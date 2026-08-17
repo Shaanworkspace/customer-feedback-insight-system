@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+dist/
+*.joblib
+backend/data/
+.env
+.github_token
+*.pdf
+project_plan.html
+.DS_Store
+*.log
+*.egg-info/
