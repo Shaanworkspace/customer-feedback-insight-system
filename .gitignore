@@ -1,16 +1,45 @@
+# Python
 .venv/
+venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
 node_modules/
 dist/
+dist-ssr/
+*.local
+
+# Data and trained artifacts (never commit)
+data/
+models/
 *.joblib
-backend/data/
+*.pkl
+
+# Environment and secrets
 .env
+.env.*
+!.env.example
 .github_token
+
+# Docs / internal
 *.pdf
 project_plan.html
-.DS_Store
-*.log
-*.egg-info/
 team_tasks.html
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
