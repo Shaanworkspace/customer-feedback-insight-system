@@ -1,12 +1,112 @@
 {
-  "battery": ["battery", "batteries", "charge", "charging", "drains fast"],
-  "camera": ["camera", "photo", "photos", "pictures", "lens"],
-  "delivery": ["delivery", "shipping", "arrived", "late", "packaging"],
-  "price": ["price", "expensive", "cheap", "cost", "worth", "value"],
-  "build_quality": ["build quality", "sturdy", "flimsy", "durable"],
-  "screen": ["screen", "display", "brightness", "resolution"],
-  "sound": ["sound", "audio", "speaker", "volume"],
-  "performance": ["speed", "slow", "fast", "lag", "performance", "hang"],
-  "size": ["size", "small", "large", "bulky", "compact"],
-  "ease_of_use": ["easy to use", "user friendly", "setup", "instructions"]
+  "battery": [
+    "battery life",
+    "battery drain",
+    "battery backup",
+    "battery drains",
+    "drains fast",
+    "drains quickly",
+    "drains overnight",
+    "battery",
+    "batteries",
+    "charge",
+    "charging"
+  ],
+  "camera": [
+    "camera quality",
+    "picture quality",
+    "image quality",
+    "video quality",
+    "camera",
+    "photo",
+    "photos",
+    "pictures",
+    "lens"
+  ],
+  "delivery": [
+    "delivery time",
+    "arrived late",
+    "delivery",
+    "shipping",
+    "arrived",
+    "late",
+    "packaging",
+    "package",
+    "courier"
+  ],
+  "price": [
+    "value for money",
+    "price",
+    "expensive",
+    "cheap",
+    "cost",
+    "worth",
+    "value",
+    "overpriced",
+    "affordable"
+  ],
+  "quality": [
+    "build quality",
+    "quality",
+    "sturdy",
+    "flimsy",
+    "durable",
+    "durability",
+    "well built",
+    "poorly built"
+  ],
+  "screen": [
+    "screen quality",
+    "display quality",
+    "screen",
+    "display",
+    "brightness",
+    "resolution",
+    "touch screen"
+  ],
+  "sound": [
+    "sound quality",
+    "audio quality",
+    "sound",
+    "audio",
+    "speaker",
+    "volume",
+    "bass",
+    "microphone"
+  ],
+  "performance": [
+    "performance",
+    "lag",
+    "lags",
+    "hang",
+    "hangs",
+    "slow",
+    "speed",
+    "smooth",
+    "freezes",
+    "crash",
+    "crashes"
+  ],
+  "customer_service": [
+    "customer service",
+    "customer support",
+    "support team",
+    "refund",
+    "return",
+    "response",
+    "helpdesk",
+    "staff",
+    "rude",
+    "helpful"
+  ],
+  "website": [
+    "website",
+    "app",
+    "checkout",
+    "login",
+    "account",
+    "error",
+    "page",
+    "online"
+  ]
 }
