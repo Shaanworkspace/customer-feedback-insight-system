@@ -29,9 +29,20 @@ TFIDF_MIN_DF = 2
 TFIDF_MAX_FEATURES = 50000
 
 # Concern / RAG settings
-CONCERN_LEXICON_PATH = PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
+CONCERN_LEXICON_PATH = (
+    PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
+)
+
 CONCERN_STATS_PATH = ARTIFACTS_DIR / "concern_stats.json"
-RAG_INDEX_PATH = ARTIFACTS_DIR / "rag_vectors.joblib"
-RAG_ANALYTICS_PATH = ARTIFACTS_DIR / "rag_analytics.joblib"
+
+# ChromaDB persistent vector database
+RAG_DB_PATH = MODELS_DIR / "rag_db"
+RAG_DATA_DIR = PROJECT_ROOT / "IMP_FILES" / "data"
+
+# ChromaDB collection name
+RAG_COLLECTION_NAME = "reviews"
+
+# RAG returns up to 3 proof reviews per concern
 RAG_TOP_K = 5
+
 RAG_USE_SAMPLE = 30000

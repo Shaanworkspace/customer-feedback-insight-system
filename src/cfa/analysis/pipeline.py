@@ -66,8 +66,12 @@ def analyze_review(
     concerns = _build_concerns(raw_concerns, aspect_sentiments)
 
     # 5. RAG retrieval + evidence
-    rag_result = _run_rag(review_text, rag_index, top_k, min_similarity)
-
+    rag_result = _run_rag(
+    concerns,
+    rag_index,
+    top_k,
+    min_similarity,
+)
     return {
         "review":             review_text,
         "overall_sentiment":  overall,
@@ -144,36 +148,80 @@ def _build_concerns(
 
 
 def _run_rag(
-    review_text: str,
+    concerns: List[Dict],
     rag_index: Optional[Dict],
     top_k: int,
     min_similarity: float,
 ) -> Dict:
-    """Run RAG retrieval and evidence. Returns empty structure if unavailable."""
-    empty = {"top_k": top_k, "similar_reviews": [], "evidence": []}
+    """
+    Run RAG retrieval for each detected concern.
+
+    Existing sentiment analysis and concern detection are unchanged.
+    RAG searches using each detected concern/aspect.
+    """
+
+    empty = {
+        "top_k": min(top_k, 5),
+        "proof_by_concern": {},
+        "similar_reviews": [],
+        "evidence": [],
+    }
 
     if rag_index is None:
         logger.info("RAG index not available — skipping RAG.")
         return empty
 
+    if not concerns:
+        logger.info("No concerns detected — skipping RAG.")
+        return empty
+
     try:
-        similar  = retrieve_similar_reviews(
-            query=review_text,
-            rag_index=rag_index,
-            top_k=top_k,
-            min_similarity=min_similarity,
-        )
-        evidence = build_rag_evidence(similar)
+        proof_by_concern: Dict[str, List[Dict]] = {}
+        all_reviews: List[Dict] = []
+
+        for concern in concerns:
+            aspect = str(
+                concern.get("aspect", "")
+            ).strip()
+
+            if not aspect:
+                continue
+
+            similar = retrieve_similar_reviews(
+                query=aspect,
+                rag_index=rag_index,
+                top_k=min(top_k, 5),
+                min_similarity=min_similarity,
+            )
+
+            proof_by_concern[aspect] = similar
+            all_reviews.extend(similar)
+
+        # Remove duplicate review IDs.
+        unique_reviews = []
+        seen_ids = set()
+
+        for review in all_reviews:
+            review_id = review.get("review_id")
+
+            if review_id in seen_ids:
+                continue
+
+            seen_ids.add(review_id)
+            unique_reviews.append(review)
+
+        evidence = build_rag_evidence(unique_reviews)
+
         return {
-            "top_k":           top_k,
-            "similar_reviews": similar,
-            "evidence":        evidence,
+            "top_k": min(top_k, 5),
+            "proof_by_concern": proof_by_concern,
+            "similar_reviews": unique_reviews,
+            "evidence": evidence,
         }
+
     except Exception as exc:
         logger.error("RAG failed: %s", exc)
         return empty
-
-
 def _empty_result() -> Dict:
     return {
         "review":            "",
