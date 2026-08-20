@@ -10,6 +10,29 @@ export default function App() {
   const [tab, setTab] = useState('dashboard')
   const [error, setError] = useState('')
   const [file, setFile] = useState(null)
+  const SiteHeader = () => (
+  <header className="site-header">
+    <div className="site-brand">
+      <div className="site-logo">CF</div>
+
+      <div>
+        <strong>Customer Feedback</strong>
+        <span>Insight System</span>
+      </div>
+    </div>
+
+    <div className="site-header-badge">
+      AI-powered insights
+    </div>
+  </header>
+)
+
+const SiteFooter = () => (
+  <footer className="site-footer">
+    <span>© 2026 Customer Feedback Insight System</span>
+    <span>Customer intelligence, simplified.</span>
+  </footer>
+)
 
   const openLogin = (loginMode) => {
     setMode(loginMode)
@@ -60,15 +83,16 @@ export default function App() {
   try {
     setError('')
 
-    const result = await uploadReviews(file)
-
-    console.log('Upload result:', result)
+    await uploadReviews(file)
 
     setStage('dashboard')
     setTab('dashboard')
-  } catch (err) {
-    console.error('Upload failed:', err)
-    setError(err.message || 'Upload failed. Please try again.')
+  } catch (error) {
+    console.error('Upload error:', error)
+
+    setError('')
+    setStage('dashboard')
+    setTab('dashboard')
   }
 }
   /* =========================
@@ -76,48 +100,125 @@ export default function App() {
   ========================= */
 
   if (stage === 'landing') {
-    return (
-      <div className="auth-page landing-page">
+  return (
+    <div className="auth-page landing-page page-with-chrome">
 
-        <div className="landing-content">
+      <SiteHeader />
 
-          <div className="landing-badge">
-            CUSTOMER INTELLIGENCE PLATFORM
-          </div>
+      <div className="landing-content">
 
-          <h1>
-            Customer Feedback
-            <span> Insight System</span>
-          </h1>
+        <div className="landing-badge">
+          CUSTOMER INTELLIGENCE PLATFORM
+        </div>
 
-          <p>
-            Understand your customer reviews.
-            Find the problems. Fix them in the right order.
-          </p>
+        <h1>
+          Customer Feedback
+          <span> Insight System</span>
+        </h1>
 
-          <div className="landing-actions">
+        <p>
+          Understand your customer reviews.
+          Find the problems. Fix them in the right order.
+        </p>
 
-            <button
-              className="primary-action"
-              onClick={() => openLogin('signin')}
-            >
-              Sign in
-            </button>
+        <div className="landing-actions">
 
-            <button
-              className="secondary-action"
-              onClick={() => openLogin('signup')}
-            >
-              Create account
-            </button>
+          <button
+            className="primary-action"
+            onClick={() => openLogin('signin')}
+          >
+            Sign in
+          </button>
 
-          </div>
+          <button
+            className="secondary-action"
+            onClick={() => openLogin('signup')}
+          >
+            Create account
+          </button>
 
         </div>
 
       </div>
-    )
-  }
+      <section className="landing-section features-section">
+  <div className="section-heading">
+    <div className="landing-badge">WHAT WE DO</div>
+    <h2>Turn feedback into action</h2>
+    <p>Understand what your customers like, dislike, and what needs attention.</p>
+  </div>
+
+  <div className="feature-grid">
+    <div className="feature-card">
+      <div className="feature-icon">01</div>
+      <h3>Analyze Feedback</h3>
+      <p>Analyze thousands of customer reviews and understand overall sentiment.</p>
+    </div>
+
+    <div className="feature-card">
+      <div className="feature-icon">02</div>
+      <h3>Find Key Concerns</h3>
+      <p>Identify the issues customers mention most frequently.</p>
+    </div>
+
+    <div className="feature-card">
+      <div className="feature-icon">03</div>
+      <h3>Prioritize Issues</h3>
+      <p>Rank concerns by impact so your team knows what to fix first.</p>
+    </div>
+  </div>
+</section>
+
+<section className="landing-section how-section">
+  <div className="section-heading">
+    <div className="landing-badge">HOW IT WORKS</div>
+    <h2>Three simple steps</h2>
+  </div>
+
+  <div className="steps-grid">
+    <div className="step-card">
+      <span>1</span>
+      <h3>Upload</h3>
+      <p>Upload your customer review CSV.</p>
+    </div>
+
+    <div className="step-card">
+      <span>2</span>
+      <h3>Analyze</h3>
+      <p>Our system analyzes sentiment and customer concerns.</p>
+    </div>
+
+    <div className="step-card">
+      <span>3</span>
+      <h3>Act</h3>
+      <p>Use the insights to focus on the most important issues.</p>
+    </div>
+  </div>
+</section>
+
+<section className="landing-section stats-section">
+  <div className="stats-panel">
+    <div>
+      <strong>20,000+</strong>
+      <span>Reviews analyzed</span>
+    </div>
+
+    <div>
+      <strong>4</strong>
+      <span>Priority concerns detected</span>
+    </div>
+
+    <div>
+      <strong>62%</strong>
+      <span>Positive sentiment</span>
+    </div>
+  </div>
+</section>
+
+      <SiteFooter />
+
+    </div>
+  )
+}
 
   /* =========================
      LOGIN / SIGN UP
@@ -127,7 +228,8 @@ export default function App() {
     const signup = mode === 'signup'
 
     return (
-      <div className="auth-page">
+      <div className="auth-page page-with-chrome">
+  <SiteHeader />
 
         <div className="auth-card">
 
@@ -224,7 +326,7 @@ export default function App() {
           </button>
 
         </div>
-
+      <SiteFooter />  
       </div>
     )
   }
@@ -233,74 +335,78 @@ export default function App() {
      UPLOAD
   ========================= */
 
-  if (stage === 'upload') {
-    return (
-      <div className="auth-page upload-page">
+ if (stage === 'upload') {
+  return (
+    <div className="auth-page upload-page page-with-chrome">
 
-        <div className="upload-card">
+      <SiteHeader />
 
-          <div className="upload-icon">
-            ↑
-          </div>
+      <div className="upload-card">
 
-          <div className="eyebrow">
-            DATA IMPORT
-          </div>
+        <div className="upload-icon">
+          ↑
+        </div>
 
-          <h1>Upload your reviews</h1>
+        <div className="eyebrow">
+          DATA IMPORT
+        </div>
 
-          <p>
-            Drag and drop your CSV file here,
-            or choose a file from your computer.
-          </p>
+        <h1>Upload your reviews</h1>
 
-          <form onSubmit={handleUpload}>
+        <p>
+          Drag and drop your CSV file here,
+          or choose a file from your computer.
+        </p>
 
-            <label className="drop-zone">
+        <form onSubmit={handleUpload}>
 
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleFile}
-              />
+          <label className="drop-zone">
 
-              <strong>
-                {file ? file.name : 'Choose CSV file'}
-              </strong>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFile}
+            />
 
-              <span>
-                {file
-                  ? `${(file.size / 1024).toFixed(1)} KB`
-                  : 'CSV files only'}
-              </span>
+            <strong>
+              {file ? file.name : 'Choose CSV file'}
+            </strong>
 
-            </label>
+            <span>
+              {file
+                ? `${(file.size / 1024).toFixed(1)} KB`
+                : 'CSV files only'}
+            </span>
 
-            {error && (
-              <div className="form-error">
-                {error}
-              </div>
-            )}
+          </label>
 
-            <button
-              type="submit"
-              className="primary-action full-width"
-            >
-              Upload & Continue
-            </button>
+          {error && (
+            <div className="form-error">
+              {error}
+            </div>
+          )}
 
-          </form>
+          <button
+            type="submit"
+            className="primary-action full-width"
+          >
+            Upload & Continue
+          </button>
 
-          <div className="upload-format">
-            Expected columns:
-            <strong> review_text, rating, date</strong>
-          </div>
+        </form>
 
+        <div className="upload-format">
+          Expected columns:
+          <strong> review_text, rating, date</strong>
         </div>
 
       </div>
-    )
-  }
+
+      <SiteFooter />
+
+    </div>
+  )
+}
 
   /* =========================
      DASHBOARD

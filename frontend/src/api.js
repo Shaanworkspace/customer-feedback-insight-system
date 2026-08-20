@@ -2,6 +2,11 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 export async function getStats() {
   const res = await fetch(`${API_BASE}/api/v1/stats`)
+
+  if (!res.ok) {
+    throw new Error('Stats request failed')
+  }
+
   return res.json()
 }
 
@@ -11,29 +16,47 @@ export async function analyzeReview(text) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ review_text: text }),
   })
-  return res.json()
-}
-export async function uploadReviews(file) {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  const res = await fetch(`${API_BASE}/api/v1/upload`, {
-    method: 'POST',
-    body: formData,
-  })
 
   if (!res.ok) {
-    let message = 'Upload failed. Please try again.'
-
-    try {
-      const data = await res.json()
-      message = data.detail || message
-    } catch {
-      // Keep default error message
-    }
-
-    throw new Error(message)
+    throw new Error('Analysis request failed')
   }
 
   return res.json()
+}
+
+export async function uploadReviews(file) {
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const res = await fetch(`${API_BASE}/api/v1/upload`, {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!res.ok) {
+      let detail = ''
+
+      try {
+        const data = await res.json()
+        detail = data.detail || ''
+      } catch {
+        // Ignore invalid error response
+      }
+
+      console.error('Upload failed:', detail || res.status)
+
+      throw new Error(
+        'Not able to connect to the backend. Please try again later.'
+      )
+    }
+
+    return res.json()
+  } catch (error) {
+    console.error('Upload error:', error)
+
+    throw new Error(
+      'Not able to connect to the backend. Please try again later.'
+    )
+  }
 }
