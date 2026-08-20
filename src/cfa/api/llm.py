@@ -69,7 +69,7 @@ def _groq_call(reviews: List[str], known_entities: List[str]) -> List[Dict]:
     return payload["results"]
 
 
-def _rule_based_sentiment(text: str) -> tuple:
+def rule_based_sentiment(text: str) -> tuple:
     words = [w.strip(string.punctuation).lower() for w in text.split()]
     good = sum(1 for w in words if w in GOOD_WORDS)
     bad = sum(1 for w in words if w in BAD_WORDS)
@@ -84,7 +84,7 @@ def rule_based_batch(reviews: List[str]) -> List[Dict]:
     """Same output shape as the Groq call. Works fully offline."""
     results = []
     for i, text in enumerate(reviews):
-        sentiment, confidence = _rule_based_sentiment(text)
+        sentiment, confidence = rule_based_sentiment(text)
         aspects = [
             {"entity": c["aspect"], "sentiment": sentiment, "confidence": confidence}
             for c in detect_concerns(text)
