@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { analyzeReview } from '../../api'
-import { analysis as sampleAnalysis } from '../../sampleData'
 
 export default function Analyzer() {
   const [text, setText] = useState('')
   const [result, setResult] = useState(null)
+  const [error, setError] = useState('')
 
   const handleAnalyze = () => {
     if (!text.trim()) return
+    setError('')
     analyzeReview(text)
       .then(setResult)
-      .catch(() => setResult(sampleAnalysis))
+      .catch(() => setError('Backend is not reachable. Please try again.'))
   }
 
   return (
@@ -38,6 +39,12 @@ export default function Analyzer() {
           Analyze
         </button>
       </div>
+
+      {error && (
+        <div className="rounded-[15px] border border-[#ffd5ce] bg-[#fff5f3] p-5 text-[13px] font-semibold text-[#b42318]">
+          {error}
+        </div>
+      )}
 
       {result && (
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">

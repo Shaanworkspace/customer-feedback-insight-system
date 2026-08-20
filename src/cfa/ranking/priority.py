@@ -3,9 +3,14 @@
 Impact = normalized(count x negative_pct), 0-100.
 """
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def rank_concerns(concern_stats: dict) -> list:
     concerns = concern_stats.get("concerns", [])
+    logger.info("rank_concerns: received %d concerns.", len(concerns))
 
     scores = [
         (c, c["count"] * c["negative_pct"])
@@ -13,6 +18,7 @@ def rank_concerns(concern_stats: dict) -> list:
     ]
 
     if not scores:
+        logger.info("rank_concerns: no concerns to rank.")
         return []
 
     max_score = max(s for _, s in scores)
@@ -34,4 +40,7 @@ def rank_concerns(concern_stats: dict) -> list:
             }
         )
 
+    logger.info("rank_concerns: ranked %d concerns, top='%s' impact=%d.",
+                len(ranked), ranked[0]["concern"] if ranked else None,
+                ranked[0]["impact"] if ranked else None)
     return ranked

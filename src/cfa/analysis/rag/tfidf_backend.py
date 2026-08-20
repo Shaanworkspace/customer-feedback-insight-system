@@ -134,4 +134,6 @@ def retrieve(query: str, index: Optional[Dict], top_k: int = 5, min_similarity: 
             "similarity": similarity,
         })
 
+    logger.info("TF-IDF retrieve '%s': %d results (top_k=%d, min_sim=%.2f).",
+                query, len(results), top_k, min_similarity)
     return results[:5]

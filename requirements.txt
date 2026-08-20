@@ -11,3 +11,4 @@ requests>=2.31
 nltk>=3.8
 chromadb>=0.5
 sentence-transformers>=3.0
+groq>=0.9

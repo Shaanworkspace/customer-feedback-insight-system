@@ -56,6 +56,8 @@ def _groq_call(reviews: List[str], known_entities: List[str]) -> List[Dict]:
     from groq import Groq
 
     client = Groq(api_key=GROQ_API_KEY)
+    logger.info("Groq call: batch of %d reviews, model=%s, known_entities=%d.",
+                len(reviews), GROQ_MODEL, len(known_entities))
     response = client.chat.completions.create(
         model=GROQ_MODEL,
         messages=[
@@ -66,7 +68,9 @@ def _groq_call(reviews: List[str], known_entities: List[str]) -> List[Dict]:
         temperature=0,
     )
     payload = json.loads(response.choices[0].message.content)
-    return payload["results"]
+    results = payload["results"]
+    logger.info("Groq call: returned %d results.", len(results))
+    return results
 
 
 def rule_based_sentiment(text: str) -> tuple:
@@ -90,14 +94,16 @@ def rule_based_batch(reviews: List[str]) -> List[Dict]:
             for c in detect_concerns(text)
         ]
         results.append({"index": i, "aspects": aspects})
+    logger.info("rule_based_batch: processed %d reviews -> %d results.",
+                len(reviews), len(results))
     return results
 
 
 def call_llm_batch(reviews: List[str], known_entities: List[str]) -> List[Dict]:
     """Send one batch (25-30 reviews) to Groq. Tries once, retries twice,
-    then skips the batch so the next segment can proceed."""
+    then falls back to rule-based so no batch is ever dropped."""
     if not GROQ_API_KEY:
-        logger.info("No GROQ_API_KEY set — using rule-based fallback.")
+        logger.info("No GROQ_API_KEY set — using rule-based fallback for %d reviews.", len(reviews))
         return rule_based_batch(reviews)
 
     for attempt in range(3):
@@ -106,5 +112,5 @@ def call_llm_batch(reviews: List[str], known_entities: List[str]) -> List[Dict]:
         except Exception as exc:
             logger.warning("Groq call failed (attempt %d): %s", attempt + 1, exc)
 
-    logger.error("Groq call failed 3 times — skipping this batch.")
-    return []
+    logger.error("Groq call failed 3 times — falling back to rule-based for %d reviews.", len(reviews))
+    return rule_based_batch(reviews)

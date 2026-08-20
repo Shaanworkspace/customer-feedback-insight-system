@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import AppHeader from './components/layout/AppHeader'
+import BackendStatusPopup from './components/layout/BackendStatusPopup'
 import Landing from './components/landing/Landing'
 import Login from './components/auth/Login'
 import Upload from './components/upload/Upload'
@@ -60,6 +61,7 @@ export default function App() {
         <SiteHeader onStart={() => go('login')} />
         <Landing onStart={() => go('login')} />
         <SiteFooter />
+        <BackendStatusPopup base="landing" />
       </div>
     )
   }
@@ -70,6 +72,7 @@ export default function App() {
         <SiteHeader onStart={() => go('login')} />
         <Login onLogin={handleLogin} onBack={() => go('landing')} />
         <SiteFooter />
+        <BackendStatusPopup base="login" />
       </div>
     )
   }
@@ -80,6 +83,7 @@ export default function App() {
         <SiteHeader onStart={() => go('login')} />
         <Upload onDone={handleUploadDone} onCancel={handleUploadCancel} />
         <SiteFooter />
+        <BackendStatusPopup base="upload" />
       </div>
     )
   }
@@ -96,6 +100,7 @@ export default function App() {
         <span>Customer Feedback Insight System</span>
         <span>AI-powered customer intelligence</span>
       </footer>
+      <BackendStatusPopup base="app" />
     </div>
   )
 }

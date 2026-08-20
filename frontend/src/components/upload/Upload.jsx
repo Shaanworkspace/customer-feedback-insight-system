@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { uploadReviews, setApiBase } from '../../api'
+import { pingBackend, uploadReviews, setApiBase } from '../../api'
 
 const LOCAL_BASE = 'http://localhost:8000'
 const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
@@ -53,9 +53,25 @@ export default function Upload({ onDone, onCancel }) {
     setApiBase(base)
 
     try {
+      const online = await pingBackend()
+      if (!online) {
+        setError('Backend is not reachable. Try again in a moment.')
+        setBusy(false)
+        return
+      }
+    } catch {
+      setError('Backend is not reachable. Try again in a moment.')
+      setBusy(false)
+      return
+    }
+
+    try {
       await uploadReviews(file)
     } catch (err) {
-      console.error('Upload failed, showing sample data:', err)
+      console.error('Upload failed:', err)
+      setError('Upload failed. The backend did not accept the file. Please try again.')
+      setBusy(false)
+      return
     } finally {
       setBusy(false)
     }

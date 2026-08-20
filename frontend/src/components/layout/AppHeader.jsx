@@ -1,5 +1,27 @@
+import { useCallback, useEffect, useState } from 'react'
+import { pingBackend } from '../../api'
+
 export default function AppHeader({ tab, setTab, onUpload }) {
   const tabs = ['dashboard', 'analyzer', 'explorer']
+  const [status, setStatus] = useState('checking')
+  const [retry, setRetry] = useState(0)
+
+  const check = useCallback(async () => {
+    setStatus('checking')
+    try {
+      const message = await pingBackend()
+      setStatus(message ? 'online' : 'offline')
+    } catch {
+      setStatus('offline')
+    }
+  }, [])
+
+  useEffect(() => {
+    check()
+  }, [check, retry])
+
+  const dotColor = status === 'online' ? 'bg-[#2eaf62]' : status === 'offline' ? 'bg-[#e0563d]' : 'bg-[#f0a33c]'
+  const dotLabel = status === 'online' ? 'Backend online' : status === 'offline' ? 'Backend offline' : 'Waking backend…'
 
   return (
     <header className="sticky top-0 z-20 flex h-[78px] items-center justify-between border-b border-[#e4e9f0] bg-white/95 px-[6%] backdrop-blur-md">
@@ -30,6 +52,14 @@ export default function AppHeader({ tab, setTab, onUpload }) {
       </nav>
 
       <div className="flex items-center gap-3">
+        <button
+          className="flex cursor-pointer items-center gap-2 rounded-full border border-[#dfe5ec] bg-white px-3 py-2 text-[12px] font-semibold text-[#5e6d82] transition hover:text-[#173f73]"
+          onClick={() => setRetry((r) => r + 1)}
+          title="Re-check backend"
+        >
+          <span className={`inline-block h-[8px] w-[8px] rounded-full ${dotColor}`}></span>
+          {dotLabel}
+        </button>
         <button
           className="cursor-pointer rounded-[9px] bg-[#173f73] px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_5px_14px_rgba(23,63,115,0.22)] transition hover:-translate-y-0.5 hover:bg-[#12345f]"
           onClick={onUpload}

@@ -1,8 +1,5 @@
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
 
-const LOCAL_BASE = 'http://localhost:8000'
-const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
-
 let currentBase = API_BASE
 
 export function setApiBase(base) {
@@ -13,11 +10,32 @@ export function getApiBase() {
   return currentBase
 }
 
+export async function pingBackend() {
+  const res = await fetch(`${currentBase}/api/v1/ping`)
+
+  if (!res.ok) {
+    throw new Error('Ping failed')
+  }
+
+  const data = await res.json()
+  return data.message
+}
+
 export async function getStats() {
   const res = await fetch(`${currentBase}/api/v1/stats`)
 
   if (!res.ok) {
     throw new Error('Stats request failed')
+  }
+
+  return res.json()
+}
+
+export async function getReviews() {
+  const res = await fetch(`${currentBase}/api/v1/reviews`)
+
+  if (!res.ok) {
+    throw new Error('Reviews request failed')
   }
 
   return res.json()

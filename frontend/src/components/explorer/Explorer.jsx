@@ -1,7 +1,27 @@
-import { stats as sampleStats } from '../../sampleData'
+import { useEffect, useState } from 'react'
+import { getReviews } from '../../api'
 
 export default function Explorer() {
-  const reviews = sampleStats.representative_reviews
+  const [reviews, setReviews] = useState([])
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    getReviews()
+      .then(setReviews)
+      .catch(() => setError(true))
+  }, [])
+
+  if (error) {
+    return (
+      <div className="rounded-[15px] border border-[#ffd5ce] bg-[#fff5f3] p-8 text-center">
+        <div className="text-[14px] font-bold text-[#b42318]">Backend is not reachable.</div>
+        <p className="mt-2 text-[13px] text-[#8a5a52]">
+          The analysis server is offline or still waking up.
+          Please try again in a moment.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <section className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">

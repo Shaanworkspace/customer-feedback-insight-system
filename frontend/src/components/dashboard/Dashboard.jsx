@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { getStats } from '../../api'
-import { stats as sampleStats } from '../../sampleData'
 import KpiCards from './KpiCards'
 import SentimentPanel from './SentimentPanel'
 import PriorityConcerns from './PriorityConcerns'
@@ -9,12 +8,25 @@ import ReviewExplorer from './ReviewExplorer'
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     getStats()
       .then(setStats)
-      .catch(() => setStats(sampleStats))
+      .catch(() => setError(true))
   }, [])
+
+  if (error) {
+    return (
+      <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-8 text-center">
+        <div className="text-[14px] font-bold text-[#b42318]">Backend is not reachable.</div>
+        <p className="mt-2 text-[13px] text-[#8a5a52]">
+          The analysis server is offline or still waking up.
+          Please try again in a moment.
+        </p>
+      </div>
+    )
+  }
 
   if (!stats) {
     return (
