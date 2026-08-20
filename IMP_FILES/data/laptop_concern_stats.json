@@ -1,34 +1,54 @@
 {
   "total_reviews": 1000,
-  "total_mentions": 1004,
-  "concerns": [
+  "sentiment_distribution": {
+    "positive": 563,
+    "negative": 437
+  },
+  "ranked_concerns": [
     {
-      "name": "build",
+      "concern": "build",
       "count": 145,
-      "positive": 70,
-      "negative": 75,
-      "negative_pct": 51.7
+      "negative_pct": 51.7,
+      "impact": 100,
+      "priority": 1
     },
     {
-      "name": "battery",
+      "concern": "battery",
       "count": 136,
-      "positive": 65,
-      "negative": 71,
-      "negative_pct": 52.2
+      "negative_pct": 52.2,
+      "impact": 95,
+      "priority": 2
     },
     {
-      "name": "connectivity",
+      "concern": "connectivity",
       "count": 37,
-      "positive": 5,
-      "negative": 32,
-      "negative_pct": 86.5
+      "negative_pct": 86.5,
+      "impact": 43,
+      "priority": 3
     },
     {
-      "name": "delivery",
+      "concern": "delivery",
       "count": 39,
-      "positive": 10,
-      "negative": 29,
-      "negative_pct": 74.4
+      "negative_pct": 74.4,
+      "impact": 39,
+      "priority": 4
+    }
+  ],
+  "representative_reviews": [
+    {
+      "review_id": "laptop_0004",
+      "text": "Touchpad is unresponsive and jittery",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "laptop_0005",
+      "text": "The hinge broke after 3 months",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "laptop_0015",
+      "text": "Keyboard feels cheap and keys stick",
+      "sentiment": "negative"
     }
   ]
 }

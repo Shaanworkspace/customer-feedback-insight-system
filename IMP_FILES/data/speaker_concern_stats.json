@@ -1,27 +1,47 @@
 {
   "total_reviews": 1000,
-  "total_mentions": 1112,
-  "concerns": [
+  "sentiment_distribution": {
+    "positive": 581,
+    "negative": 419
+  },
+  "ranked_concerns": [
     {
-      "name": "connectivity",
+      "concern": "connectivity",
       "count": 67,
-      "positive": 10,
-      "negative": 57,
-      "negative_pct": 85.1
+      "negative_pct": 85.1,
+      "impact": 100,
+      "priority": 1
     },
     {
-      "name": "battery",
+      "concern": "battery",
       "count": 94,
-      "positive": 49,
-      "negative": 45,
-      "negative_pct": 47.9
+      "negative_pct": 47.9,
+      "impact": 79,
+      "priority": 2
     },
     {
-      "name": "price",
+      "concern": "price",
       "count": 32,
-      "positive": 8,
-      "negative": 24,
-      "negative_pct": 75.0
+      "negative_pct": 75.0,
+      "impact": 42,
+      "priority": 3
+    }
+  ],
+  "representative_reviews": [
+    {
+      "review_id": "speaker_0003",
+      "text": "Multipoint connection is buggy",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "speaker_0004",
+      "text": "Bluetooth keeps disconnecting",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "speaker_0037",
+      "text": "Multipoint connection is buggy",
+      "sentiment": "negative"
     }
   ]
 }

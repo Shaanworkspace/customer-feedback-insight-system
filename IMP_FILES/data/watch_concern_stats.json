@@ -1,41 +1,61 @@
 {
   "total_reviews": 1000,
-  "total_mentions": 1024,
-  "concerns": [
+  "sentiment_distribution": {
+    "positive": 561,
+    "negative": 439
+  },
+  "ranked_concerns": [
     {
-      "name": "battery",
+      "concern": "battery",
       "count": 243,
-      "positive": 123,
-      "negative": 120,
-      "negative_pct": 49.4
+      "negative_pct": 49.4,
+      "impact": 100,
+      "priority": 1
     },
     {
-      "name": "screen",
+      "concern": "screen",
       "count": 140,
-      "positive": 62,
-      "negative": 78,
-      "negative_pct": 55.7
+      "negative_pct": 55.7,
+      "impact": 65,
+      "priority": 2
     },
     {
-      "name": "performance",
+      "concern": "performance",
       "count": 111,
-      "positive": 54,
-      "negative": 57,
-      "negative_pct": 51.4
+      "negative_pct": 51.4,
+      "impact": 48,
+      "priority": 3
     },
     {
-      "name": "build",
+      "concern": "build",
       "count": 101,
-      "positive": 50,
-      "negative": 51,
-      "negative_pct": 50.5
+      "negative_pct": 50.5,
+      "impact": 42,
+      "priority": 4
     },
     {
-      "name": "sound",
+      "concern": "sound",
       "count": 35,
-      "positive": 6,
-      "negative": 29,
-      "negative_pct": 82.9
+      "negative_pct": 82.9,
+      "impact": 24,
+      "priority": 5
+    }
+  ],
+  "representative_reviews": [
+    {
+      "review_id": "watch_0004",
+      "text": "Charging cable is too short",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "watch_0005",
+      "text": "Battery life is terrible",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "watch_0018",
+      "text": "Charging cable is too short",
+      "sentiment": "negative"
     }
   ]
 }
