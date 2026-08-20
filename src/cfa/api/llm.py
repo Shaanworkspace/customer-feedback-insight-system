@@ -94,16 +94,17 @@ def rule_based_batch(reviews: List[str]) -> List[Dict]:
 
 
 def call_llm_batch(reviews: List[str], known_entities: List[str]) -> List[Dict]:
-    """Send one batch (25-30 reviews) to Groq. Retries once, then falls back."""
+    """Send one batch (25-30 reviews) to Groq. Tries once, retries twice,
+    then skips the batch so the next segment can proceed."""
     if not GROQ_API_KEY:
         logger.info("No GROQ_API_KEY set — using rule-based fallback.")
         return rule_based_batch(reviews)
 
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             return _groq_call(reviews, known_entities)
         except Exception as exc:
             logger.warning("Groq call failed (attempt %d): %s", attempt + 1, exc)
 
-    logger.error("Groq call failed twice — using rule-based fallback for this batch.")
-    return rule_based_batch(reviews)
+    logger.error("Groq call failed 3 times — skipping this batch.")
+    return []
