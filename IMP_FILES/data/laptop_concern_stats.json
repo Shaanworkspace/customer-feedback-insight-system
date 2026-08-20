@@ -1,0 +1,34 @@
+{
+  "total_reviews": 1000,
+  "total_mentions": 1004,
+  "concerns": [
+    {
+      "name": "build",
+      "count": 145,
+      "positive": 70,
+      "negative": 75,
+      "negative_pct": 51.7
+    },
+    {
+      "name": "battery",
+      "count": 136,
+      "positive": 65,
+      "negative": 71,
+      "negative_pct": 52.2
+    },
+    {
+      "name": "connectivity",
+      "count": 37,
+      "positive": 5,
+      "negative": 32,
+      "negative_pct": 86.5
+    },
+    {
+      "name": "delivery",
+      "count": 39,
+      "positive": 10,
+      "negative": 29,
+      "negative_pct": 74.4
+    }
+  ]
+}

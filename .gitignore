@@ -15,7 +15,7 @@ dist-ssr/
 *.local
 
 # Data and trained artifacts (never commit)
-data/
+/data/
 models/
 *.joblib
 *.pkl

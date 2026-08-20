@@ -1,0 +1,41 @@
+{
+  "total_reviews": 1000,
+  "total_mentions": 1024,
+  "concerns": [
+    {
+      "name": "battery",
+      "count": 243,
+      "positive": 123,
+      "negative": 120,
+      "negative_pct": 49.4
+    },
+    {
+      "name": "screen",
+      "count": 140,
+      "positive": 62,
+      "negative": 78,
+      "negative_pct": 55.7
+    },
+    {
+      "name": "performance",
+      "count": 111,
+      "positive": 54,
+      "negative": 57,
+      "negative_pct": 51.4
+    },
+    {
+      "name": "build",
+      "count": 101,
+      "positive": 50,
+      "negative": 51,
+      "negative_pct": 50.5
+    },
+    {
+      "name": "sound",
+      "count": 35,
+      "positive": 6,
+      "negative": 29,
+      "negative_pct": 82.9
+    }
+  ]
+}

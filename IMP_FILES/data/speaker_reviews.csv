@@ -1,0 +1,1001 @@
+review_id,review_text,rating,date
+speaker_0001,"Battery drains too fast, dies quickly",1,2025-03-31
+speaker_0002,"Mids are clear, vocals sound great",4,2025-12-13
+speaker_0003,Multipoint connection is buggy,1,2025-01-24
+speaker_0004,Bluetooth keeps disconnecting,2,2025-03-29
+speaker_0005,One speaker went silent after a week,3,2025-05-18
+speaker_0006,"Volume is amazing, fills the room",4,2025-06-25
+speaker_0007,Delay between video and audio is bad,1,2025-08-22
+speaker_0008,Delay between video and audio is bad,2,2025-09-02
+speaker_0009,"Love the sound, great for parties",4,2025-12-23
+speaker_0010,"Love the sound, great for parties",4,2025-10-30
+speaker_0011,Excellent stereo separation,5,2025-04-03
+speaker_0012,"Portable and lightweight, easy to carry",5,2025-12-17
+speaker_0013,"Love the sound, great for parties",5,2025-09-07
+speaker_0014,Delay between video and audio is bad,1,2025-02-02
+speaker_0015,Speaker crackles at max volume,1,2025-12-14
+speaker_0016,Excellent stereo separation,5,2025-04-25
+speaker_0017,"Portable and lightweight, easy to carry",5,2025-12-19
+speaker_0018,"Volume is amazing, fills the room",5,2025-05-08
+speaker_0019,Amazing bass for its size,4,2025-10-13
+speaker_0020,Excellent stereo separation,4,2025-11-26
+speaker_0021,Setup was easy and quick,5,2025-09-11
+speaker_0022,"Volume is amazing, fills the room",5,2025-06-14
+speaker_0023,Sound is muddy at high volume,1,2025-04-25
+speaker_0024,Amazing bass for its size,5,2025-05-01
+speaker_0025,One speaker went silent after a week,3,2025-08-18
+speaker_0026,One speaker went silent after a week,1,2025-03-02
+speaker_0027,"Sound quality is excellent, loud and clear",4,2025-07-31
+speaker_0028,Charging port stopped working,1,2025-02-16
+speaker_0029,Excellent stereo separation,5,2025-09-18
+speaker_0030,Build feels sturdy and solid,5,2025-07-06
+speaker_0031,"Battery lasts long, very good",5,2025-06-19
+speaker_0032,Excellent stereo separation,5,2025-12-03
+speaker_0033,One speaker went silent after a week,1,2025-12-04
+speaker_0034,Speaker crackles at max volume,1,2025-11-21
+speaker_0035,"Mids are clear, vocals sound great",5,2025-07-11
+speaker_0036,"Sound quality is excellent, loud and clear",5,2025-09-10
+speaker_0037,Multipoint connection is buggy,2,2025-07-29
+speaker_0038,Too expensive for the sound quality,1,2025-03-03
+speaker_0039,Amazing bass for its size,4,2025-04-08
+speaker_0040,"Volume is amazing, fills the room",5,2025-01-24
+speaker_0041,Excellent stereo separation,4,2025-08-19
+speaker_0042,Excellent stereo separation,5,2025-03-10
+speaker_0043,"Sound quality is excellent, loud and clear",5,2025-01-25
+speaker_0044,Amazing bass for its size,5,2025-09-05
+speaker_0045,"Love the sound, great for parties",5,2025-03-30
+speaker_0046,"Love the sound, great for parties",4,2025-12-03
+speaker_0047,"Portable and lightweight, easy to carry",5,2025-07-16
+speaker_0048,Too expensive for the sound quality,3,2025-05-08
+speaker_0049,Speaker crackles at max volume,3,2025-08-20
+speaker_0050,"Love the sound, great for parties",5,2025-12-25
+speaker_0051,Setup was easy and quick,4,2025-12-26
+speaker_0052,"Portable and lightweight, easy to carry",5,2025-10-11
+speaker_0053,"Battery lasts long, very good",4,2025-05-29
+speaker_0054,"Love the sound, great for parties",5,2025-11-29
+speaker_0055,"Love the sound, great for parties",5,2025-12-22
+speaker_0056,"Volume is amazing, fills the room",5,2025-10-15
+speaker_0057,Excellent stereo separation,5,2025-12-30
+speaker_0058,Multipoint connection is buggy,3,2025-10-01
+speaker_0059,Delay between video and audio is bad,3,2025-09-25
+speaker_0060,Delay between video and audio is bad,1,2025-12-10
+speaker_0061,Sound is muddy at high volume,2,2025-03-24
+speaker_0062,"Mids are clear, vocals sound great",4,2025-02-01
+speaker_0063,"Mids are clear, vocals sound great",4,2025-10-05
+speaker_0064,One speaker went silent after a week,1,2025-12-12
+speaker_0065,"Battery lasts long, very good",5,2025-10-15
+speaker_0066,Charging port stopped working,2,2025-12-23
+speaker_0067,"Treble is harsh, hurts the ears",1,2025-07-15
+speaker_0068,Microphone quality is poor,3,2025-06-10
+speaker_0069,"Sound quality is excellent, loud and clear",4,2025-05-09
+speaker_0070,Microphone quality is poor,3,2025-08-15
+speaker_0071,"Portable and lightweight, easy to carry",5,2025-10-07
+speaker_0072,"Battery lasts long, very good",5,2025-04-10
+speaker_0073,Bluetooth keeps disconnecting,3,2025-02-08
+speaker_0074,Bluetooth keeps disconnecting,2,2025-03-03
+speaker_0075,Delay between video and audio is bad,1,2025-05-16
+speaker_0076,Too expensive for the sound quality,3,2025-01-03
+speaker_0077,Multipoint connection is buggy,3,2025-01-21
+speaker_0078,Speaker crackles at max volume,2,2025-11-17
+speaker_0079,"Mids are clear, vocals sound great",5,2025-10-21
+speaker_0080,"Volume is amazing, fills the room",5,2025-06-12
+speaker_0081,"Love the sound, great for parties",5,2025-09-16
+speaker_0082,Charging port stopped working,2,2025-02-17
+speaker_0083,Build quality feels cheap and plastic,2,2025-06-19
+speaker_0084,Build quality feels cheap and plastic,3,2025-11-13
+speaker_0085,Setup was easy and quick,5,2025-11-29
+speaker_0086,"Treble is harsh, hurts the ears",1,2025-05-04
+speaker_0087,Excellent stereo separation,5,2025-05-05
+speaker_0088,"Portable and lightweight, easy to carry",4,2025-02-28
+speaker_0089,Charging port stopped working,2,2025-01-13
+speaker_0090,"Portable and lightweight, easy to carry",5,2025-09-18
+speaker_0091,"Sound quality is excellent, loud and clear",4,2025-11-30
+speaker_0092,Charging port stopped working,1,2025-02-19
+speaker_0093,Microphone quality is poor,2,2025-01-04
+speaker_0094,"Battery lasts long, very good",5,2025-04-20
+speaker_0095,Amazing bass for its size,5,2025-04-16
+speaker_0096,Amazing bass for its size,5,2025-02-06
+speaker_0097,"Love the sound, great for parties",4,2025-06-19
+speaker_0098,"Bass is weak, very disappointing",1,2025-05-09
+speaker_0099,Excellent stereo separation,5,2025-05-13
+speaker_0100,One speaker went silent after a week,2,2025-08-10
+speaker_0101,Delay between video and audio is bad,2,2025-10-01
+speaker_0102,Multipoint connection is buggy,2,2025-10-27
+speaker_0103,"Bass is weak, very disappointing",1,2025-09-15
+speaker_0104,Microphone quality is poor,2,2025-11-07
+speaker_0105,Microphone quality is poor,3,2025-07-15
+speaker_0106,"Treble is harsh, hurts the ears",1,2025-03-22
+speaker_0107,"Love the sound, great for parties",5,2025-10-07
+speaker_0108,"Treble is harsh, hurts the ears",1,2025-12-13
+speaker_0109,"Portable and lightweight, easy to carry",5,2025-01-06
+speaker_0110,Setup was easy and quick,4,2025-01-22
+speaker_0111,Too expensive for the sound quality,1,2025-10-08
+speaker_0112,"Mids are clear, vocals sound great",4,2025-06-26
+speaker_0113,"Treble is harsh, hurts the ears",3,2025-03-14
+speaker_0114,Build quality feels cheap and plastic,2,2025-05-10
+speaker_0115,Bluetooth keeps disconnecting,2,2025-10-18
+speaker_0116,Setup was easy and quick,5,2025-10-09
+speaker_0117,"Treble is harsh, hurts the ears",1,2025-02-20
+speaker_0118,Too expensive for the sound quality,2,2025-06-19
+speaker_0119,"Treble is harsh, hurts the ears",2,2025-02-21
+speaker_0120,"Bass is weak, very disappointing",3,2025-06-12
+speaker_0121,"Portable and lightweight, easy to carry",5,2025-06-06
+speaker_0122,"Love the sound, great for parties",5,2025-07-06
+speaker_0123,Amazing bass for its size,4,2025-06-10
+speaker_0124,Build quality feels cheap and plastic,2,2025-11-25
+speaker_0125,"Portable and lightweight, easy to carry",4,2025-06-19
+speaker_0126,Build feels sturdy and solid,5,2025-06-06
+speaker_0127,"Volume is amazing, fills the room",4,2025-11-07
+speaker_0128,Sound is muddy at high volume,3,2025-03-13
+speaker_0129,"Battery lasts long, very good",4,2025-11-17
+speaker_0130,"Bass is weak, very disappointing",3,2025-09-17
+speaker_0131,Excellent stereo separation,5,2025-10-30
+speaker_0132,"Battery drains too fast, dies quickly",2,2025-10-06
+speaker_0133,Setup was easy and quick,5,2025-03-18
+speaker_0134,Build quality feels cheap and plastic,3,2025-10-29
+speaker_0135,"Mids are clear, vocals sound great",4,2025-09-14
+speaker_0136,Amazing bass for its size,4,2025-01-06
+speaker_0137,Excellent stereo separation,5,2025-09-21
+speaker_0138,Bluetooth keeps disconnecting,1,2025-10-17
+speaker_0139,"Love the sound, great for parties",5,2025-09-05
+speaker_0140,"Sound quality is excellent, loud and clear",4,2025-09-07
+speaker_0141,Sound is muddy at high volume,1,2025-01-22
+speaker_0142,Setup was easy and quick,5,2025-07-04
+speaker_0143,One speaker went silent after a week,3,2025-01-21
+speaker_0144,"Portable and lightweight, easy to carry",4,2025-09-24
+speaker_0145,"Mids are clear, vocals sound great",5,2025-05-15
+speaker_0146,Excellent stereo separation,4,2025-12-01
+speaker_0147,Too expensive for the sound quality,2,2025-02-09
+speaker_0148,Amazing bass for its size,5,2025-04-25
+speaker_0149,"Portable and lightweight, easy to carry",5,2025-06-26
+speaker_0150,Build feels sturdy and solid,5,2025-01-04
+speaker_0151,"Love the sound, great for parties",5,2025-04-28
+speaker_0152,"Treble is harsh, hurts the ears",1,2025-03-18
+speaker_0153,Speaker crackles at max volume,2,2025-03-02
+speaker_0154,Amazing bass for its size,5,2025-02-28
+speaker_0155,Build feels sturdy and solid,5,2025-10-30
+speaker_0156,Delay between video and audio is bad,1,2025-01-23
+speaker_0157,Too expensive for the sound quality,1,2025-11-19
+speaker_0158,Excellent stereo separation,4,2025-03-27
+speaker_0159,Bluetooth keeps disconnecting,2,2025-07-27
+speaker_0160,Excellent stereo separation,5,2025-12-05
+speaker_0161,"Volume is amazing, fills the room",4,2025-11-07
+speaker_0162,Build feels sturdy and solid,4,2025-07-30
+speaker_0163,Excellent stereo separation,5,2025-04-04
+speaker_0164,Setup was easy and quick,4,2025-12-18
+speaker_0165,One speaker went silent after a week,2,2025-02-05
+speaker_0166,Delay between video and audio is bad,1,2025-01-09
+speaker_0167,Charging port stopped working,2,2025-03-18
+speaker_0168,"Love the sound, great for parties",5,2025-11-11
+speaker_0169,Setup was easy and quick,5,2025-03-02
+speaker_0170,"Treble is harsh, hurts the ears",1,2025-11-05
+speaker_0171,"Sound quality is excellent, loud and clear",5,2025-12-14
+speaker_0172,Setup was easy and quick,5,2025-01-23
+speaker_0173,Amazing bass for its size,4,2025-09-04
+speaker_0174,Amazing bass for its size,4,2025-12-23
+speaker_0175,Amazing bass for its size,4,2025-09-02
+speaker_0176,"Volume is amazing, fills the room",4,2025-10-06
+speaker_0177,Build quality feels cheap and plastic,1,2025-01-04
+speaker_0178,"Volume is amazing, fills the room",5,2025-07-12
+speaker_0179,"Portable and lightweight, easy to carry",5,2025-02-24
+speaker_0180,"Treble is harsh, hurts the ears",2,2025-05-14
+speaker_0181,Amazing bass for its size,5,2025-11-10
+speaker_0182,"Treble is harsh, hurts the ears",1,2025-04-15
+speaker_0183,Microphone quality is poor,2,2025-04-02
+speaker_0184,Charging port stopped working,2,2025-06-07
+speaker_0185,Amazing bass for its size,5,2025-12-04
+speaker_0186,Build quality feels cheap and plastic,1,2025-12-25
+speaker_0187,"Volume is amazing, fills the room",4,2025-07-25
+speaker_0188,Setup was easy and quick,5,2025-12-17
+speaker_0189,"Love the sound, great for parties",4,2025-11-22
+speaker_0190,"Bass is weak, very disappointing",3,2025-08-30
+speaker_0191,Amazing bass for its size,4,2025-05-15
+speaker_0192,"Bass is weak, very disappointing",2,2025-07-16
+speaker_0193,Amazing bass for its size,5,2025-09-24
+speaker_0194,Too expensive for the sound quality,1,2025-03-31
+speaker_0195,Build feels sturdy and solid,4,2025-12-03
+speaker_0196,Setup was easy and quick,4,2025-01-18
+speaker_0197,Setup was easy and quick,5,2025-04-29
+speaker_0198,"Sound quality is excellent, loud and clear",4,2025-12-02
+speaker_0199,Bluetooth keeps disconnecting,1,2025-05-22
+speaker_0200,"Portable and lightweight, easy to carry",5,2025-07-27
+speaker_0201,Setup was easy and quick,4,2025-12-27
+speaker_0202,"Bass is weak, very disappointing",2,2025-10-14
+speaker_0203,"Portable and lightweight, easy to carry",4,2025-05-22
+speaker_0204,Build quality feels cheap and plastic,2,2025-07-26
+speaker_0205,"Mids are clear, vocals sound great",4,2025-09-17
+speaker_0206,"Bass is weak, very disappointing",2,2025-06-24
+speaker_0207,Setup was easy and quick,5,2025-10-03
+speaker_0208,Excellent stereo separation,4,2025-08-15
+speaker_0209,Excellent stereo separation,5,2025-05-05
+speaker_0210,Build feels sturdy and solid,5,2025-10-28
+speaker_0211,Build feels sturdy and solid,4,2025-02-04
+speaker_0212,Microphone quality is poor,3,2025-12-13
+speaker_0213,"Portable and lightweight, easy to carry",5,2025-06-30
+speaker_0214,"Sound quality is excellent, loud and clear",5,2025-05-15
+speaker_0215,"Bass is weak, very disappointing",1,2025-06-25
+speaker_0216,Bluetooth keeps disconnecting,2,2025-07-01
+speaker_0217,Too expensive for the sound quality,1,2025-12-16
+speaker_0218,"Battery lasts long, very good",5,2025-04-13
+speaker_0219,Build quality feels cheap and plastic,3,2025-04-16
+speaker_0220,Build quality feels cheap and plastic,3,2025-07-02
+speaker_0221,"Bass is weak, very disappointing",1,2025-02-10
+speaker_0222,Build feels sturdy and solid,5,2025-10-05
+speaker_0223,Build feels sturdy and solid,4,2025-06-11
+speaker_0224,Excellent stereo separation,5,2025-09-09
+speaker_0225,Microphone quality is poor,3,2025-05-24
+speaker_0226,Microphone quality is poor,2,2025-01-28
+speaker_0227,Amazing bass for its size,5,2025-10-04
+speaker_0228,Speaker crackles at max volume,1,2025-12-18
+speaker_0229,Build feels sturdy and solid,5,2025-12-24
+speaker_0230,"Portable and lightweight, easy to carry",5,2025-01-07
+speaker_0231,Amazing bass for its size,5,2025-06-16
+speaker_0232,Sound is muddy at high volume,1,2025-05-15
+speaker_0233,One speaker went silent after a week,3,2025-06-25
+speaker_0234,One speaker went silent after a week,1,2025-08-03
+speaker_0235,"Portable and lightweight, easy to carry",4,2025-07-25
+speaker_0236,Bluetooth keeps disconnecting,2,2025-10-22
+speaker_0237,"Volume is amazing, fills the room",5,2025-05-01
+speaker_0238,Amazing bass for its size,4,2025-03-18
+speaker_0239,"Sound quality is excellent, loud and clear",4,2025-09-13
+speaker_0240,"Treble is harsh, hurts the ears",2,2025-06-11
+speaker_0241,"Mids are clear, vocals sound great",4,2025-10-18
+speaker_0242,"Bass is weak, very disappointing",2,2025-01-31
+speaker_0243,Sound is muddy at high volume,2,2025-11-19
+speaker_0244,Multipoint connection is buggy,1,2025-07-04
+speaker_0245,Charging port stopped working,3,2025-05-12
+speaker_0246,Delay between video and audio is bad,1,2025-12-14
+speaker_0247,"Battery lasts long, very good",5,2025-11-29
+speaker_0248,"Love the sound, great for parties",5,2025-05-26
+speaker_0249,"Treble is harsh, hurts the ears",2,2025-08-17
+speaker_0250,Amazing bass for its size,5,2025-08-26
+speaker_0251,"Love the sound, great for parties",5,2025-11-24
+speaker_0252,"Portable and lightweight, easy to carry",5,2025-11-10
+speaker_0253,"Volume is amazing, fills the room",4,2025-06-25
+speaker_0254,Speaker crackles at max volume,2,2025-12-30
+speaker_0255,"Treble is harsh, hurts the ears",1,2025-08-16
+speaker_0256,"Portable and lightweight, easy to carry",5,2025-09-24
+speaker_0257,Amazing bass for its size,4,2025-01-12
+speaker_0258,Build quality feels cheap and plastic,2,2025-12-25
+speaker_0259,"Battery lasts long, very good",4,2025-02-22
+speaker_0260,One speaker went silent after a week,2,2025-01-14
+speaker_0261,Setup was easy and quick,5,2025-02-12
+speaker_0262,Too expensive for the sound quality,1,2025-12-02
+speaker_0263,Amazing bass for its size,4,2025-05-07
+speaker_0264,Build feels sturdy and solid,5,2025-03-09
+speaker_0265,"Love the sound, great for parties",4,2025-12-06
+speaker_0266,Speaker crackles at max volume,3,2025-08-28
+speaker_0267,Setup was easy and quick,5,2025-10-08
+speaker_0268,Setup was easy and quick,4,2025-11-02
+speaker_0269,Excellent stereo separation,5,2025-11-24
+speaker_0270,"Mids are clear, vocals sound great",5,2025-09-04
+speaker_0271,"Volume is amazing, fills the room",5,2025-07-07
+speaker_0272,Bluetooth keeps disconnecting,1,2025-01-01
+speaker_0273,"Love the sound, great for parties",4,2025-08-29
+speaker_0274,Build feels sturdy and solid,5,2025-09-02
+speaker_0275,Microphone quality is poor,1,2025-05-30
+speaker_0276,"Sound quality is excellent, loud and clear",5,2025-04-07
+speaker_0277,Charging port stopped working,1,2025-05-08
+speaker_0278,Multipoint connection is buggy,2,2025-07-13
+speaker_0279,"Bass is weak, very disappointing",1,2025-05-03
+speaker_0280,Excellent stereo separation,5,2025-12-17
+speaker_0281,"Treble is harsh, hurts the ears",2,2025-05-18
+speaker_0282,"Bass is weak, very disappointing",1,2025-05-29
+speaker_0283,One speaker went silent after a week,2,2025-05-20
+speaker_0284,Build feels sturdy and solid,4,2025-01-10
+speaker_0285,Charging port stopped working,1,2025-02-22
+speaker_0286,Bluetooth keeps disconnecting,2,2025-01-05
+speaker_0287,Bluetooth keeps disconnecting,1,2025-04-22
+speaker_0288,Sound is muddy at high volume,2,2025-09-13
+speaker_0289,Build feels sturdy and solid,5,2025-01-17
+speaker_0290,Microphone quality is poor,3,2025-01-29
+speaker_0291,Delay between video and audio is bad,1,2025-08-29
+speaker_0292,Sound is muddy at high volume,3,2025-01-07
+speaker_0293,Microphone quality is poor,2,2025-07-17
+speaker_0294,Build feels sturdy and solid,4,2025-01-18
+speaker_0295,Multipoint connection is buggy,2,2025-09-24
+speaker_0296,"Battery lasts long, very good",5,2025-12-15
+speaker_0297,"Portable and lightweight, easy to carry",4,2025-01-22
+speaker_0298,Setup was easy and quick,5,2025-05-10
+speaker_0299,"Mids are clear, vocals sound great",4,2025-01-27
+speaker_0300,"Battery lasts long, very good",5,2025-05-01
+speaker_0301,"Portable and lightweight, easy to carry",4,2025-05-22
+speaker_0302,Amazing bass for its size,5,2025-01-05
+speaker_0303,Excellent stereo separation,5,2025-09-01
+speaker_0304,"Love the sound, great for parties",4,2025-02-15
+speaker_0305,One speaker went silent after a week,1,2025-11-13
+speaker_0306,Microphone quality is poor,2,2025-01-31
+speaker_0307,Bluetooth keeps disconnecting,2,2025-02-24
+speaker_0308,Build quality feels cheap and plastic,1,2025-10-13
+speaker_0309,"Portable and lightweight, easy to carry",5,2025-08-13
+speaker_0310,"Sound quality is excellent, loud and clear",5,2025-07-03
+speaker_0311,"Mids are clear, vocals sound great",5,2025-09-06
+speaker_0312,Setup was easy and quick,4,2025-12-23
+speaker_0313,Excellent stereo separation,4,2025-06-28
+speaker_0314,One speaker went silent after a week,1,2025-11-03
+speaker_0315,Setup was easy and quick,4,2025-09-29
+speaker_0316,Sound is muddy at high volume,3,2025-10-05
+speaker_0317,"Battery drains too fast, dies quickly",2,2025-09-17
+speaker_0318,Bluetooth keeps disconnecting,3,2025-11-14
+speaker_0319,Excellent stereo separation,4,2025-02-02
+speaker_0320,Setup was easy and quick,5,2025-04-08
+speaker_0321,Build feels sturdy and solid,5,2025-03-20
+speaker_0322,"Portable and lightweight, easy to carry",5,2025-06-14
+speaker_0323,Charging port stopped working,2,2025-01-23
+speaker_0324,"Love the sound, great for parties",4,2025-01-17
+speaker_0325,One speaker went silent after a week,1,2025-01-17
+speaker_0326,Amazing bass for its size,5,2025-09-27
+speaker_0327,Excellent stereo separation,4,2025-07-07
+speaker_0328,Multipoint connection is buggy,1,2025-04-17
+speaker_0329,"Volume is amazing, fills the room",5,2025-11-24
+speaker_0330,Charging port stopped working,2,2025-08-01
+speaker_0331,"Sound quality is excellent, loud and clear",5,2025-05-17
+speaker_0332,"Volume is amazing, fills the room",5,2025-02-09
+speaker_0333,Setup was easy and quick,4,2025-04-29
+speaker_0334,"Battery lasts long, very good",4,2025-12-03
+speaker_0335,"Treble is harsh, hurts the ears",3,2025-10-13
+speaker_0336,Amazing bass for its size,5,2025-11-23
+speaker_0337,Build feels sturdy and solid,5,2025-08-07
+speaker_0338,"Love the sound, great for parties",5,2025-10-09
+speaker_0339,Speaker crackles at max volume,2,2025-10-01
+speaker_0340,Build feels sturdy and solid,5,2025-06-11
+speaker_0341,"Portable and lightweight, easy to carry",5,2025-07-31
+speaker_0342,Amazing bass for its size,5,2025-06-15
+speaker_0343,Excellent stereo separation,5,2025-07-12
+speaker_0344,"Mids are clear, vocals sound great",4,2025-08-20
+speaker_0345,Amazing bass for its size,4,2025-01-18
+speaker_0346,Excellent stereo separation,4,2025-03-11
+speaker_0347,"Mids are clear, vocals sound great",4,2025-04-24
+speaker_0348,Speaker crackles at max volume,1,2025-12-20
+speaker_0349,Setup was easy and quick,5,2025-10-20
+speaker_0350,"Love the sound, great for parties",4,2025-08-24
+speaker_0351,Bluetooth keeps disconnecting,1,2025-10-26
+speaker_0352,Sound is muddy at high volume,3,2025-02-17
+speaker_0353,Excellent stereo separation,5,2025-02-09
+speaker_0354,Build feels sturdy and solid,4,2025-12-20
+speaker_0355,"Volume is amazing, fills the room",5,2025-06-03
+speaker_0356,Microphone quality is poor,2,2025-02-10
+speaker_0357,"Portable and lightweight, easy to carry",4,2025-08-11
+speaker_0358,"Bass is weak, very disappointing",3,2025-04-27
+speaker_0359,Excellent stereo separation,5,2025-11-21
+speaker_0360,Amazing bass for its size,4,2025-09-26
+speaker_0361,Charging port stopped working,2,2025-06-17
+speaker_0362,"Battery lasts long, very good",4,2025-12-11
+speaker_0363,Amazing bass for its size,5,2025-11-01
+speaker_0364,"Volume is amazing, fills the room",4,2025-05-29
+speaker_0365,"Love the sound, great for parties",4,2025-02-12
+speaker_0366,"Sound quality is excellent, loud and clear",5,2025-05-15
+speaker_0367,Charging port stopped working,1,2025-12-24
+speaker_0368,Bluetooth keeps disconnecting,2,2025-04-12
+speaker_0369,Excellent stereo separation,4,2025-11-12
+speaker_0370,Setup was easy and quick,4,2025-02-06
+speaker_0371,Delay between video and audio is bad,1,2025-10-22
+speaker_0372,"Treble is harsh, hurts the ears",1,2025-07-07
+speaker_0373,Speaker crackles at max volume,1,2025-12-02
+speaker_0374,Sound is muddy at high volume,1,2025-06-29
+speaker_0375,Build feels sturdy and solid,5,2025-08-14
+speaker_0376,Build quality feels cheap and plastic,1,2025-07-11
+speaker_0377,Multipoint connection is buggy,3,2025-02-27
+speaker_0378,"Battery lasts long, very good",5,2025-03-17
+speaker_0379,"Mids are clear, vocals sound great",4,2025-12-22
+speaker_0380,"Mids are clear, vocals sound great",5,2025-01-12
+speaker_0381,Multipoint connection is buggy,2,2025-04-15
+speaker_0382,"Mids are clear, vocals sound great",5,2025-11-15
+speaker_0383,"Love the sound, great for parties",5,2025-12-09
+speaker_0384,Too expensive for the sound quality,3,2025-09-27
+speaker_0385,Bluetooth keeps disconnecting,1,2025-04-13
+speaker_0386,Excellent stereo separation,4,2025-08-27
+speaker_0387,"Sound quality is excellent, loud and clear",4,2025-12-05
+speaker_0388,"Treble is harsh, hurts the ears",1,2025-02-25
+speaker_0389,"Treble is harsh, hurts the ears",1,2025-07-14
+speaker_0390,"Volume is amazing, fills the room",5,2025-09-06
+speaker_0391,Setup was easy and quick,4,2025-04-12
+speaker_0392,Build feels sturdy and solid,5,2025-12-31
+speaker_0393,Build quality feels cheap and plastic,3,2025-06-06
+speaker_0394,Delay between video and audio is bad,2,2025-01-10
+speaker_0395,Speaker crackles at max volume,1,2025-06-04
+speaker_0396,Charging port stopped working,1,2025-02-01
+speaker_0397,Amazing bass for its size,5,2025-01-16
+speaker_0398,"Mids are clear, vocals sound great",4,2025-06-24
+speaker_0399,"Love the sound, great for parties",4,2025-07-15
+speaker_0400,Excellent stereo separation,5,2025-12-18
+speaker_0401,Build quality feels cheap and plastic,2,2025-08-07
+speaker_0402,Excellent stereo separation,4,2025-10-05
+speaker_0403,"Treble is harsh, hurts the ears",1,2025-10-05
+speaker_0404,"Battery lasts long, very good",5,2025-06-08
+speaker_0405,Setup was easy and quick,5,2025-08-09
+speaker_0406,"Love the sound, great for parties",5,2025-10-17
+speaker_0407,"Portable and lightweight, easy to carry",4,2025-09-30
+speaker_0408,"Volume is amazing, fills the room",4,2025-03-16
+speaker_0409,"Portable and lightweight, easy to carry",5,2025-07-31
+speaker_0410,"Mids are clear, vocals sound great",5,2025-11-23
+speaker_0411,"Mids are clear, vocals sound great",4,2025-04-07
+speaker_0412,Bluetooth keeps disconnecting,1,2025-11-10
+speaker_0413,Excellent stereo separation,5,2025-04-29
+speaker_0414,"Battery lasts long, very good",5,2025-07-03
+speaker_0415,Microphone quality is poor,2,2025-09-15
+speaker_0416,Build feels sturdy and solid,5,2025-07-11
+speaker_0417,Delay between video and audio is bad,2,2025-03-12
+speaker_0418,Build quality feels cheap and plastic,1,2025-01-08
+speaker_0419,Amazing bass for its size,4,2025-12-10
+speaker_0420,"Battery lasts long, very good",4,2025-08-13
+speaker_0421,Build feels sturdy and solid,5,2025-08-23
+speaker_0422,Amazing bass for its size,5,2025-01-22
+speaker_0423,Amazing bass for its size,5,2025-07-21
+speaker_0424,Excellent stereo separation,5,2025-09-26
+speaker_0425,"Sound quality is excellent, loud and clear",5,2025-08-20
+speaker_0426,"Sound quality is excellent, loud and clear",5,2025-05-06
+speaker_0427,Amazing bass for its size,5,2025-01-21
+speaker_0428,Setup was easy and quick,5,2025-01-26
+speaker_0429,One speaker went silent after a week,1,2025-06-05
+speaker_0430,"Mids are clear, vocals sound great",5,2025-08-05
+speaker_0431,"Battery drains too fast, dies quickly",2,2025-03-14
+speaker_0432,Build feels sturdy and solid,4,2025-09-14
+speaker_0433,Microphone quality is poor,2,2025-12-23
+speaker_0434,Amazing bass for its size,5,2025-08-19
+speaker_0435,One speaker went silent after a week,2,2025-12-31
+speaker_0436,Build feels sturdy and solid,4,2025-06-15
+speaker_0437,"Love the sound, great for parties",5,2025-03-05
+speaker_0438,Multipoint connection is buggy,1,2025-07-05
+speaker_0439,Multipoint connection is buggy,1,2025-09-19
+speaker_0440,"Love the sound, great for parties",4,2025-07-14
+speaker_0441,Bluetooth keeps disconnecting,3,2025-10-17
+speaker_0442,"Love the sound, great for parties",4,2025-03-16
+speaker_0443,Multipoint connection is buggy,1,2025-06-07
+speaker_0444,Microphone quality is poor,3,2025-05-28
+speaker_0445,"Volume is amazing, fills the room",5,2025-04-14
+speaker_0446,Microphone quality is poor,1,2025-08-23
+speaker_0447,Build feels sturdy and solid,5,2025-01-03
+speaker_0448,Build feels sturdy and solid,4,2025-10-29
+speaker_0449,Build feels sturdy and solid,5,2025-02-10
+speaker_0450,"Sound quality is excellent, loud and clear",4,2025-10-08
+speaker_0451,"Treble is harsh, hurts the ears",2,2025-04-17
+speaker_0452,Bluetooth keeps disconnecting,1,2025-06-28
+speaker_0453,"Battery drains too fast, dies quickly",2,2025-11-05
+speaker_0454,"Bass is weak, very disappointing",1,2025-08-02
+speaker_0455,"Love the sound, great for parties",5,2025-11-09
+speaker_0456,Excellent stereo separation,5,2025-10-15
+speaker_0457,One speaker went silent after a week,2,2025-07-04
+speaker_0458,"Volume is amazing, fills the room",5,2025-06-15
+speaker_0459,Delay between video and audio is bad,3,2025-08-07
+speaker_0460,"Volume is amazing, fills the room",4,2025-03-10
+speaker_0461,Sound is muddy at high volume,1,2025-07-31
+speaker_0462,"Battery lasts long, very good",5,2025-02-25
+speaker_0463,Setup was easy and quick,5,2025-09-05
+speaker_0464,Excellent stereo separation,5,2025-12-28
+speaker_0465,Too expensive for the sound quality,3,2025-05-13
+speaker_0466,Excellent stereo separation,4,2025-03-08
+speaker_0467,Build feels sturdy and solid,5,2025-11-20
+speaker_0468,"Love the sound, great for parties",5,2025-04-30
+speaker_0469,"Battery lasts long, very good",4,2025-01-13
+speaker_0470,"Volume is amazing, fills the room",5,2025-04-17
+speaker_0471,Amazing bass for its size,5,2025-06-20
+speaker_0472,Microphone quality is poor,2,2025-01-06
+speaker_0473,"Mids are clear, vocals sound great",4,2025-02-04
+speaker_0474,Charging port stopped working,2,2025-01-04
+speaker_0475,Speaker crackles at max volume,1,2025-10-19
+speaker_0476,"Sound quality is excellent, loud and clear",5,2025-04-10
+speaker_0477,Speaker crackles at max volume,3,2025-09-03
+speaker_0478,"Sound quality is excellent, loud and clear",5,2025-09-04
+speaker_0479,One speaker went silent after a week,3,2025-10-02
+speaker_0480,Build feels sturdy and solid,5,2025-07-31
+speaker_0481,"Sound quality is excellent, loud and clear",5,2025-06-03
+speaker_0482,"Portable and lightweight, easy to carry",5,2025-01-10
+speaker_0483,"Treble is harsh, hurts the ears",1,2025-07-01
+speaker_0484,Bluetooth keeps disconnecting,1,2025-01-16
+speaker_0485,Delay between video and audio is bad,2,2025-03-26
+speaker_0486,Amazing bass for its size,4,2025-03-01
+speaker_0487,"Mids are clear, vocals sound great",5,2025-06-11
+speaker_0488,"Mids are clear, vocals sound great",5,2025-09-12
+speaker_0489,"Portable and lightweight, easy to carry",5,2025-06-04
+speaker_0490,Sound is muddy at high volume,1,2025-07-11
+speaker_0491,"Battery lasts long, very good",5,2025-08-16
+speaker_0492,Build feels sturdy and solid,5,2025-03-20
+speaker_0493,One speaker went silent after a week,2,2025-09-26
+speaker_0494,Speaker crackles at max volume,1,2025-02-20
+speaker_0495,Setup was easy and quick,5,2025-03-09
+speaker_0496,"Battery drains too fast, dies quickly",2,2025-09-25
+speaker_0497,Sound is muddy at high volume,3,2025-12-18
+speaker_0498,"Volume is amazing, fills the room",4,2025-01-24
+speaker_0499,Microphone quality is poor,2,2025-06-09
+speaker_0500,Microphone quality is poor,1,2025-04-18
+speaker_0501,Build quality feels cheap and plastic,1,2025-09-30
+speaker_0502,One speaker went silent after a week,2,2025-05-20
+speaker_0503,Sound is muddy at high volume,1,2025-11-15
+speaker_0504,"Volume is amazing, fills the room",4,2025-06-29
+speaker_0505,"Mids are clear, vocals sound great",4,2025-12-27
+speaker_0506,Excellent stereo separation,4,2025-02-06
+speaker_0507,Speaker crackles at max volume,2,2025-01-26
+speaker_0508,One speaker went silent after a week,3,2025-01-26
+speaker_0509,"Battery drains too fast, dies quickly",1,2025-07-20
+speaker_0510,Too expensive for the sound quality,3,2025-11-19
+speaker_0511,Build feels sturdy and solid,5,2025-06-09
+speaker_0512,Build quality feels cheap and plastic,2,2025-12-10
+speaker_0513,"Volume is amazing, fills the room",5,2025-08-27
+speaker_0514,"Volume is amazing, fills the room",5,2025-12-24
+speaker_0515,Build feels sturdy and solid,4,2025-11-26
+speaker_0516,Build feels sturdy and solid,5,2025-04-25
+speaker_0517,Too expensive for the sound quality,1,2025-07-06
+speaker_0518,Multipoint connection is buggy,3,2025-06-19
+speaker_0519,"Portable and lightweight, easy to carry",5,2025-01-16
+speaker_0520,"Bass is weak, very disappointing",1,2025-08-25
+speaker_0521,"Mids are clear, vocals sound great",5,2025-11-06
+speaker_0522,Setup was easy and quick,4,2025-02-24
+speaker_0523,"Treble is harsh, hurts the ears",1,2025-06-04
+speaker_0524,Amazing bass for its size,5,2025-05-03
+speaker_0525,Setup was easy and quick,4,2025-09-04
+speaker_0526,Speaker crackles at max volume,1,2025-12-22
+speaker_0527,Amazing bass for its size,5,2025-06-25
+speaker_0528,"Battery lasts long, very good",4,2025-12-09
+speaker_0529,Multipoint connection is buggy,2,2025-09-07
+speaker_0530,Too expensive for the sound quality,2,2025-10-12
+speaker_0531,One speaker went silent after a week,1,2025-07-27
+speaker_0532,"Bass is weak, very disappointing",2,2025-11-02
+speaker_0533,Amazing bass for its size,4,2025-11-27
+speaker_0534,"Volume is amazing, fills the room",4,2025-03-13
+speaker_0535,"Sound quality is excellent, loud and clear",5,2025-12-05
+speaker_0536,Charging port stopped working,1,2025-11-12
+speaker_0537,"Battery lasts long, very good",4,2025-06-12
+speaker_0538,Microphone quality is poor,3,2025-06-05
+speaker_0539,Amazing bass for its size,5,2025-06-26
+speaker_0540,Excellent stereo separation,4,2025-09-19
+speaker_0541,Bluetooth keeps disconnecting,3,2025-02-01
+speaker_0542,Charging port stopped working,3,2025-01-01
+speaker_0543,"Portable and lightweight, easy to carry",4,2025-05-25
+speaker_0544,"Battery lasts long, very good",5,2025-10-30
+speaker_0545,Speaker crackles at max volume,2,2025-07-27
+speaker_0546,Charging port stopped working,1,2025-03-30
+speaker_0547,"Battery lasts long, very good",5,2025-07-04
+speaker_0548,"Love the sound, great for parties",4,2025-12-10
+speaker_0549,"Battery drains too fast, dies quickly",1,2025-01-09
+speaker_0550,One speaker went silent after a week,2,2025-03-11
+speaker_0551,"Treble is harsh, hurts the ears",3,2025-08-22
+speaker_0552,Excellent stereo separation,5,2025-11-16
+speaker_0553,Charging port stopped working,1,2025-08-19
+speaker_0554,Build quality feels cheap and plastic,1,2025-11-06
+speaker_0555,One speaker went silent after a week,3,2025-05-02
+speaker_0556,"Mids are clear, vocals sound great",5,2025-10-07
+speaker_0557,"Sound quality is excellent, loud and clear",5,2025-10-18
+speaker_0558,"Portable and lightweight, easy to carry",4,2025-09-04
+speaker_0559,"Volume is amazing, fills the room",4,2025-09-27
+speaker_0560,"Mids are clear, vocals sound great",5,2025-02-10
+speaker_0561,Excellent stereo separation,4,2025-08-30
+speaker_0562,"Volume is amazing, fills the room",5,2025-10-04
+speaker_0563,"Mids are clear, vocals sound great",5,2025-06-25
+speaker_0564,"Sound quality is excellent, loud and clear",5,2025-09-20
+speaker_0565,Excellent stereo separation,5,2025-08-04
+speaker_0566,Microphone quality is poor,1,2025-03-27
+speaker_0567,Too expensive for the sound quality,2,2025-10-16
+speaker_0568,"Treble is harsh, hurts the ears",2,2025-03-28
+speaker_0569,"Mids are clear, vocals sound great",5,2025-11-16
+speaker_0570,One speaker went silent after a week,1,2025-09-16
+speaker_0571,Microphone quality is poor,1,2025-03-09
+speaker_0572,"Mids are clear, vocals sound great",5,2025-01-08
+speaker_0573,Excellent stereo separation,4,2025-10-30
+speaker_0574,Build feels sturdy and solid,4,2025-03-31
+speaker_0575,Multipoint connection is buggy,1,2025-04-03
+speaker_0576,"Sound quality is excellent, loud and clear",4,2025-02-13
+speaker_0577,Excellent stereo separation,5,2025-03-20
+speaker_0578,Amazing bass for its size,5,2025-05-02
+speaker_0579,"Love the sound, great for parties",4,2025-06-26
+speaker_0580,Sound is muddy at high volume,2,2025-03-01
+speaker_0581,One speaker went silent after a week,1,2025-06-04
+speaker_0582,Setup was easy and quick,4,2025-12-16
+speaker_0583,Build feels sturdy and solid,4,2025-09-29
+speaker_0584,"Sound quality is excellent, loud and clear",4,2025-08-18
+speaker_0585,Speaker crackles at max volume,3,2025-12-16
+speaker_0586,"Volume is amazing, fills the room",5,2025-11-23
+speaker_0587,Delay between video and audio is bad,2,2025-11-30
+speaker_0588,"Portable and lightweight, easy to carry",4,2025-02-20
+speaker_0589,Too expensive for the sound quality,1,2025-12-12
+speaker_0590,Excellent stereo separation,5,2025-09-24
+speaker_0591,Multipoint connection is buggy,3,2025-06-10
+speaker_0592,"Sound quality is excellent, loud and clear",5,2025-01-07
+speaker_0593,Charging port stopped working,1,2025-08-17
+speaker_0594,Multipoint connection is buggy,1,2025-04-09
+speaker_0595,Too expensive for the sound quality,1,2025-11-01
+speaker_0596,"Battery lasts long, very good",5,2025-11-23
+speaker_0597,"Bass is weak, very disappointing",1,2025-11-06
+speaker_0598,"Treble is harsh, hurts the ears",2,2025-11-28
+speaker_0599,"Love the sound, great for parties",5,2025-12-23
+speaker_0600,Sound is muddy at high volume,2,2025-02-08
+speaker_0601,"Mids are clear, vocals sound great",5,2025-12-21
+speaker_0602,"Portable and lightweight, easy to carry",4,2025-02-07
+speaker_0603,"Battery drains too fast, dies quickly",1,2025-06-20
+speaker_0604,"Mids are clear, vocals sound great",5,2025-05-16
+speaker_0605,"Bass is weak, very disappointing",2,2025-04-13
+speaker_0606,"Love the sound, great for parties",5,2025-02-25
+speaker_0607,Microphone quality is poor,1,2025-11-11
+speaker_0608,Build feels sturdy and solid,5,2025-02-22
+speaker_0609,"Bass is weak, very disappointing",2,2025-05-09
+speaker_0610,"Sound quality is excellent, loud and clear",5,2025-03-18
+speaker_0611,"Sound quality is excellent, loud and clear",5,2025-12-07
+speaker_0612,Bluetooth keeps disconnecting,2,2025-07-20
+speaker_0613,Setup was easy and quick,5,2025-09-09
+speaker_0614,Amazing bass for its size,5,2025-02-05
+speaker_0615,"Sound quality is excellent, loud and clear",4,2025-12-19
+speaker_0616,Build feels sturdy and solid,4,2025-10-02
+speaker_0617,"Portable and lightweight, easy to carry",4,2025-06-05
+speaker_0618,"Treble is harsh, hurts the ears",3,2025-11-28
+speaker_0619,Charging port stopped working,3,2025-06-24
+speaker_0620,One speaker went silent after a week,2,2025-05-29
+speaker_0621,"Love the sound, great for parties",5,2025-07-16
+speaker_0622,"Mids are clear, vocals sound great",5,2025-02-24
+speaker_0623,"Portable and lightweight, easy to carry",5,2025-11-20
+speaker_0624,"Battery lasts long, very good",4,2025-04-09
+speaker_0625,Too expensive for the sound quality,1,2025-07-19
+speaker_0626,Charging port stopped working,2,2025-09-13
+speaker_0627,Build feels sturdy and solid,5,2025-01-09
+speaker_0628,"Battery drains too fast, dies quickly",1,2025-01-22
+speaker_0629,Build quality feels cheap and plastic,3,2025-12-08
+speaker_0630,Setup was easy and quick,4,2025-10-24
+speaker_0631,"Bass is weak, very disappointing",1,2025-03-14
+speaker_0632,"Sound quality is excellent, loud and clear",5,2025-11-13
+speaker_0633,Multipoint connection is buggy,2,2025-01-08
+speaker_0634,"Battery drains too fast, dies quickly",3,2025-02-19
+speaker_0635,"Love the sound, great for parties",5,2025-02-02
+speaker_0636,"Volume is amazing, fills the room",4,2025-11-01
+speaker_0637,"Battery lasts long, very good",4,2025-04-14
+speaker_0638,Amazing bass for its size,4,2025-12-17
+speaker_0639,"Love the sound, great for parties",4,2025-04-20
+speaker_0640,Excellent stereo separation,4,2025-02-02
+speaker_0641,Bluetooth keeps disconnecting,2,2025-03-28
+speaker_0642,Setup was easy and quick,4,2025-05-05
+speaker_0643,"Sound quality is excellent, loud and clear",4,2025-11-20
+speaker_0644,"Love the sound, great for parties",4,2025-09-07
+speaker_0645,"Battery drains too fast, dies quickly",1,2025-02-15
+speaker_0646,Excellent stereo separation,5,2025-08-02
+speaker_0647,Build feels sturdy and solid,5,2025-04-16
+speaker_0648,Sound is muddy at high volume,2,2025-07-30
+speaker_0649,Bluetooth keeps disconnecting,2,2025-01-20
+speaker_0650,Build feels sturdy and solid,5,2025-02-15
+speaker_0651,"Mids are clear, vocals sound great",4,2025-01-03
+speaker_0652,"Battery lasts long, very good",4,2025-09-29
+speaker_0653,Excellent stereo separation,4,2025-10-04
+speaker_0654,Build feels sturdy and solid,5,2025-12-04
+speaker_0655,"Battery drains too fast, dies quickly",1,2025-03-18
+speaker_0656,Build feels sturdy and solid,5,2025-03-23
+speaker_0657,"Sound quality is excellent, loud and clear",4,2025-07-06
+speaker_0658,Delay between video and audio is bad,1,2025-11-12
+speaker_0659,Build feels sturdy and solid,4,2025-01-27
+speaker_0660,"Love the sound, great for parties",4,2025-01-15
+speaker_0661,"Volume is amazing, fills the room",4,2025-05-01
+speaker_0662,Excellent stereo separation,5,2025-08-03
+speaker_0663,"Treble is harsh, hurts the ears",3,2025-04-28
+speaker_0664,"Portable and lightweight, easy to carry",4,2025-05-02
+speaker_0665,"Battery lasts long, very good",4,2025-04-23
+speaker_0666,Too expensive for the sound quality,2,2025-08-12
+speaker_0667,Too expensive for the sound quality,2,2025-07-18
+speaker_0668,One speaker went silent after a week,2,2025-11-20
+speaker_0669,Sound is muddy at high volume,1,2025-03-07
+speaker_0670,Too expensive for the sound quality,1,2025-03-11
+speaker_0671,One speaker went silent after a week,2,2025-03-29
+speaker_0672,"Battery lasts long, very good",5,2025-11-06
+speaker_0673,Microphone quality is poor,2,2025-11-10
+speaker_0674,Excellent stereo separation,5,2025-04-28
+speaker_0675,Charging port stopped working,2,2025-04-21
+speaker_0676,Build feels sturdy and solid,4,2025-08-08
+speaker_0677,"Battery lasts long, very good",4,2025-08-11
+speaker_0678,Excellent stereo separation,5,2025-10-21
+speaker_0679,Amazing bass for its size,5,2025-01-21
+speaker_0680,Setup was easy and quick,4,2025-09-29
+speaker_0681,Microphone quality is poor,2,2025-02-20
+speaker_0682,"Battery lasts long, very good",4,2025-01-07
+speaker_0683,Amazing bass for its size,5,2025-03-09
+speaker_0684,Build quality feels cheap and plastic,2,2025-02-16
+speaker_0685,"Treble is harsh, hurts the ears",1,2025-12-27
+speaker_0686,Excellent stereo separation,5,2025-01-13
+speaker_0687,Build feels sturdy and solid,5,2025-12-27
+speaker_0688,Microphone quality is poor,3,2025-11-17
+speaker_0689,"Sound quality is excellent, loud and clear",5,2025-02-06
+speaker_0690,Multipoint connection is buggy,1,2025-01-17
+speaker_0691,Microphone quality is poor,1,2025-11-10
+speaker_0692,"Battery lasts long, very good",5,2025-02-11
+speaker_0693,"Portable and lightweight, easy to carry",5,2025-01-29
+speaker_0694,"Portable and lightweight, easy to carry",5,2025-02-26
+speaker_0695,One speaker went silent after a week,2,2025-07-07
+speaker_0696,"Treble is harsh, hurts the ears",2,2025-02-04
+speaker_0697,"Battery lasts long, very good",4,2025-06-21
+speaker_0698,"Bass is weak, very disappointing",2,2025-10-25
+speaker_0699,"Battery lasts long, very good",5,2025-04-26
+speaker_0700,Sound is muddy at high volume,2,2025-08-05
+speaker_0701,"Bass is weak, very disappointing",1,2025-08-20
+speaker_0702,Setup was easy and quick,5,2025-08-29
+speaker_0703,Setup was easy and quick,5,2025-08-20
+speaker_0704,"Volume is amazing, fills the room",4,2025-08-23
+speaker_0705,Delay between video and audio is bad,3,2025-05-28
+speaker_0706,"Volume is amazing, fills the room",4,2025-05-22
+speaker_0707,Bluetooth keeps disconnecting,2,2025-04-15
+speaker_0708,"Sound quality is excellent, loud and clear",4,2025-12-16
+speaker_0709,"Love the sound, great for parties",5,2025-08-04
+speaker_0710,"Sound quality is excellent, loud and clear",4,2025-02-02
+speaker_0711,Microphone quality is poor,1,2025-09-24
+speaker_0712,Amazing bass for its size,5,2025-12-02
+speaker_0713,"Portable and lightweight, easy to carry",5,2025-12-07
+speaker_0714,Setup was easy and quick,5,2025-06-05
+speaker_0715,"Mids are clear, vocals sound great",4,2025-05-14
+speaker_0716,Speaker crackles at max volume,3,2025-01-25
+speaker_0717,Sound is muddy at high volume,2,2025-03-27
+speaker_0718,"Love the sound, great for parties",5,2025-05-27
+speaker_0719,Bluetooth keeps disconnecting,3,2025-12-21
+speaker_0720,"Love the sound, great for parties",4,2025-03-01
+speaker_0721,Speaker crackles at max volume,2,2025-08-14
+speaker_0722,Bluetooth keeps disconnecting,1,2025-12-29
+speaker_0723,Speaker crackles at max volume,3,2025-03-17
+speaker_0724,Charging port stopped working,3,2025-10-01
+speaker_0725,"Battery drains too fast, dies quickly",1,2025-09-13
+speaker_0726,Build feels sturdy and solid,5,2025-03-21
+speaker_0727,Multipoint connection is buggy,2,2025-09-17
+speaker_0728,Multipoint connection is buggy,1,2025-05-29
+speaker_0729,Excellent stereo separation,5,2025-10-17
+speaker_0730,Build feels sturdy and solid,4,2025-02-27
+speaker_0731,"Sound quality is excellent, loud and clear",4,2025-10-10
+speaker_0732,"Battery drains too fast, dies quickly",1,2025-04-23
+speaker_0733,"Volume is amazing, fills the room",4,2025-11-08
+speaker_0734,Excellent stereo separation,5,2025-05-23
+speaker_0735,"Bass is weak, very disappointing",2,2025-08-17
+speaker_0736,"Volume is amazing, fills the room",5,2025-07-21
+speaker_0737,Speaker crackles at max volume,2,2025-09-19
+speaker_0738,"Portable and lightweight, easy to carry",4,2025-08-07
+speaker_0739,Speaker crackles at max volume,1,2025-06-26
+speaker_0740,One speaker went silent after a week,3,2025-02-14
+speaker_0741,One speaker went silent after a week,2,2025-08-01
+speaker_0742,"Mids are clear, vocals sound great",4,2025-08-06
+speaker_0743,Amazing bass for its size,4,2025-10-28
+speaker_0744,"Love the sound, great for parties",4,2025-09-01
+speaker_0745,Setup was easy and quick,5,2025-02-03
+speaker_0746,Excellent stereo separation,5,2025-02-15
+speaker_0747,"Treble is harsh, hurts the ears",3,2025-08-01
+speaker_0748,One speaker went silent after a week,2,2025-03-12
+speaker_0749,Delay between video and audio is bad,1,2025-09-09
+speaker_0750,Sound is muddy at high volume,3,2025-06-05
+speaker_0751,Build feels sturdy and solid,4,2025-01-02
+speaker_0752,Sound is muddy at high volume,3,2025-11-22
+speaker_0753,"Mids are clear, vocals sound great",5,2025-09-09
+speaker_0754,"Battery lasts long, very good",4,2025-05-22
+speaker_0755,"Volume is amazing, fills the room",5,2025-07-05
+speaker_0756,Excellent stereo separation,5,2025-05-13
+speaker_0757,Build feels sturdy and solid,5,2025-03-03
+speaker_0758,Multipoint connection is buggy,2,2025-05-13
+speaker_0759,"Battery drains too fast, dies quickly",1,2025-08-25
+speaker_0760,"Love the sound, great for parties",4,2025-01-28
+speaker_0761,Delay between video and audio is bad,2,2025-07-02
+speaker_0762,Sound is muddy at high volume,2,2025-02-09
+speaker_0763,"Love the sound, great for parties",5,2025-11-03
+speaker_0764,Setup was easy and quick,4,2025-06-11
+speaker_0765,"Mids are clear, vocals sound great",4,2025-12-24
+speaker_0766,"Volume is amazing, fills the room",5,2025-06-30
+speaker_0767,"Sound quality is excellent, loud and clear",4,2025-05-25
+speaker_0768,One speaker went silent after a week,1,2025-03-25
+speaker_0769,Bluetooth keeps disconnecting,2,2025-04-07
+speaker_0770,Setup was easy and quick,5,2025-09-27
+speaker_0771,Setup was easy and quick,5,2025-02-28
+speaker_0772,"Bass is weak, very disappointing",1,2025-03-09
+speaker_0773,Build feels sturdy and solid,4,2025-12-20
+speaker_0774,One speaker went silent after a week,3,2025-11-02
+speaker_0775,"Portable and lightweight, easy to carry",4,2025-06-05
+speaker_0776,"Bass is weak, very disappointing",1,2025-12-22
+speaker_0777,Build quality feels cheap and plastic,1,2025-04-18
+speaker_0778,"Bass is weak, very disappointing",1,2025-02-27
+speaker_0779,Microphone quality is poor,2,2025-08-09
+speaker_0780,"Bass is weak, very disappointing",1,2025-12-04
+speaker_0781,"Sound quality is excellent, loud and clear",5,2025-05-10
+speaker_0782,Sound is muddy at high volume,2,2025-02-19
+speaker_0783,Excellent stereo separation,4,2025-04-13
+speaker_0784,Speaker crackles at max volume,1,2025-03-16
+speaker_0785,"Mids are clear, vocals sound great",5,2025-06-28
+speaker_0786,Charging port stopped working,2,2025-11-10
+speaker_0787,Too expensive for the sound quality,1,2025-10-24
+speaker_0788,Setup was easy and quick,4,2025-04-09
+speaker_0789,"Love the sound, great for parties",5,2025-10-03
+speaker_0790,Multipoint connection is buggy,1,2025-04-20
+speaker_0791,Build feels sturdy and solid,4,2025-10-29
+speaker_0792,"Treble is harsh, hurts the ears",3,2025-04-03
+speaker_0793,Amazing bass for its size,5,2025-09-21
+speaker_0794,"Bass is weak, very disappointing",2,2025-06-10
+speaker_0795,"Bass is weak, very disappointing",2,2025-09-11
+speaker_0796,"Mids are clear, vocals sound great",5,2025-01-21
+speaker_0797,One speaker went silent after a week,1,2025-05-26
+speaker_0798,"Mids are clear, vocals sound great",5,2025-08-16
+speaker_0799,Delay between video and audio is bad,1,2025-08-08
+speaker_0800,"Bass is weak, very disappointing",3,2025-09-01
+speaker_0801,"Portable and lightweight, easy to carry",4,2025-12-12
+speaker_0802,"Volume is amazing, fills the room",4,2025-09-25
+speaker_0803,"Volume is amazing, fills the room",4,2025-07-22
+speaker_0804,Too expensive for the sound quality,3,2025-03-28
+speaker_0805,Build quality feels cheap and plastic,1,2025-11-01
+speaker_0806,Amazing bass for its size,4,2025-08-06
+speaker_0807,"Mids are clear, vocals sound great",5,2025-10-25
+speaker_0808,Amazing bass for its size,4,2025-12-08
+speaker_0809,Amazing bass for its size,5,2025-09-19
+speaker_0810,Microphone quality is poor,2,2025-03-04
+speaker_0811,One speaker went silent after a week,1,2025-03-10
+speaker_0812,Multipoint connection is buggy,1,2025-02-04
+speaker_0813,"Sound quality is excellent, loud and clear",5,2025-07-15
+speaker_0814,"Portable and lightweight, easy to carry",4,2025-11-15
+speaker_0815,"Volume is amazing, fills the room",5,2025-09-24
+speaker_0816,Build feels sturdy and solid,4,2025-12-05
+speaker_0817,Setup was easy and quick,4,2025-06-25
+speaker_0818,Setup was easy and quick,5,2025-01-17
+speaker_0819,"Volume is amazing, fills the room",4,2025-06-11
+speaker_0820,Build feels sturdy and solid,5,2025-01-17
+speaker_0821,"Treble is harsh, hurts the ears",3,2025-06-05
+speaker_0822,"Love the sound, great for parties",5,2025-03-10
+speaker_0823,Delay between video and audio is bad,2,2025-02-26
+speaker_0824,Build feels sturdy and solid,5,2025-12-17
+speaker_0825,Build feels sturdy and solid,5,2025-03-22
+speaker_0826,Amazing bass for its size,4,2025-10-30
+speaker_0827,Excellent stereo separation,5,2025-05-26
+speaker_0828,"Battery drains too fast, dies quickly",2,2025-03-07
+speaker_0829,"Portable and lightweight, easy to carry",5,2025-10-26
+speaker_0830,"Treble is harsh, hurts the ears",1,2025-02-19
+speaker_0831,"Portable and lightweight, easy to carry",5,2025-01-29
+speaker_0832,"Battery lasts long, very good",4,2025-06-09
+speaker_0833,"Volume is amazing, fills the room",5,2025-02-28
+speaker_0834,"Battery drains too fast, dies quickly",2,2025-01-20
+speaker_0835,Amazing bass for its size,5,2025-08-04
+speaker_0836,Multipoint connection is buggy,2,2025-01-12
+speaker_0837,Amazing bass for its size,5,2025-06-15
+speaker_0838,Build feels sturdy and solid,4,2025-12-12
+speaker_0839,One speaker went silent after a week,2,2025-12-08
+speaker_0840,Too expensive for the sound quality,1,2025-08-12
+speaker_0841,"Treble is harsh, hurts the ears",3,2025-02-08
+speaker_0842,Setup was easy and quick,4,2025-05-16
+speaker_0843,Too expensive for the sound quality,1,2025-04-26
+speaker_0844,"Volume is amazing, fills the room",5,2025-10-24
+speaker_0845,Speaker crackles at max volume,1,2025-10-18
+speaker_0846,Build feels sturdy and solid,5,2025-06-27
+speaker_0847,"Mids are clear, vocals sound great",5,2025-06-03
+speaker_0848,Setup was easy and quick,4,2025-08-01
+speaker_0849,Too expensive for the sound quality,2,2025-12-10
+speaker_0850,"Love the sound, great for parties",5,2025-11-18
+speaker_0851,"Love the sound, great for parties",5,2025-04-20
+speaker_0852,Build feels sturdy and solid,4,2025-11-23
+speaker_0853,Excellent stereo separation,5,2025-08-11
+speaker_0854,"Sound quality is excellent, loud and clear",5,2025-07-06
+speaker_0855,"Battery lasts long, very good",4,2025-12-17
+speaker_0856,Amazing bass for its size,5,2025-02-02
+speaker_0857,Amazing bass for its size,4,2025-05-27
+speaker_0858,"Mids are clear, vocals sound great",5,2025-05-01
+speaker_0859,"Bass is weak, very disappointing",1,2025-01-15
+speaker_0860,Sound is muddy at high volume,2,2025-10-14
+speaker_0861,Amazing bass for its size,5,2025-01-19
+speaker_0862,Sound is muddy at high volume,1,2025-05-13
+speaker_0863,"Mids are clear, vocals sound great",5,2025-04-01
+speaker_0864,"Sound quality is excellent, loud and clear",5,2025-09-06
+speaker_0865,"Sound quality is excellent, loud and clear",5,2025-02-12
+speaker_0866,Sound is muddy at high volume,3,2025-07-28
+speaker_0867,"Volume is amazing, fills the room",4,2025-03-13
+speaker_0868,Too expensive for the sound quality,2,2025-03-03
+speaker_0869,Excellent stereo separation,5,2025-09-26
+speaker_0870,"Bass is weak, very disappointing",1,2025-03-04
+speaker_0871,"Portable and lightweight, easy to carry",4,2025-10-27
+speaker_0872,"Battery lasts long, very good",5,2025-04-22
+speaker_0873,Bluetooth keeps disconnecting,1,2025-05-21
+speaker_0874,"Mids are clear, vocals sound great",5,2025-01-29
+speaker_0875,"Portable and lightweight, easy to carry",5,2025-02-27
+speaker_0876,Delay between video and audio is bad,2,2025-05-07
+speaker_0877,"Love the sound, great for parties",4,2025-07-08
+speaker_0878,"Sound quality is excellent, loud and clear",5,2025-11-07
+speaker_0879,Multipoint connection is buggy,2,2025-01-28
+speaker_0880,"Battery lasts long, very good",4,2025-07-16
+speaker_0881,Multipoint connection is buggy,1,2025-12-17
+speaker_0882,Build quality feels cheap and plastic,3,2025-07-18
+speaker_0883,Delay between video and audio is bad,3,2025-05-11
+speaker_0884,Microphone quality is poor,1,2025-04-18
+speaker_0885,"Love the sound, great for parties",5,2025-11-20
+speaker_0886,Microphone quality is poor,2,2025-07-28
+speaker_0887,"Mids are clear, vocals sound great",5,2025-09-09
+speaker_0888,Amazing bass for its size,5,2025-06-20
+speaker_0889,"Volume is amazing, fills the room",5,2025-12-24
+speaker_0890,"Bass is weak, very disappointing",1,2025-11-05
+speaker_0891,Setup was easy and quick,5,2025-08-21
+speaker_0892,"Sound quality is excellent, loud and clear",5,2025-04-05
+speaker_0893,"Love the sound, great for parties",4,2025-04-13
+speaker_0894,"Portable and lightweight, easy to carry",5,2025-02-26
+speaker_0895,Charging port stopped working,2,2025-11-29
+speaker_0896,Excellent stereo separation,5,2025-06-13
+speaker_0897,"Love the sound, great for parties",4,2025-12-18
+speaker_0898,"Portable and lightweight, easy to carry",5,2025-04-12
+speaker_0899,Speaker crackles at max volume,1,2025-07-13
+speaker_0900,Excellent stereo separation,4,2025-01-12
+speaker_0901,Excellent stereo separation,5,2025-02-15
+speaker_0902,"Battery lasts long, very good",4,2025-03-28
+speaker_0903,Too expensive for the sound quality,1,2025-05-14
+speaker_0904,Speaker crackles at max volume,1,2025-10-18
+speaker_0905,Multipoint connection is buggy,2,2025-08-21
+speaker_0906,Build feels sturdy and solid,4,2025-04-15
+speaker_0907,Microphone quality is poor,1,2025-09-11
+speaker_0908,Delay between video and audio is bad,3,2025-11-04
+speaker_0909,Sound is muddy at high volume,2,2025-04-07
+speaker_0910,Delay between video and audio is bad,2,2025-01-15
+speaker_0911,Sound is muddy at high volume,1,2025-08-19
+speaker_0912,"Portable and lightweight, easy to carry",5,2025-11-28
+speaker_0913,"Sound quality is excellent, loud and clear",5,2025-06-15
+speaker_0914,Amazing bass for its size,5,2025-07-16
+speaker_0915,Excellent stereo separation,4,2025-02-18
+speaker_0916,"Sound quality is excellent, loud and clear",4,2025-05-01
+speaker_0917,"Portable and lightweight, easy to carry",5,2025-12-10
+speaker_0918,Excellent stereo separation,5,2025-01-24
+speaker_0919,Charging port stopped working,2,2025-06-04
+speaker_0920,"Portable and lightweight, easy to carry",4,2025-10-14
+speaker_0921,Bluetooth keeps disconnecting,1,2025-09-15
+speaker_0922,"Portable and lightweight, easy to carry",5,2025-03-09
+speaker_0923,Multipoint connection is buggy,2,2025-03-14
+speaker_0924,Speaker crackles at max volume,1,2025-03-07
+speaker_0925,"Mids are clear, vocals sound great",5,2025-08-09
+speaker_0926,Sound is muddy at high volume,2,2025-05-16
+speaker_0927,Amazing bass for its size,5,2025-06-11
+speaker_0928,Build feels sturdy and solid,5,2025-03-19
+speaker_0929,Build feels sturdy and solid,4,2025-03-18
+speaker_0930,Bluetooth keeps disconnecting,1,2025-05-14
+speaker_0931,One speaker went silent after a week,1,2025-09-11
+speaker_0932,Speaker crackles at max volume,3,2025-10-15
+speaker_0933,Build feels sturdy and solid,4,2025-03-17
+speaker_0934,"Bass is weak, very disappointing",1,2025-05-26
+speaker_0935,Bluetooth keeps disconnecting,2,2025-05-20
+speaker_0936,Excellent stereo separation,4,2025-01-03
+speaker_0937,Excellent stereo separation,4,2025-02-09
+speaker_0938,One speaker went silent after a week,2,2025-06-18
+speaker_0939,"Treble is harsh, hurts the ears",3,2025-03-04
+speaker_0940,Too expensive for the sound quality,3,2025-02-24
+speaker_0941,"Love the sound, great for parties",4,2025-08-24
+speaker_0942,Build feels sturdy and solid,5,2025-05-18
+speaker_0943,"Sound quality is excellent, loud and clear",4,2025-01-23
+speaker_0944,Build feels sturdy and solid,4,2025-10-19
+speaker_0945,"Battery drains too fast, dies quickly",3,2025-05-25
+speaker_0946,"Battery drains too fast, dies quickly",2,2025-10-08
+speaker_0947,Amazing bass for its size,4,2025-05-11
+speaker_0948,Microphone quality is poor,3,2025-02-15
+speaker_0949,Build quality feels cheap and plastic,1,2025-07-26
+speaker_0950,Microphone quality is poor,3,2025-03-20
+speaker_0951,One speaker went silent after a week,3,2025-06-08
+speaker_0952,Excellent stereo separation,4,2025-12-07
+speaker_0953,Speaker crackles at max volume,2,2025-09-08
+speaker_0954,Amazing bass for its size,5,2025-10-16
+speaker_0955,"Volume is amazing, fills the room",5,2025-07-08
+speaker_0956,Amazing bass for its size,5,2025-02-17
+speaker_0957,Speaker crackles at max volume,3,2025-12-13
+speaker_0958,"Treble is harsh, hurts the ears",2,2025-09-11
+speaker_0959,Setup was easy and quick,4,2025-08-28
+speaker_0960,Build feels sturdy and solid,4,2025-03-07
+speaker_0961,"Mids are clear, vocals sound great",5,2025-09-25
+speaker_0962,Excellent stereo separation,4,2025-02-09
+speaker_0963,Setup was easy and quick,4,2025-08-06
+speaker_0964,One speaker went silent after a week,2,2025-10-19
+speaker_0965,"Portable and lightweight, easy to carry",4,2025-02-11
+speaker_0966,"Sound quality is excellent, loud and clear",4,2025-12-05
+speaker_0967,"Love the sound, great for parties",5,2025-01-24
+speaker_0968,Multipoint connection is buggy,1,2025-10-28
+speaker_0969,Build feels sturdy and solid,5,2025-05-16
+speaker_0970,Microphone quality is poor,1,2025-04-05
+speaker_0971,Too expensive for the sound quality,1,2025-12-11
+speaker_0972,Charging port stopped working,1,2025-07-22
+speaker_0973,Bluetooth keeps disconnecting,2,2025-08-24
+speaker_0974,Excellent stereo separation,5,2025-06-05
+speaker_0975,Excellent stereo separation,4,2025-12-11
+speaker_0976,Amazing bass for its size,5,2025-02-14
+speaker_0977,"Battery drains too fast, dies quickly",1,2025-01-09
+speaker_0978,"Battery lasts long, very good",5,2025-04-18
+speaker_0979,"Love the sound, great for parties",5,2025-08-12
+speaker_0980,Setup was easy and quick,4,2025-06-04
+speaker_0981,"Love the sound, great for parties",5,2025-01-12
+speaker_0982,Bluetooth keeps disconnecting,2,2025-08-16
+speaker_0983,Build feels sturdy and solid,4,2025-08-19
+speaker_0984,"Battery lasts long, very good",4,2025-07-20
+speaker_0985,"Battery drains too fast, dies quickly",1,2025-08-10
+speaker_0986,Build feels sturdy and solid,5,2025-11-02
+speaker_0987,"Mids are clear, vocals sound great",4,2025-07-24
+speaker_0988,Excellent stereo separation,5,2025-12-14
+speaker_0989,Build feels sturdy and solid,4,2025-02-01
+speaker_0990,Amazing bass for its size,5,2025-10-11
+speaker_0991,"Treble is harsh, hurts the ears",1,2025-08-31
+speaker_0992,Too expensive for the sound quality,3,2025-06-27
+speaker_0993,Amazing bass for its size,4,2025-05-28
+speaker_0994,Build feels sturdy and solid,4,2025-04-29
+speaker_0995,Excellent stereo separation,5,2025-06-23
+speaker_0996,Build feels sturdy and solid,4,2025-05-31
+speaker_0997,Amazing bass for its size,5,2025-12-11
+speaker_0998,"Portable and lightweight, easy to carry",5,2025-03-24
+speaker_0999,"Mids are clear, vocals sound great",5,2025-02-14
+speaker_1000,"Love the sound, great for parties",4,2025-03-22

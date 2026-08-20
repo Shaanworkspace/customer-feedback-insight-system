@@ -1,0 +1,1001 @@
+review_id,review_text,rating,date
+laptop_0001,"Great performance, everything runs smoothly",5,2025-05-06
+laptop_0002,Wifi keeps disconnecting frequently,1,2025-10-07
+laptop_0003,"Delivery was very late, took 2 weeks",1,2025-02-17
+laptop_0004,Touchpad is unresponsive and jittery,2,2025-10-15
+laptop_0005,The hinge broke after 3 months,2,2025-08-03
+laptop_0006,Price is too high for the specs,1,2025-01-04
+laptop_0007,"Excellent build quality, feels premium",5,2025-06-24
+laptop_0008,"Screen flickers sometimes, annoying",3,2025-06-22
+laptop_0009,"Delivery was very late, took 2 weeks",1,2025-06-26
+laptop_0010,"Great performance, everything runs smoothly",5,2025-10-02
+laptop_0011,"Delivery was very late, took 2 weeks",1,2025-05-31
+laptop_0012,Trackpad gestures work perfectly,5,2025-07-05
+laptop_0013,"Love this laptop, fast and lightweight",4,2025-04-27
+laptop_0014,"Love this laptop, fast and lightweight",5,2025-02-21
+laptop_0015,Keyboard feels cheap and keys stick,2,2025-07-06
+laptop_0016,Fan is loud and noisy while charging,1,2025-05-17
+laptop_0017,"Love this laptop, fast and lightweight",5,2025-03-29
+laptop_0018,Screen colors are vivid and sharp,4,2025-07-14
+laptop_0019,The hinge broke after 3 months,2,2025-04-23
+laptop_0020,"Great performance, everything runs smoothly",4,2025-01-17
+laptop_0021,"Great value for money, worth it",4,2025-04-19
+laptop_0022,Trackpad gestures work perfectly,5,2025-06-11
+laptop_0023,Keyboard feels cheap and keys stick,1,2025-11-26
+laptop_0024,"Boots up in seconds, very snappy",4,2025-10-15
+laptop_0025,Trackpad gestures work perfectly,5,2025-10-26
+laptop_0026,"Screen flickers sometimes, annoying",3,2025-03-12
+laptop_0027,"Love this laptop, fast and lightweight",5,2025-02-26
+laptop_0028,"Screen is too dim, hard to see outdoors",2,2025-08-05
+laptop_0029,"Great value for money, worth it",4,2025-08-28
+laptop_0030,"Display is great, crisp and bright",5,2025-01-06
+laptop_0031,"Love this laptop, fast and lightweight",5,2025-10-02
+laptop_0032,"Fast charging works great, very handy",4,2025-08-11
+laptop_0033,"Battery drains very fast, dies in 2 hours",3,2025-05-15
+laptop_0034,"Excellent build quality, feels premium",5,2025-02-24
+laptop_0035,"Boots up in seconds, very snappy",5,2025-09-17
+laptop_0036,"Excellent build quality, feels premium",4,2025-03-24
+laptop_0037,"Display is great, crisp and bright",5,2025-11-03
+laptop_0038,"Battery drains very fast, dies in 2 hours",1,2025-07-05
+laptop_0039,"Boots up in seconds, very snappy",4,2025-05-04
+laptop_0040,"Love this laptop, fast and lightweight",4,2025-09-06
+laptop_0041,"Display is great, crisp and bright",5,2025-03-07
+laptop_0042,"Display is great, crisp and bright",4,2025-09-28
+laptop_0043,"Great value for money, worth it",5,2025-10-04
+laptop_0044,Screen colors are vivid and sharp,5,2025-07-24
+laptop_0045,"Fast charging works great, very handy",5,2025-09-22
+laptop_0046,Screen colors are vivid and sharp,4,2025-06-23
+laptop_0047,Touchpad is unresponsive and jittery,1,2025-04-23
+laptop_0048,Wifi keeps disconnecting frequently,2,2025-04-28
+laptop_0049,"Battery drains very fast, dies in 2 hours",3,2025-02-06
+laptop_0050,"Boots up in seconds, very snappy",5,2025-04-20
+laptop_0051,Trackpad gestures work perfectly,5,2025-05-05
+laptop_0052,"Great value for money, worth it",4,2025-02-19
+laptop_0053,"Fast charging works great, very handy",5,2025-08-28
+laptop_0054,"Great performance, everything runs smoothly",5,2025-11-27
+laptop_0055,"Delivery was very late, took 2 weeks",2,2025-02-25
+laptop_0056,"Screen flickers sometimes, annoying",2,2025-03-13
+laptop_0057,"Boots up in seconds, very snappy",5,2025-02-08
+laptop_0058,"Display is great, crisp and bright",4,2025-11-30
+laptop_0059,"Great performance, everything runs smoothly",5,2025-05-02
+laptop_0060,Keyboard feels cheap and keys stick,2,2025-07-25
+laptop_0061,"Excellent build quality, feels premium",4,2025-07-19
+laptop_0062,"SSD storage is too small, 256GB only",2,2025-05-27
+laptop_0063,"Display is great, crisp and bright",5,2025-09-07
+laptop_0064,Overheats quickly during heavy work,1,2025-01-30
+laptop_0065,"Display is great, crisp and bright",4,2025-06-10
+laptop_0066,Price is too high for the specs,2,2025-09-29
+laptop_0067,Touchpad is unresponsive and jittery,1,2025-04-06
+laptop_0068,"Battery life is terrible, worst I have used",2,2025-05-01
+laptop_0069,Price is too high for the specs,1,2025-11-01
+laptop_0070,"Battery life is terrible, worst I have used",1,2025-10-26
+laptop_0071,"Fast charging works great, very handy",5,2025-04-15
+laptop_0072,"Fast charging works great, very handy",4,2025-07-22
+laptop_0073,The hinge broke after 3 months,1,2025-06-11
+laptop_0074,"Love this laptop, fast and lightweight",4,2025-11-15
+laptop_0075,"Love this laptop, fast and lightweight",4,2025-04-20
+laptop_0076,"Excellent build quality, feels premium",5,2025-02-05
+laptop_0077,"Fast charging works great, very handy",4,2025-08-13
+laptop_0078,"Boots up in seconds, very snappy",5,2025-12-01
+laptop_0079,"Display is great, crisp and bright",4,2025-12-06
+laptop_0080,"Screen is too dim, hard to see outdoors",1,2025-02-24
+laptop_0081,"Excellent build quality, feels premium",4,2025-11-06
+laptop_0082,Fan is loud and noisy while charging,1,2025-11-21
+laptop_0083,"Display is great, crisp and bright",5,2025-01-27
+laptop_0084,"Delivery was very late, took 2 weeks",3,2025-01-23
+laptop_0085,"SSD storage is too small, 256GB only",1,2025-05-15
+laptop_0086,Keyboard feels cheap and keys stick,2,2025-08-07
+laptop_0087,"Love this laptop, fast and lightweight",4,2025-12-20
+laptop_0088,"Display is great, crisp and bright",4,2025-07-09
+laptop_0089,"Excellent build quality, feels premium",5,2025-01-22
+laptop_0090,"SSD storage is too small, 256GB only",3,2025-01-21
+laptop_0091,Screen colors are vivid and sharp,5,2025-12-08
+laptop_0092,"SSD storage is too small, 256GB only",2,2025-07-28
+laptop_0093,"Excellent build quality, feels premium",5,2025-05-02
+laptop_0094,"Excellent build quality, feels premium",5,2025-01-13
+laptop_0095,Fan is loud and noisy while charging,2,2025-07-30
+laptop_0096,Screen colors are vivid and sharp,4,2025-12-26
+laptop_0097,Customer support was useless,1,2025-08-29
+laptop_0098,Customer support was useless,3,2025-06-29
+laptop_0099,"SSD storage is too small, 256GB only",3,2025-04-25
+laptop_0100,"Screen flickers sometimes, annoying",1,2025-05-23
+laptop_0101,"Boots up in seconds, very snappy",4,2025-09-18
+laptop_0102,Customer support was useless,2,2025-01-15
+laptop_0103,Overheats quickly during heavy work,1,2025-05-16
+laptop_0104,Price is too high for the specs,1,2025-06-10
+laptop_0105,"Display is great, crisp and bright",4,2025-10-23
+laptop_0106,"Battery drains very fast, dies in 2 hours",2,2025-01-01
+laptop_0107,"Display is great, crisp and bright",5,2025-12-10
+laptop_0108,"Delivery was very late, took 2 weeks",1,2025-12-07
+laptop_0109,Trackpad gestures work perfectly,4,2025-03-05
+laptop_0110,"Boots up in seconds, very snappy",5,2025-12-08
+laptop_0111,"Delivery was very late, took 2 weeks",2,2025-10-11
+laptop_0112,"Delivery was very late, took 2 weeks",2,2025-07-14
+laptop_0113,"Excellent build quality, feels premium",5,2025-06-04
+laptop_0114,Customer support was useless,1,2025-05-27
+laptop_0115,"SSD storage is too small, 256GB only",2,2025-12-02
+laptop_0116,Keyboard feels cheap and keys stick,1,2025-04-20
+laptop_0117,"Excellent build quality, feels premium",5,2025-05-26
+laptop_0118,Trackpad gestures work perfectly,4,2025-05-01
+laptop_0119,Screen colors are vivid and sharp,5,2025-03-17
+laptop_0120,"Screen flickers sometimes, annoying",3,2025-11-09
+laptop_0121,"Love this laptop, fast and lightweight",5,2025-11-19
+laptop_0122,"Great value for money, worth it",5,2025-05-05
+laptop_0123,Wifi keeps disconnecting frequently,1,2025-02-24
+laptop_0124,Screen colors are vivid and sharp,4,2025-12-23
+laptop_0125,"Great performance, everything runs smoothly",5,2025-03-04
+laptop_0126,Runs quiet and cool during normal use,5,2025-10-14
+laptop_0127,Runs quiet and cool during normal use,5,2025-09-16
+laptop_0128,"Display is great, crisp and bright",5,2025-03-23
+laptop_0129,Runs quiet and cool during normal use,5,2025-05-07
+laptop_0130,"Boots up in seconds, very snappy",5,2025-09-24
+laptop_0131,Screen colors are vivid and sharp,4,2025-02-09
+laptop_0132,Screen colors are vivid and sharp,4,2025-06-13
+laptop_0133,"Love this laptop, fast and lightweight",4,2025-04-29
+laptop_0134,"Screen is too dim, hard to see outdoors",2,2025-02-02
+laptop_0135,Fan is loud and noisy while charging,2,2025-08-01
+laptop_0136,Customer support was useless,1,2025-10-27
+laptop_0137,"Great performance, everything runs smoothly",5,2025-10-22
+laptop_0138,"Battery drains very fast, dies in 2 hours",3,2025-06-02
+laptop_0139,"Great value for money, worth it",5,2025-10-07
+laptop_0140,Screen colors are vivid and sharp,5,2025-05-20
+laptop_0141,"Great performance, everything runs smoothly",4,2025-12-09
+laptop_0142,"Great value for money, worth it",5,2025-08-28
+laptop_0143,Trackpad gestures work perfectly,5,2025-07-21
+laptop_0144,"Great performance, everything runs smoothly",4,2025-08-08
+laptop_0145,Keyboard feels cheap and keys stick,1,2025-05-14
+laptop_0146,"Screen flickers sometimes, annoying",2,2025-06-22
+laptop_0147,"Great value for money, worth it",4,2025-08-04
+laptop_0148,"Battery life is terrible, worst I have used",2,2025-10-04
+laptop_0149,Fan is loud and noisy while charging,1,2025-02-05
+laptop_0150,"Great performance, everything runs smoothly",5,2025-05-07
+laptop_0151,"Battery drains very fast, dies in 2 hours",2,2025-05-03
+laptop_0152,The hinge broke after 3 months,1,2025-04-22
+laptop_0153,"Boots up in seconds, very snappy",5,2025-03-27
+laptop_0154,"Love this laptop, fast and lightweight",5,2025-03-25
+laptop_0155,"Love this laptop, fast and lightweight",5,2025-06-09
+laptop_0156,"Great value for money, worth it",4,2025-04-12
+laptop_0157,Wifi keeps disconnecting frequently,3,2025-05-05
+laptop_0158,"SSD storage is too small, 256GB only",1,2025-12-17
+laptop_0159,"Love this laptop, fast and lightweight",5,2025-10-17
+laptop_0160,"Fast charging works great, very handy",5,2025-12-05
+laptop_0161,Touchpad is unresponsive and jittery,2,2025-01-07
+laptop_0162,Runs quiet and cool during normal use,4,2025-07-05
+laptop_0163,Runs quiet and cool during normal use,5,2025-08-11
+laptop_0164,Touchpad is unresponsive and jittery,3,2025-05-19
+laptop_0165,"Display is great, crisp and bright",5,2025-08-27
+laptop_0166,Trackpad gestures work perfectly,4,2025-05-06
+laptop_0167,"Love this laptop, fast and lightweight",4,2025-08-19
+laptop_0168,Keyboard feels cheap and keys stick,2,2025-12-09
+laptop_0169,"Battery drains very fast, dies in 2 hours",2,2025-06-16
+laptop_0170,"Screen flickers sometimes, annoying",1,2025-05-13
+laptop_0171,Price is too high for the specs,2,2025-05-22
+laptop_0172,"Display is great, crisp and bright",5,2025-02-13
+laptop_0173,"Delivery was very late, took 2 weeks",2,2025-05-04
+laptop_0174,Runs quiet and cool during normal use,5,2025-01-09
+laptop_0175,"Screen flickers sometimes, annoying",1,2025-05-05
+laptop_0176,Price is too high for the specs,1,2025-10-11
+laptop_0177,"Great value for money, worth it",5,2025-10-09
+laptop_0178,Wifi keeps disconnecting frequently,2,2025-06-06
+laptop_0179,"Battery life is terrible, worst I have used",2,2025-06-11
+laptop_0180,Touchpad is unresponsive and jittery,3,2025-12-20
+laptop_0181,"Screen flickers sometimes, annoying",2,2025-05-22
+laptop_0182,"Display is great, crisp and bright",5,2025-02-21
+laptop_0183,"Boots up in seconds, very snappy",4,2025-04-02
+laptop_0184,Wifi keeps disconnecting frequently,2,2025-05-21
+laptop_0185,"Battery drains very fast, dies in 2 hours",2,2025-12-24
+laptop_0186,Runs quiet and cool during normal use,4,2025-01-07
+laptop_0187,Runs quiet and cool during normal use,5,2025-06-24
+laptop_0188,"Battery drains very fast, dies in 2 hours",1,2025-09-02
+laptop_0189,"Battery life is terrible, worst I have used",1,2025-02-07
+laptop_0190,"Great performance, everything runs smoothly",4,2025-10-16
+laptop_0191,"Love this laptop, fast and lightweight",5,2025-03-02
+laptop_0192,"Great value for money, worth it",5,2025-11-13
+laptop_0193,Touchpad is unresponsive and jittery,1,2025-08-15
+laptop_0194,Price is too high for the specs,3,2025-06-06
+laptop_0195,"Great performance, everything runs smoothly",5,2025-02-20
+laptop_0196,Screen colors are vivid and sharp,5,2025-05-16
+laptop_0197,"Excellent build quality, feels premium",4,2025-10-10
+laptop_0198,"Battery drains very fast, dies in 2 hours",1,2025-12-19
+laptop_0199,"Boots up in seconds, very snappy",4,2025-05-28
+laptop_0200,Runs quiet and cool during normal use,4,2025-04-30
+laptop_0201,Trackpad gestures work perfectly,5,2025-04-12
+laptop_0202,"Display is great, crisp and bright",4,2025-03-18
+laptop_0203,"Excellent build quality, feels premium",4,2025-03-26
+laptop_0204,Trackpad gestures work perfectly,5,2025-10-19
+laptop_0205,Runs quiet and cool during normal use,4,2025-12-19
+laptop_0206,"Delivery was very late, took 2 weeks",3,2025-09-14
+laptop_0207,Runs quiet and cool during normal use,4,2025-01-21
+laptop_0208,"Fast charging works great, very handy",5,2025-01-14
+laptop_0209,The hinge broke after 3 months,3,2025-10-22
+laptop_0210,"Great performance, everything runs smoothly",5,2025-12-11
+laptop_0211,Trackpad gestures work perfectly,4,2025-03-31
+laptop_0212,Runs quiet and cool during normal use,5,2025-04-03
+laptop_0213,"Great value for money, worth it",5,2025-09-09
+laptop_0214,Runs quiet and cool during normal use,4,2025-06-20
+laptop_0215,"Battery life is terrible, worst I have used",3,2025-06-18
+laptop_0216,Keyboard feels cheap and keys stick,1,2025-07-25
+laptop_0217,"Display is great, crisp and bright",4,2025-02-15
+laptop_0218,Fan is loud and noisy while charging,1,2025-07-26
+laptop_0219,"Great performance, everything runs smoothly",5,2025-10-05
+laptop_0220,"Great performance, everything runs smoothly",4,2025-07-05
+laptop_0221,Runs quiet and cool during normal use,5,2025-01-27
+laptop_0222,Touchpad is unresponsive and jittery,1,2025-05-28
+laptop_0223,Runs quiet and cool during normal use,4,2025-11-19
+laptop_0224,Screen colors are vivid and sharp,5,2025-06-09
+laptop_0225,"Display is great, crisp and bright",5,2025-04-26
+laptop_0226,"Love this laptop, fast and lightweight",5,2025-03-02
+laptop_0227,"Excellent build quality, feels premium",5,2025-05-30
+laptop_0228,"Boots up in seconds, very snappy",5,2025-09-05
+laptop_0229,Screen colors are vivid and sharp,5,2025-03-16
+laptop_0230,Price is too high for the specs,2,2025-03-11
+laptop_0231,"Boots up in seconds, very snappy",5,2025-08-01
+laptop_0232,"SSD storage is too small, 256GB only",2,2025-01-02
+laptop_0233,Overheats quickly during heavy work,3,2025-10-24
+laptop_0234,Runs quiet and cool during normal use,5,2025-08-17
+laptop_0235,"Fast charging works great, very handy",4,2025-10-06
+laptop_0236,Fan is loud and noisy while charging,3,2025-12-24
+laptop_0237,"Delivery was very late, took 2 weeks",1,2025-07-30
+laptop_0238,Wifi keeps disconnecting frequently,2,2025-07-15
+laptop_0239,The hinge broke after 3 months,2,2025-11-30
+laptop_0240,Runs quiet and cool during normal use,5,2025-03-06
+laptop_0241,Trackpad gestures work perfectly,4,2025-02-21
+laptop_0242,Runs quiet and cool during normal use,4,2025-08-22
+laptop_0243,"Screen is too dim, hard to see outdoors",1,2025-12-02
+laptop_0244,"Love this laptop, fast and lightweight",5,2025-05-16
+laptop_0245,Wifi keeps disconnecting frequently,1,2025-02-11
+laptop_0246,"Display is great, crisp and bright",4,2025-06-12
+laptop_0247,Runs quiet and cool during normal use,5,2025-01-19
+laptop_0248,Screen colors are vivid and sharp,5,2025-05-28
+laptop_0249,"Love this laptop, fast and lightweight",5,2025-02-20
+laptop_0250,"Love this laptop, fast and lightweight",5,2025-12-22
+laptop_0251,"Battery drains very fast, dies in 2 hours",1,2025-01-29
+laptop_0252,Fan is loud and noisy while charging,1,2025-05-06
+laptop_0253,Trackpad gestures work perfectly,5,2025-04-03
+laptop_0254,"Battery life is terrible, worst I have used",2,2025-07-15
+laptop_0255,Screen colors are vivid and sharp,5,2025-10-26
+laptop_0256,Keyboard feels cheap and keys stick,2,2025-08-24
+laptop_0257,"Battery drains very fast, dies in 2 hours",3,2025-08-27
+laptop_0258,"Display is great, crisp and bright",4,2025-08-15
+laptop_0259,Trackpad gestures work perfectly,4,2025-08-06
+laptop_0260,Runs quiet and cool during normal use,5,2025-04-12
+laptop_0261,Runs quiet and cool during normal use,4,2025-07-15
+laptop_0262,Trackpad gestures work perfectly,4,2025-12-25
+laptop_0263,Customer support was useless,2,2025-05-21
+laptop_0264,Customer support was useless,2,2025-01-26
+laptop_0265,Runs quiet and cool during normal use,5,2025-05-27
+laptop_0266,Screen colors are vivid and sharp,5,2025-06-30
+laptop_0267,"Screen flickers sometimes, annoying",2,2025-12-14
+laptop_0268,"Excellent build quality, feels premium",5,2025-11-18
+laptop_0269,"Boots up in seconds, very snappy",5,2025-01-18
+laptop_0270,"Excellent build quality, feels premium",4,2025-06-01
+laptop_0271,"Delivery was very late, took 2 weeks",1,2025-03-09
+laptop_0272,"Fast charging works great, very handy",5,2025-05-20
+laptop_0273,"Boots up in seconds, very snappy",5,2025-09-04
+laptop_0274,"Boots up in seconds, very snappy",5,2025-06-23
+laptop_0275,Runs quiet and cool during normal use,5,2025-03-14
+laptop_0276,Screen colors are vivid and sharp,5,2025-12-12
+laptop_0277,"Display is great, crisp and bright",4,2025-07-22
+laptop_0278,Touchpad is unresponsive and jittery,1,2025-07-08
+laptop_0279,"Boots up in seconds, very snappy",5,2025-11-23
+laptop_0280,"Love this laptop, fast and lightweight",5,2025-08-30
+laptop_0281,Touchpad is unresponsive and jittery,1,2025-11-09
+laptop_0282,"Battery life is terrible, worst I have used",2,2025-08-26
+laptop_0283,"Boots up in seconds, very snappy",5,2025-03-01
+laptop_0284,"Battery drains very fast, dies in 2 hours",1,2025-09-10
+laptop_0285,"Screen flickers sometimes, annoying",3,2025-03-11
+laptop_0286,Fan is loud and noisy while charging,2,2025-12-23
+laptop_0287,"Great value for money, worth it",5,2025-03-21
+laptop_0288,"Love this laptop, fast and lightweight",5,2025-11-12
+laptop_0289,Overheats quickly during heavy work,1,2025-07-09
+laptop_0290,Keyboard feels cheap and keys stick,3,2025-07-05
+laptop_0291,The hinge broke after 3 months,1,2025-11-27
+laptop_0292,"Delivery was very late, took 2 weeks",1,2025-03-04
+laptop_0293,Runs quiet and cool during normal use,4,2025-04-19
+laptop_0294,Trackpad gestures work perfectly,5,2025-01-26
+laptop_0295,Screen colors are vivid and sharp,5,2025-10-17
+laptop_0296,Customer support was useless,2,2025-04-17
+laptop_0297,Screen colors are vivid and sharp,4,2025-03-17
+laptop_0298,Trackpad gestures work perfectly,4,2025-03-16
+laptop_0299,"Display is great, crisp and bright",4,2025-03-31
+laptop_0300,Customer support was useless,1,2025-01-08
+laptop_0301,"SSD storage is too small, 256GB only",1,2025-06-15
+laptop_0302,Overheats quickly during heavy work,1,2025-08-04
+laptop_0303,"Love this laptop, fast and lightweight",5,2025-07-05
+laptop_0304,"Love this laptop, fast and lightweight",5,2025-04-24
+laptop_0305,"Great performance, everything runs smoothly",5,2025-12-04
+laptop_0306,Runs quiet and cool during normal use,5,2025-01-16
+laptop_0307,Keyboard feels cheap and keys stick,3,2025-08-07
+laptop_0308,Runs quiet and cool during normal use,5,2025-08-16
+laptop_0309,"Battery life is terrible, worst I have used",1,2025-03-17
+laptop_0310,Overheats quickly during heavy work,2,2025-10-27
+laptop_0311,"Fast charging works great, very handy",4,2025-11-02
+laptop_0312,Runs quiet and cool during normal use,5,2025-08-09
+laptop_0313,Wifi keeps disconnecting frequently,1,2025-12-02
+laptop_0314,"Display is great, crisp and bright",5,2025-04-21
+laptop_0315,Screen colors are vivid and sharp,5,2025-08-21
+laptop_0316,Wifi keeps disconnecting frequently,1,2025-08-07
+laptop_0317,Overheats quickly during heavy work,1,2025-03-20
+laptop_0318,Runs quiet and cool during normal use,4,2025-02-13
+laptop_0319,"Battery life is terrible, worst I have used",2,2025-07-10
+laptop_0320,"Display is great, crisp and bright",4,2025-10-15
+laptop_0321,"Love this laptop, fast and lightweight",5,2025-12-07
+laptop_0322,"Great value for money, worth it",5,2025-01-27
+laptop_0323,Trackpad gestures work perfectly,4,2025-02-23
+laptop_0324,Screen colors are vivid and sharp,4,2025-09-04
+laptop_0325,"Battery life is terrible, worst I have used",1,2025-10-12
+laptop_0326,"SSD storage is too small, 256GB only",1,2025-04-26
+laptop_0327,"Display is great, crisp and bright",5,2025-11-15
+laptop_0328,"Display is great, crisp and bright",4,2025-12-03
+laptop_0329,"Boots up in seconds, very snappy",4,2025-05-20
+laptop_0330,"Boots up in seconds, very snappy",5,2025-06-29
+laptop_0331,Customer support was useless,1,2025-12-03
+laptop_0332,"Screen is too dim, hard to see outdoors",2,2025-01-16
+laptop_0333,Touchpad is unresponsive and jittery,1,2025-08-03
+laptop_0334,"Excellent build quality, feels premium",4,2025-06-16
+laptop_0335,Trackpad gestures work perfectly,5,2025-01-27
+laptop_0336,"SSD storage is too small, 256GB only",2,2025-12-12
+laptop_0337,Keyboard feels cheap and keys stick,2,2025-09-06
+laptop_0338,"Great value for money, worth it",4,2025-09-20
+laptop_0339,"Delivery was very late, took 2 weeks",1,2025-12-14
+laptop_0340,Runs quiet and cool during normal use,5,2025-06-07
+laptop_0341,"Delivery was very late, took 2 weeks",3,2025-01-29
+laptop_0342,Overheats quickly during heavy work,3,2025-03-12
+laptop_0343,"Boots up in seconds, very snappy",4,2025-01-04
+laptop_0344,"Great value for money, worth it",4,2025-07-14
+laptop_0345,Screen colors are vivid and sharp,5,2025-12-09
+laptop_0346,"Love this laptop, fast and lightweight",4,2025-01-22
+laptop_0347,Runs quiet and cool during normal use,5,2025-06-10
+laptop_0348,Trackpad gestures work perfectly,5,2025-11-24
+laptop_0349,"Battery life is terrible, worst I have used",1,2025-06-16
+laptop_0350,Price is too high for the specs,2,2025-12-20
+laptop_0351,"Love this laptop, fast and lightweight",5,2025-02-24
+laptop_0352,Price is too high for the specs,1,2025-02-10
+laptop_0353,Overheats quickly during heavy work,2,2025-04-24
+laptop_0354,"Screen is too dim, hard to see outdoors",1,2025-11-21
+laptop_0355,Touchpad is unresponsive and jittery,1,2025-06-28
+laptop_0356,Customer support was useless,2,2025-03-17
+laptop_0357,"Screen is too dim, hard to see outdoors",1,2025-03-30
+laptop_0358,"Love this laptop, fast and lightweight",4,2025-11-18
+laptop_0359,Trackpad gestures work perfectly,5,2025-08-18
+laptop_0360,Trackpad gestures work perfectly,5,2025-11-16
+laptop_0361,The hinge broke after 3 months,1,2025-08-14
+laptop_0362,Keyboard feels cheap and keys stick,2,2025-05-21
+laptop_0363,"Fast charging works great, very handy",5,2025-06-08
+laptop_0364,"Great performance, everything runs smoothly",4,2025-05-27
+laptop_0365,Customer support was useless,3,2025-02-16
+laptop_0366,"Display is great, crisp and bright",4,2025-10-25
+laptop_0367,"Great performance, everything runs smoothly",5,2025-10-20
+laptop_0368,"Fast charging works great, very handy",5,2025-09-14
+laptop_0369,"Battery drains very fast, dies in 2 hours",2,2025-06-25
+laptop_0370,"Love this laptop, fast and lightweight",5,2025-03-30
+laptop_0371,Wifi keeps disconnecting frequently,1,2025-08-13
+laptop_0372,Trackpad gestures work perfectly,4,2025-07-10
+laptop_0373,"Great value for money, worth it",5,2025-06-23
+laptop_0374,"Great performance, everything runs smoothly",5,2025-11-28
+laptop_0375,Fan is loud and noisy while charging,1,2025-12-14
+laptop_0376,Overheats quickly during heavy work,2,2025-12-03
+laptop_0377,Trackpad gestures work perfectly,5,2025-06-20
+laptop_0378,The hinge broke after 3 months,1,2025-06-29
+laptop_0379,The hinge broke after 3 months,2,2025-07-20
+laptop_0380,Wifi keeps disconnecting frequently,3,2025-06-08
+laptop_0381,"Fast charging works great, very handy",5,2025-12-10
+laptop_0382,"Display is great, crisp and bright",4,2025-12-10
+laptop_0383,"Fast charging works great, very handy",4,2025-06-08
+laptop_0384,"Screen flickers sometimes, annoying",1,2025-09-06
+laptop_0385,"Screen is too dim, hard to see outdoors",1,2025-06-01
+laptop_0386,"Love this laptop, fast and lightweight",5,2025-10-04
+laptop_0387,"Display is great, crisp and bright",4,2025-06-22
+laptop_0388,Trackpad gestures work perfectly,4,2025-07-12
+laptop_0389,"Screen is too dim, hard to see outdoors",3,2025-11-16
+laptop_0390,"Excellent build quality, feels premium",5,2025-01-23
+laptop_0391,The hinge broke after 3 months,2,2025-08-16
+laptop_0392,Runs quiet and cool during normal use,4,2025-05-03
+laptop_0393,"SSD storage is too small, 256GB only",2,2025-04-10
+laptop_0394,Price is too high for the specs,3,2025-08-25
+laptop_0395,"Great value for money, worth it",5,2025-08-03
+laptop_0396,Screen colors are vivid and sharp,5,2025-03-12
+laptop_0397,"Great performance, everything runs smoothly",5,2025-07-10
+laptop_0398,"Love this laptop, fast and lightweight",5,2025-09-22
+laptop_0399,"Boots up in seconds, very snappy",4,2025-03-24
+laptop_0400,Touchpad is unresponsive and jittery,1,2025-08-12
+laptop_0401,"Screen flickers sometimes, annoying",3,2025-06-28
+laptop_0402,"Great value for money, worth it",4,2025-09-15
+laptop_0403,"Delivery was very late, took 2 weeks",3,2025-07-11
+laptop_0404,Fan is loud and noisy while charging,3,2025-11-29
+laptop_0405,"Screen is too dim, hard to see outdoors",1,2025-05-27
+laptop_0406,Runs quiet and cool during normal use,5,2025-03-13
+laptop_0407,Runs quiet and cool during normal use,5,2025-01-03
+laptop_0408,"Great performance, everything runs smoothly",4,2025-03-18
+laptop_0409,Trackpad gestures work perfectly,5,2025-02-26
+laptop_0410,Screen colors are vivid and sharp,4,2025-01-25
+laptop_0411,The hinge broke after 3 months,2,2025-08-23
+laptop_0412,Customer support was useless,3,2025-11-02
+laptop_0413,"Display is great, crisp and bright",5,2025-03-15
+laptop_0414,"Battery drains very fast, dies in 2 hours",2,2025-05-04
+laptop_0415,"Excellent build quality, feels premium",5,2025-02-13
+laptop_0416,"Fast charging works great, very handy",4,2025-09-27
+laptop_0417,"Display is great, crisp and bright",5,2025-07-19
+laptop_0418,"Great performance, everything runs smoothly",5,2025-07-11
+laptop_0419,"Battery drains very fast, dies in 2 hours",1,2025-02-04
+laptop_0420,Wifi keeps disconnecting frequently,2,2025-02-23
+laptop_0421,"Fast charging works great, very handy",4,2025-06-30
+laptop_0422,"Excellent build quality, feels premium",5,2025-12-17
+laptop_0423,Runs quiet and cool during normal use,5,2025-03-11
+laptop_0424,"SSD storage is too small, 256GB only",3,2025-01-19
+laptop_0425,"Battery drains very fast, dies in 2 hours",2,2025-01-22
+laptop_0426,Overheats quickly during heavy work,2,2025-10-06
+laptop_0427,"Great performance, everything runs smoothly",5,2025-04-08
+laptop_0428,Customer support was useless,2,2025-12-02
+laptop_0429,"Battery life is terrible, worst I have used",2,2025-08-12
+laptop_0430,Runs quiet and cool during normal use,5,2025-07-17
+laptop_0431,"Screen is too dim, hard to see outdoors",2,2025-09-12
+laptop_0432,"SSD storage is too small, 256GB only",2,2025-02-12
+laptop_0433,"Love this laptop, fast and lightweight",5,2025-04-03
+laptop_0434,"Fast charging works great, very handy",4,2025-06-17
+laptop_0435,"Boots up in seconds, very snappy",5,2025-08-07
+laptop_0436,Keyboard feels cheap and keys stick,1,2025-01-22
+laptop_0437,"Fast charging works great, very handy",5,2025-08-11
+laptop_0438,"SSD storage is too small, 256GB only",3,2025-02-08
+laptop_0439,"Great value for money, worth it",4,2025-12-14
+laptop_0440,"Battery drains very fast, dies in 2 hours",1,2025-11-08
+laptop_0441,Runs quiet and cool during normal use,4,2025-02-04
+laptop_0442,The hinge broke after 3 months,1,2025-07-16
+laptop_0443,"Great performance, everything runs smoothly",5,2025-12-14
+laptop_0444,"Fast charging works great, very handy",4,2025-02-09
+laptop_0445,"Display is great, crisp and bright",4,2025-06-10
+laptop_0446,Screen colors are vivid and sharp,5,2025-01-14
+laptop_0447,Runs quiet and cool during normal use,5,2025-10-15
+laptop_0448,"SSD storage is too small, 256GB only",1,2025-08-17
+laptop_0449,Price is too high for the specs,1,2025-09-09
+laptop_0450,"Screen is too dim, hard to see outdoors",3,2025-08-20
+laptop_0451,Wifi keeps disconnecting frequently,1,2025-02-14
+laptop_0452,"Fast charging works great, very handy",5,2025-12-30
+laptop_0453,Touchpad is unresponsive and jittery,1,2025-06-03
+laptop_0454,"Excellent build quality, feels premium",5,2025-09-18
+laptop_0455,"Screen flickers sometimes, annoying",2,2025-05-02
+laptop_0456,"Great performance, everything runs smoothly",4,2025-10-21
+laptop_0457,"SSD storage is too small, 256GB only",3,2025-03-08
+laptop_0458,"Love this laptop, fast and lightweight",4,2025-07-23
+laptop_0459,Runs quiet and cool during normal use,5,2025-07-29
+laptop_0460,"Love this laptop, fast and lightweight",4,2025-06-12
+laptop_0461,Runs quiet and cool during normal use,5,2025-09-22
+laptop_0462,Customer support was useless,2,2025-11-24
+laptop_0463,"Excellent build quality, feels premium",5,2025-01-29
+laptop_0464,"Display is great, crisp and bright",4,2025-03-26
+laptop_0465,Wifi keeps disconnecting frequently,1,2025-09-23
+laptop_0466,"Love this laptop, fast and lightweight",4,2025-11-22
+laptop_0467,"Boots up in seconds, very snappy",4,2025-06-05
+laptop_0468,"Love this laptop, fast and lightweight",5,2025-03-28
+laptop_0469,Trackpad gestures work perfectly,4,2025-12-04
+laptop_0470,Trackpad gestures work perfectly,4,2025-10-16
+laptop_0471,Customer support was useless,1,2025-01-24
+laptop_0472,Trackpad gestures work perfectly,4,2025-04-18
+laptop_0473,"Great value for money, worth it",5,2025-01-16
+laptop_0474,"Display is great, crisp and bright",4,2025-06-04
+laptop_0475,"Great value for money, worth it",4,2025-02-07
+laptop_0476,"Excellent build quality, feels premium",5,2025-09-05
+laptop_0477,"Fast charging works great, very handy",5,2025-06-10
+laptop_0478,"Fast charging works great, very handy",5,2025-06-26
+laptop_0479,"Excellent build quality, feels premium",5,2025-09-21
+laptop_0480,"Fast charging works great, very handy",4,2025-03-04
+laptop_0481,"Screen flickers sometimes, annoying",1,2025-01-26
+laptop_0482,"Delivery was very late, took 2 weeks",3,2025-08-03
+laptop_0483,Customer support was useless,3,2025-06-17
+laptop_0484,"Fast charging works great, very handy",4,2025-03-23
+laptop_0485,"Display is great, crisp and bright",5,2025-06-07
+laptop_0486,"Love this laptop, fast and lightweight",5,2025-09-16
+laptop_0487,Screen colors are vivid and sharp,4,2025-06-30
+laptop_0488,Overheats quickly during heavy work,2,2025-12-01
+laptop_0489,"Boots up in seconds, very snappy",5,2025-02-25
+laptop_0490,"Boots up in seconds, very snappy",5,2025-07-26
+laptop_0491,"Delivery was very late, took 2 weeks",1,2025-10-15
+laptop_0492,Touchpad is unresponsive and jittery,1,2025-07-17
+laptop_0493,"Display is great, crisp and bright",4,2025-11-16
+laptop_0494,"Love this laptop, fast and lightweight",4,2025-02-19
+laptop_0495,"SSD storage is too small, 256GB only",3,2025-10-13
+laptop_0496,"Excellent build quality, feels premium",4,2025-09-18
+laptop_0497,"Battery drains very fast, dies in 2 hours",1,2025-03-12
+laptop_0498,Runs quiet and cool during normal use,5,2025-03-18
+laptop_0499,"Display is great, crisp and bright",4,2025-11-10
+laptop_0500,"Delivery was very late, took 2 weeks",3,2025-06-03
+laptop_0501,"Display is great, crisp and bright",5,2025-09-30
+laptop_0502,Trackpad gestures work perfectly,4,2025-01-09
+laptop_0503,The hinge broke after 3 months,1,2025-08-02
+laptop_0504,"Great performance, everything runs smoothly",5,2025-05-16
+laptop_0505,Trackpad gestures work perfectly,5,2025-01-27
+laptop_0506,"Excellent build quality, feels premium",5,2025-11-14
+laptop_0507,"Great value for money, worth it",4,2025-12-15
+laptop_0508,Price is too high for the specs,3,2025-02-26
+laptop_0509,Keyboard feels cheap and keys stick,1,2025-03-19
+laptop_0510,"Screen flickers sometimes, annoying",1,2025-11-10
+laptop_0511,"Great performance, everything runs smoothly",5,2025-09-23
+laptop_0512,Fan is loud and noisy while charging,3,2025-09-02
+laptop_0513,"Fast charging works great, very handy",5,2025-08-24
+laptop_0514,"Fast charging works great, very handy",5,2025-12-13
+laptop_0515,"Boots up in seconds, very snappy",5,2025-04-09
+laptop_0516,"Boots up in seconds, very snappy",5,2025-04-26
+laptop_0517,"Boots up in seconds, very snappy",5,2025-12-27
+laptop_0518,Wifi keeps disconnecting frequently,2,2025-09-03
+laptop_0519,"SSD storage is too small, 256GB only",2,2025-05-28
+laptop_0520,The hinge broke after 3 months,2,2025-07-22
+laptop_0521,"Excellent build quality, feels premium",4,2025-05-28
+laptop_0522,"Love this laptop, fast and lightweight",4,2025-08-15
+laptop_0523,Runs quiet and cool during normal use,4,2025-10-03
+laptop_0524,Touchpad is unresponsive and jittery,2,2025-03-12
+laptop_0525,Wifi keeps disconnecting frequently,2,2025-05-05
+laptop_0526,Touchpad is unresponsive and jittery,1,2025-04-30
+laptop_0527,"Delivery was very late, took 2 weeks",1,2025-08-30
+laptop_0528,"SSD storage is too small, 256GB only",1,2025-10-09
+laptop_0529,"Excellent build quality, feels premium",5,2025-09-01
+laptop_0530,Screen colors are vivid and sharp,5,2025-05-28
+laptop_0531,The hinge broke after 3 months,1,2025-02-15
+laptop_0532,Screen colors are vivid and sharp,5,2025-01-20
+laptop_0533,"Excellent build quality, feels premium",5,2025-04-01
+laptop_0534,"Great performance, everything runs smoothly",5,2025-07-23
+laptop_0535,"Excellent build quality, feels premium",5,2025-05-29
+laptop_0536,"Great performance, everything runs smoothly",4,2025-11-05
+laptop_0537,Fan is loud and noisy while charging,1,2025-11-25
+laptop_0538,Runs quiet and cool during normal use,5,2025-03-10
+laptop_0539,Runs quiet and cool during normal use,4,2025-02-27
+laptop_0540,Wifi keeps disconnecting frequently,2,2025-05-12
+laptop_0541,"Great performance, everything runs smoothly",5,2025-06-01
+laptop_0542,Screen colors are vivid and sharp,4,2025-11-24
+laptop_0543,"Great value for money, worth it",5,2025-02-14
+laptop_0544,"Battery life is terrible, worst I have used",1,2025-03-13
+laptop_0545,Screen colors are vivid and sharp,4,2025-07-16
+laptop_0546,"SSD storage is too small, 256GB only",1,2025-06-18
+laptop_0547,Wifi keeps disconnecting frequently,2,2025-05-14
+laptop_0548,Screen colors are vivid and sharp,4,2025-03-02
+laptop_0549,"Excellent build quality, feels premium",5,2025-09-15
+laptop_0550,"Boots up in seconds, very snappy",5,2025-11-24
+laptop_0551,"Boots up in seconds, very snappy",4,2025-04-24
+laptop_0552,"Screen is too dim, hard to see outdoors",2,2025-08-21
+laptop_0553,Trackpad gestures work perfectly,4,2025-12-26
+laptop_0554,Runs quiet and cool during normal use,5,2025-12-07
+laptop_0555,Screen colors are vivid and sharp,5,2025-11-02
+laptop_0556,"Love this laptop, fast and lightweight",5,2025-09-28
+laptop_0557,"Love this laptop, fast and lightweight",5,2025-02-27
+laptop_0558,Touchpad is unresponsive and jittery,3,2025-04-14
+laptop_0559,"Excellent build quality, feels premium",4,2025-09-24
+laptop_0560,Screen colors are vivid and sharp,5,2025-09-08
+laptop_0561,Touchpad is unresponsive and jittery,1,2025-01-29
+laptop_0562,"Display is great, crisp and bright",5,2025-10-16
+laptop_0563,Keyboard feels cheap and keys stick,2,2025-06-07
+laptop_0564,"Great value for money, worth it",4,2025-01-02
+laptop_0565,Trackpad gestures work perfectly,4,2025-08-05
+laptop_0566,"Battery life is terrible, worst I have used",2,2025-01-31
+laptop_0567,"Love this laptop, fast and lightweight",5,2025-08-30
+laptop_0568,"Delivery was very late, took 2 weeks",1,2025-03-11
+laptop_0569,"Great value for money, worth it",4,2025-07-15
+laptop_0570,"Great value for money, worth it",4,2025-12-16
+laptop_0571,"Display is great, crisp and bright",4,2025-06-28
+laptop_0572,Touchpad is unresponsive and jittery,1,2025-03-07
+laptop_0573,Screen colors are vivid and sharp,5,2025-01-12
+laptop_0574,Runs quiet and cool during normal use,5,2025-10-06
+laptop_0575,"Great value for money, worth it",5,2025-05-07
+laptop_0576,"Excellent build quality, feels premium",4,2025-02-27
+laptop_0577,The hinge broke after 3 months,1,2025-01-09
+laptop_0578,"Battery life is terrible, worst I have used",1,2025-01-18
+laptop_0579,"Great performance, everything runs smoothly",4,2025-01-23
+laptop_0580,"Screen flickers sometimes, annoying",2,2025-01-29
+laptop_0581,Overheats quickly during heavy work,1,2025-10-22
+laptop_0582,Price is too high for the specs,2,2025-06-14
+laptop_0583,"Screen is too dim, hard to see outdoors",3,2025-09-24
+laptop_0584,Overheats quickly during heavy work,1,2025-10-13
+laptop_0585,"Excellent build quality, feels premium",5,2025-08-07
+laptop_0586,"Great performance, everything runs smoothly",5,2025-11-26
+laptop_0587,"Display is great, crisp and bright",4,2025-08-02
+laptop_0588,Overheats quickly during heavy work,1,2025-10-03
+laptop_0589,Screen colors are vivid and sharp,4,2025-12-29
+laptop_0590,Keyboard feels cheap and keys stick,3,2025-10-15
+laptop_0591,"Delivery was very late, took 2 weeks",2,2025-03-10
+laptop_0592,Overheats quickly during heavy work,1,2025-11-28
+laptop_0593,Keyboard feels cheap and keys stick,3,2025-02-17
+laptop_0594,Screen colors are vivid and sharp,4,2025-07-13
+laptop_0595,Trackpad gestures work perfectly,4,2025-02-07
+laptop_0596,"SSD storage is too small, 256GB only",2,2025-12-10
+laptop_0597,Runs quiet and cool during normal use,4,2025-06-20
+laptop_0598,"Battery drains very fast, dies in 2 hours",1,2025-04-08
+laptop_0599,"Love this laptop, fast and lightweight",5,2025-09-03
+laptop_0600,Trackpad gestures work perfectly,5,2025-07-23
+laptop_0601,"Display is great, crisp and bright",4,2025-05-25
+laptop_0602,Touchpad is unresponsive and jittery,2,2025-06-07
+laptop_0603,Touchpad is unresponsive and jittery,3,2025-08-27
+laptop_0604,Wifi keeps disconnecting frequently,2,2025-06-13
+laptop_0605,"Fast charging works great, very handy",4,2025-01-24
+laptop_0606,Screen colors are vivid and sharp,5,2025-01-09
+laptop_0607,Price is too high for the specs,2,2025-08-02
+laptop_0608,"Screen flickers sometimes, annoying",1,2025-07-14
+laptop_0609,Screen colors are vivid and sharp,5,2025-12-02
+laptop_0610,"Fast charging works great, very handy",4,2025-09-08
+laptop_0611,Runs quiet and cool during normal use,5,2025-06-30
+laptop_0612,Wifi keeps disconnecting frequently,2,2025-04-05
+laptop_0613,"Display is great, crisp and bright",5,2025-01-31
+laptop_0614,"Love this laptop, fast and lightweight",5,2025-12-09
+laptop_0615,"Battery drains very fast, dies in 2 hours",1,2025-11-19
+laptop_0616,Wifi keeps disconnecting frequently,1,2025-04-22
+laptop_0617,"Fast charging works great, very handy",4,2025-11-23
+laptop_0618,Trackpad gestures work perfectly,5,2025-12-04
+laptop_0619,"Great performance, everything runs smoothly",5,2025-07-30
+laptop_0620,Touchpad is unresponsive and jittery,2,2025-10-02
+laptop_0621,"Great performance, everything runs smoothly",5,2025-12-24
+laptop_0622,"Excellent build quality, feels premium",4,2025-02-19
+laptop_0623,Screen colors are vivid and sharp,4,2025-09-27
+laptop_0624,Fan is loud and noisy while charging,1,2025-07-23
+laptop_0625,"Delivery was very late, took 2 weeks",2,2025-05-05
+laptop_0626,Screen colors are vivid and sharp,4,2025-02-11
+laptop_0627,"Great performance, everything runs smoothly",4,2025-07-14
+laptop_0628,Keyboard feels cheap and keys stick,1,2025-01-05
+laptop_0629,"Love this laptop, fast and lightweight",5,2025-08-11
+laptop_0630,"Fast charging works great, very handy",5,2025-02-18
+laptop_0631,"Great performance, everything runs smoothly",4,2025-12-21
+laptop_0632,Runs quiet and cool during normal use,4,2025-02-08
+laptop_0633,"Boots up in seconds, very snappy",5,2025-10-16
+laptop_0634,"Excellent build quality, feels premium",5,2025-06-11
+laptop_0635,"Screen flickers sometimes, annoying",2,2025-12-31
+laptop_0636,"Love this laptop, fast and lightweight",4,2025-10-16
+laptop_0637,Customer support was useless,3,2025-12-13
+laptop_0638,"Fast charging works great, very handy",4,2025-03-13
+laptop_0639,"Love this laptop, fast and lightweight",5,2025-06-27
+laptop_0640,"Delivery was very late, took 2 weeks",1,2025-02-08
+laptop_0641,"SSD storage is too small, 256GB only",2,2025-11-01
+laptop_0642,"SSD storage is too small, 256GB only",1,2025-11-21
+laptop_0643,Keyboard feels cheap and keys stick,2,2025-07-02
+laptop_0644,"Great value for money, worth it",5,2025-12-15
+laptop_0645,"Great value for money, worth it",4,2025-11-13
+laptop_0646,"Screen flickers sometimes, annoying",2,2025-02-12
+laptop_0647,"Delivery was very late, took 2 weeks",2,2025-11-21
+laptop_0648,"Delivery was very late, took 2 weeks",1,2025-02-24
+laptop_0649,Overheats quickly during heavy work,1,2025-05-19
+laptop_0650,"Battery life is terrible, worst I have used",1,2025-08-18
+laptop_0651,"Display is great, crisp and bright",5,2025-01-14
+laptop_0652,Touchpad is unresponsive and jittery,1,2025-11-03
+laptop_0653,"Great value for money, worth it",4,2025-07-31
+laptop_0654,"Battery life is terrible, worst I have used",2,2025-10-14
+laptop_0655,Screen colors are vivid and sharp,5,2025-03-28
+laptop_0656,"Excellent build quality, feels premium",4,2025-06-04
+laptop_0657,"Screen is too dim, hard to see outdoors",1,2025-08-11
+laptop_0658,Overheats quickly during heavy work,2,2025-02-09
+laptop_0659,"Screen flickers sometimes, annoying",2,2025-09-11
+laptop_0660,Screen colors are vivid and sharp,5,2025-03-11
+laptop_0661,"Delivery was very late, took 2 weeks",1,2025-11-14
+laptop_0662,Customer support was useless,1,2025-06-21
+laptop_0663,Trackpad gestures work perfectly,4,2025-06-14
+laptop_0664,Screen colors are vivid and sharp,5,2025-04-01
+laptop_0665,"Fast charging works great, very handy",4,2025-12-22
+laptop_0666,Trackpad gestures work perfectly,5,2025-06-16
+laptop_0667,Customer support was useless,2,2025-07-06
+laptop_0668,Price is too high for the specs,1,2025-10-07
+laptop_0669,"SSD storage is too small, 256GB only",2,2025-08-25
+laptop_0670,Screen colors are vivid and sharp,5,2025-05-30
+laptop_0671,"Love this laptop, fast and lightweight",5,2025-07-29
+laptop_0672,"Excellent build quality, feels premium",5,2025-05-04
+laptop_0673,"Screen is too dim, hard to see outdoors",2,2025-07-13
+laptop_0674,Price is too high for the specs,2,2025-07-25
+laptop_0675,"Great value for money, worth it",5,2025-07-04
+laptop_0676,"Display is great, crisp and bright",5,2025-02-13
+laptop_0677,"Screen flickers sometimes, annoying",2,2025-07-01
+laptop_0678,Price is too high for the specs,1,2025-11-27
+laptop_0679,"Great value for money, worth it",5,2025-06-19
+laptop_0680,"Great value for money, worth it",4,2025-02-20
+laptop_0681,Touchpad is unresponsive and jittery,2,2025-10-13
+laptop_0682,Trackpad gestures work perfectly,4,2025-07-11
+laptop_0683,"SSD storage is too small, 256GB only",2,2025-12-20
+laptop_0684,"Fast charging works great, very handy",5,2025-09-05
+laptop_0685,"Delivery was very late, took 2 weeks",3,2025-02-13
+laptop_0686,Wifi keeps disconnecting frequently,1,2025-06-09
+laptop_0687,"SSD storage is too small, 256GB only",1,2025-09-05
+laptop_0688,"Battery life is terrible, worst I have used",1,2025-12-23
+laptop_0689,"Love this laptop, fast and lightweight",4,2025-12-30
+laptop_0690,Customer support was useless,1,2025-02-25
+laptop_0691,"Excellent build quality, feels premium",5,2025-05-05
+laptop_0692,"Display is great, crisp and bright",4,2025-10-14
+laptop_0693,Runs quiet and cool during normal use,4,2025-07-27
+laptop_0694,"Excellent build quality, feels premium",5,2025-08-10
+laptop_0695,Wifi keeps disconnecting frequently,2,2025-04-12
+laptop_0696,"Great value for money, worth it",4,2025-12-27
+laptop_0697,Overheats quickly during heavy work,2,2025-02-02
+laptop_0698,"Display is great, crisp and bright",4,2025-06-16
+laptop_0699,"Battery life is terrible, worst I have used",1,2025-09-08
+laptop_0700,"Fast charging works great, very handy",5,2025-11-09
+laptop_0701,"Battery life is terrible, worst I have used",1,2025-08-23
+laptop_0702,"Boots up in seconds, very snappy",5,2025-10-30
+laptop_0703,"Screen is too dim, hard to see outdoors",1,2025-05-03
+laptop_0704,"Screen is too dim, hard to see outdoors",1,2025-03-14
+laptop_0705,"Great value for money, worth it",5,2025-10-22
+laptop_0706,"Screen is too dim, hard to see outdoors",2,2025-10-03
+laptop_0707,"Excellent build quality, feels premium",5,2025-09-08
+laptop_0708,"Screen is too dim, hard to see outdoors",1,2025-08-19
+laptop_0709,"Fast charging works great, very handy",5,2025-09-06
+laptop_0710,Customer support was useless,1,2025-10-15
+laptop_0711,Runs quiet and cool during normal use,5,2025-09-09
+laptop_0712,Customer support was useless,1,2025-03-27
+laptop_0713,"Battery drains very fast, dies in 2 hours",2,2025-04-23
+laptop_0714,Overheats quickly during heavy work,1,2025-05-28
+laptop_0715,Keyboard feels cheap and keys stick,2,2025-09-11
+laptop_0716,"Love this laptop, fast and lightweight",5,2025-05-18
+laptop_0717,"Fast charging works great, very handy",5,2025-01-22
+laptop_0718,Runs quiet and cool during normal use,5,2025-08-06
+laptop_0719,Customer support was useless,2,2025-05-07
+laptop_0720,"Battery drains very fast, dies in 2 hours",1,2025-06-28
+laptop_0721,"Love this laptop, fast and lightweight",5,2025-03-02
+laptop_0722,Screen colors are vivid and sharp,4,2025-10-29
+laptop_0723,Trackpad gestures work perfectly,5,2025-03-26
+laptop_0724,Screen colors are vivid and sharp,5,2025-01-31
+laptop_0725,"Display is great, crisp and bright",4,2025-10-03
+laptop_0726,Wifi keeps disconnecting frequently,1,2025-10-21
+laptop_0727,Customer support was useless,2,2025-12-14
+laptop_0728,"Excellent build quality, feels premium",5,2025-07-30
+laptop_0729,"Boots up in seconds, very snappy",5,2025-03-06
+laptop_0730,"Excellent build quality, feels premium",4,2025-12-31
+laptop_0731,"Screen flickers sometimes, annoying",2,2025-12-13
+laptop_0732,"Screen is too dim, hard to see outdoors",2,2025-05-18
+laptop_0733,"Great value for money, worth it",5,2025-11-21
+laptop_0734,"Love this laptop, fast and lightweight",5,2025-05-23
+laptop_0735,"Fast charging works great, very handy",5,2025-09-07
+laptop_0736,"Battery drains very fast, dies in 2 hours",3,2025-02-17
+laptop_0737,Runs quiet and cool during normal use,5,2025-12-24
+laptop_0738,"Battery life is terrible, worst I have used",2,2025-07-23
+laptop_0739,"Delivery was very late, took 2 weeks",3,2025-09-11
+laptop_0740,Customer support was useless,1,2025-10-08
+laptop_0741,Trackpad gestures work perfectly,5,2025-06-25
+laptop_0742,"Great performance, everything runs smoothly",4,2025-11-17
+laptop_0743,Runs quiet and cool during normal use,4,2025-03-22
+laptop_0744,"Great performance, everything runs smoothly",5,2025-08-08
+laptop_0745,Wifi keeps disconnecting frequently,3,2025-11-29
+laptop_0746,Customer support was useless,3,2025-05-21
+laptop_0747,Fan is loud and noisy while charging,1,2025-07-10
+laptop_0748,"Excellent build quality, feels premium",4,2025-11-17
+laptop_0749,Wifi keeps disconnecting frequently,2,2025-08-08
+laptop_0750,"Love this laptop, fast and lightweight",4,2025-09-02
+laptop_0751,Price is too high for the specs,1,2025-12-15
+laptop_0752,"Great performance, everything runs smoothly",5,2025-03-03
+laptop_0753,"Great value for money, worth it",5,2025-09-02
+laptop_0754,"Delivery was very late, took 2 weeks",1,2025-02-22
+laptop_0755,Fan is loud and noisy while charging,3,2025-03-12
+laptop_0756,Customer support was useless,2,2025-03-10
+laptop_0757,"Excellent build quality, feels premium",4,2025-10-16
+laptop_0758,The hinge broke after 3 months,1,2025-06-29
+laptop_0759,"Excellent build quality, feels premium",5,2025-11-12
+laptop_0760,Screen colors are vivid and sharp,4,2025-02-21
+laptop_0761,"Battery life is terrible, worst I have used",2,2025-07-16
+laptop_0762,"Delivery was very late, took 2 weeks",1,2025-03-13
+laptop_0763,The hinge broke after 3 months,1,2025-10-11
+laptop_0764,Trackpad gestures work perfectly,4,2025-12-20
+laptop_0765,Customer support was useless,2,2025-06-04
+laptop_0766,Price is too high for the specs,2,2025-07-20
+laptop_0767,"Battery drains very fast, dies in 2 hours",2,2025-05-03
+laptop_0768,"Love this laptop, fast and lightweight",4,2025-11-23
+laptop_0769,"Display is great, crisp and bright",5,2025-01-07
+laptop_0770,"Fast charging works great, very handy",4,2025-10-19
+laptop_0771,"Display is great, crisp and bright",5,2025-08-30
+laptop_0772,"Love this laptop, fast and lightweight",4,2025-02-04
+laptop_0773,"Screen flickers sometimes, annoying",1,2025-01-31
+laptop_0774,"Great value for money, worth it",5,2025-11-18
+laptop_0775,"Great value for money, worth it",5,2025-07-25
+laptop_0776,Touchpad is unresponsive and jittery,2,2025-03-20
+laptop_0777,Overheats quickly during heavy work,1,2025-04-15
+laptop_0778,"Excellent build quality, feels premium",5,2025-07-20
+laptop_0779,"Love this laptop, fast and lightweight",4,2025-08-12
+laptop_0780,Screen colors are vivid and sharp,4,2025-02-14
+laptop_0781,"Love this laptop, fast and lightweight",5,2025-11-08
+laptop_0782,The hinge broke after 3 months,2,2025-03-31
+laptop_0783,Wifi keeps disconnecting frequently,1,2025-01-06
+laptop_0784,Fan is loud and noisy while charging,2,2025-05-13
+laptop_0785,"Screen is too dim, hard to see outdoors",2,2025-05-18
+laptop_0786,"Love this laptop, fast and lightweight",5,2025-01-16
+laptop_0787,"Delivery was very late, took 2 weeks",1,2025-02-02
+laptop_0788,Price is too high for the specs,2,2025-09-12
+laptop_0789,"Fast charging works great, very handy",4,2025-10-18
+laptop_0790,"Screen is too dim, hard to see outdoors",1,2025-02-22
+laptop_0791,"Love this laptop, fast and lightweight",4,2025-09-18
+laptop_0792,Customer support was useless,3,2025-05-06
+laptop_0793,Fan is loud and noisy while charging,1,2025-03-18
+laptop_0794,Customer support was useless,1,2025-12-02
+laptop_0795,Fan is loud and noisy while charging,1,2025-06-13
+laptop_0796,"Battery life is terrible, worst I have used",2,2025-03-03
+laptop_0797,"Great performance, everything runs smoothly",4,2025-09-22
+laptop_0798,"Great value for money, worth it",4,2025-08-27
+laptop_0799,"Boots up in seconds, very snappy",4,2025-10-11
+laptop_0800,"Fast charging works great, very handy",4,2025-10-16
+laptop_0801,Trackpad gestures work perfectly,4,2025-07-08
+laptop_0802,Runs quiet and cool during normal use,5,2025-04-11
+laptop_0803,"Display is great, crisp and bright",5,2025-05-06
+laptop_0804,"Delivery was very late, took 2 weeks",1,2025-10-05
+laptop_0805,Customer support was useless,2,2025-01-05
+laptop_0806,"Great performance, everything runs smoothly",5,2025-07-12
+laptop_0807,"Boots up in seconds, very snappy",4,2025-09-29
+laptop_0808,"Great value for money, worth it",5,2025-01-31
+laptop_0809,"Excellent build quality, feels premium",5,2025-02-17
+laptop_0810,"Screen flickers sometimes, annoying",3,2025-09-24
+laptop_0811,Fan is loud and noisy while charging,2,2025-02-13
+laptop_0812,"Display is great, crisp and bright",4,2025-07-21
+laptop_0813,Price is too high for the specs,1,2025-12-06
+laptop_0814,Screen colors are vivid and sharp,4,2025-06-11
+laptop_0815,"Great value for money, worth it",5,2025-06-17
+laptop_0816,Overheats quickly during heavy work,1,2025-04-14
+laptop_0817,"SSD storage is too small, 256GB only",2,2025-03-21
+laptop_0818,Keyboard feels cheap and keys stick,2,2025-07-28
+laptop_0819,Fan is loud and noisy while charging,3,2025-04-17
+laptop_0820,Runs quiet and cool during normal use,4,2025-03-03
+laptop_0821,"SSD storage is too small, 256GB only",2,2025-12-27
+laptop_0822,"Great performance, everything runs smoothly",4,2025-06-17
+laptop_0823,Wifi keeps disconnecting frequently,1,2025-07-02
+laptop_0824,"Battery drains very fast, dies in 2 hours",2,2025-05-14
+laptop_0825,"Excellent build quality, feels premium",4,2025-07-27
+laptop_0826,"Display is great, crisp and bright",5,2025-05-08
+laptop_0827,"Battery life is terrible, worst I have used",3,2025-03-13
+laptop_0828,"Battery drains very fast, dies in 2 hours",3,2025-04-24
+laptop_0829,Customer support was useless,1,2025-12-18
+laptop_0830,"Love this laptop, fast and lightweight",5,2025-05-13
+laptop_0831,"Love this laptop, fast and lightweight",4,2025-02-03
+laptop_0832,The hinge broke after 3 months,1,2025-03-07
+laptop_0833,Customer support was useless,3,2025-06-19
+laptop_0834,Keyboard feels cheap and keys stick,1,2025-10-21
+laptop_0835,"Great value for money, worth it",5,2025-07-15
+laptop_0836,"Excellent build quality, feels premium",4,2025-04-06
+laptop_0837,Keyboard feels cheap and keys stick,3,2025-01-18
+laptop_0838,Trackpad gestures work perfectly,4,2025-06-01
+laptop_0839,"Display is great, crisp and bright",5,2025-02-14
+laptop_0840,"Screen is too dim, hard to see outdoors",1,2025-11-26
+laptop_0841,"Display is great, crisp and bright",4,2025-10-06
+laptop_0842,"Great value for money, worth it",5,2025-07-03
+laptop_0843,Runs quiet and cool during normal use,4,2025-10-17
+laptop_0844,"Great value for money, worth it",4,2025-01-14
+laptop_0845,"Screen flickers sometimes, annoying",1,2025-05-24
+laptop_0846,Keyboard feels cheap and keys stick,2,2025-10-27
+laptop_0847,"Excellent build quality, feels premium",4,2025-12-03
+laptop_0848,Touchpad is unresponsive and jittery,3,2025-01-29
+laptop_0849,Screen colors are vivid and sharp,5,2025-07-18
+laptop_0850,Customer support was useless,3,2025-03-30
+laptop_0851,Price is too high for the specs,1,2025-12-24
+laptop_0852,Price is too high for the specs,1,2025-12-25
+laptop_0853,Price is too high for the specs,2,2025-10-16
+laptop_0854,Runs quiet and cool during normal use,5,2025-03-31
+laptop_0855,"Love this laptop, fast and lightweight",4,2025-11-05
+laptop_0856,Touchpad is unresponsive and jittery,2,2025-06-19
+laptop_0857,Screen colors are vivid and sharp,5,2025-06-24
+laptop_0858,"Fast charging works great, very handy",4,2025-03-17
+laptop_0859,"Excellent build quality, feels premium",5,2025-09-27
+laptop_0860,"Love this laptop, fast and lightweight",4,2025-12-06
+laptop_0861,"Battery life is terrible, worst I have used",1,2025-06-15
+laptop_0862,"Screen is too dim, hard to see outdoors",2,2025-08-12
+laptop_0863,Runs quiet and cool during normal use,5,2025-03-31
+laptop_0864,"Display is great, crisp and bright",5,2025-11-11
+laptop_0865,Screen colors are vivid and sharp,5,2025-03-31
+laptop_0866,Wifi keeps disconnecting frequently,2,2025-03-07
+laptop_0867,"Battery drains very fast, dies in 2 hours",3,2025-10-21
+laptop_0868,"SSD storage is too small, 256GB only",3,2025-01-17
+laptop_0869,Fan is loud and noisy while charging,3,2025-11-10
+laptop_0870,Price is too high for the specs,1,2025-09-12
+laptop_0871,Wifi keeps disconnecting frequently,1,2025-06-27
+laptop_0872,"Excellent build quality, feels premium",5,2025-02-15
+laptop_0873,"Fast charging works great, very handy",5,2025-05-16
+laptop_0874,Wifi keeps disconnecting frequently,1,2025-05-12
+laptop_0875,"Great performance, everything runs smoothly",4,2025-08-13
+laptop_0876,"Excellent build quality, feels premium",5,2025-09-10
+laptop_0877,"Fast charging works great, very handy",5,2025-02-21
+laptop_0878,Trackpad gestures work perfectly,5,2025-12-18
+laptop_0879,Keyboard feels cheap and keys stick,1,2025-01-18
+laptop_0880,Fan is loud and noisy while charging,1,2025-02-23
+laptop_0881,"Screen is too dim, hard to see outdoors",3,2025-03-24
+laptop_0882,"Display is great, crisp and bright",5,2025-02-17
+laptop_0883,Price is too high for the specs,3,2025-12-27
+laptop_0884,The hinge broke after 3 months,1,2025-08-11
+laptop_0885,"Battery life is terrible, worst I have used",1,2025-04-08
+laptop_0886,Touchpad is unresponsive and jittery,2,2025-10-04
+laptop_0887,Overheats quickly during heavy work,1,2025-02-19
+laptop_0888,Price is too high for the specs,2,2025-09-09
+laptop_0889,Fan is loud and noisy while charging,1,2025-02-14
+laptop_0890,The hinge broke after 3 months,2,2025-09-03
+laptop_0891,"Battery drains very fast, dies in 2 hours",1,2025-11-23
+laptop_0892,"Battery life is terrible, worst I have used",2,2025-03-01
+laptop_0893,"Delivery was very late, took 2 weeks",2,2025-12-05
+laptop_0894,The hinge broke after 3 months,2,2025-04-05
+laptop_0895,"Delivery was very late, took 2 weeks",1,2025-08-17
+laptop_0896,Keyboard feels cheap and keys stick,2,2025-04-26
+laptop_0897,Trackpad gestures work perfectly,4,2025-12-23
+laptop_0898,"Love this laptop, fast and lightweight",5,2025-10-05
+laptop_0899,"SSD storage is too small, 256GB only",2,2025-10-11
+laptop_0900,"Delivery was very late, took 2 weeks",3,2025-08-03
+laptop_0901,Runs quiet and cool during normal use,5,2025-05-01
+laptop_0902,"Love this laptop, fast and lightweight",4,2025-01-18
+laptop_0903,"Display is great, crisp and bright",5,2025-12-13
+laptop_0904,"Excellent build quality, feels premium",4,2025-08-18
+laptop_0905,"Screen is too dim, hard to see outdoors",3,2025-04-09
+laptop_0906,"Delivery was very late, took 2 weeks",1,2025-12-16
+laptop_0907,"Excellent build quality, feels premium",5,2025-05-13
+laptop_0908,Wifi keeps disconnecting frequently,3,2025-02-04
+laptop_0909,Touchpad is unresponsive and jittery,1,2025-06-16
+laptop_0910,"Display is great, crisp and bright",5,2025-01-07
+laptop_0911,Trackpad gestures work perfectly,5,2025-08-03
+laptop_0912,"Screen is too dim, hard to see outdoors",1,2025-10-29
+laptop_0913,"Love this laptop, fast and lightweight",5,2025-10-16
+laptop_0914,"Boots up in seconds, very snappy",5,2025-06-26
+laptop_0915,"Boots up in seconds, very snappy",4,2025-09-06
+laptop_0916,Runs quiet and cool during normal use,4,2025-05-22
+laptop_0917,Price is too high for the specs,2,2025-12-22
+laptop_0918,"Delivery was very late, took 2 weeks",3,2025-06-19
+laptop_0919,"Great performance, everything runs smoothly",5,2025-05-18
+laptop_0920,"Great performance, everything runs smoothly",4,2025-06-05
+laptop_0921,Customer support was useless,2,2025-12-23
+laptop_0922,Screen colors are vivid and sharp,4,2025-08-15
+laptop_0923,"Fast charging works great, very handy",4,2025-08-02
+laptop_0924,"Love this laptop, fast and lightweight",4,2025-04-19
+laptop_0925,"Great value for money, worth it",5,2025-09-22
+laptop_0926,"Great performance, everything runs smoothly",5,2025-03-23
+laptop_0927,Wifi keeps disconnecting frequently,2,2025-03-11
+laptop_0928,"Display is great, crisp and bright",5,2025-01-15
+laptop_0929,Customer support was useless,1,2025-01-30
+laptop_0930,Keyboard feels cheap and keys stick,1,2025-07-04
+laptop_0931,"Boots up in seconds, very snappy",4,2025-08-26
+laptop_0932,"Love this laptop, fast and lightweight",5,2025-05-04
+laptop_0933,Price is too high for the specs,1,2025-08-31
+laptop_0934,"Fast charging works great, very handy",4,2025-05-13
+laptop_0935,"Love this laptop, fast and lightweight",4,2025-07-17
+laptop_0936,Customer support was useless,2,2025-04-20
+laptop_0937,Screen colors are vivid and sharp,5,2025-05-18
+laptop_0938,"Display is great, crisp and bright",4,2025-12-16
+laptop_0939,"Screen is too dim, hard to see outdoors",2,2025-11-04
+laptop_0940,Screen colors are vivid and sharp,4,2025-06-06
+laptop_0941,"Boots up in seconds, very snappy",5,2025-07-12
+laptop_0942,Runs quiet and cool during normal use,4,2025-08-27
+laptop_0943,Touchpad is unresponsive and jittery,3,2025-07-23
+laptop_0944,"Great performance, everything runs smoothly",5,2025-12-06
+laptop_0945,"Fast charging works great, very handy",5,2025-11-01
+laptop_0946,"Boots up in seconds, very snappy",5,2025-09-04
+laptop_0947,Overheats quickly during heavy work,2,2025-05-22
+laptop_0948,Wifi keeps disconnecting frequently,3,2025-11-30
+laptop_0949,"Screen is too dim, hard to see outdoors",2,2025-05-04
+laptop_0950,Trackpad gestures work perfectly,5,2025-06-13
+laptop_0951,"Great performance, everything runs smoothly",5,2025-06-01
+laptop_0952,"Delivery was very late, took 2 weeks",1,2025-01-19
+laptop_0953,Trackpad gestures work perfectly,5,2025-06-25
+laptop_0954,Screen colors are vivid and sharp,5,2025-11-23
+laptop_0955,"Fast charging works great, very handy",5,2025-03-29
+laptop_0956,"Display is great, crisp and bright",4,2025-02-19
+laptop_0957,"Boots up in seconds, very snappy",5,2025-10-14
+laptop_0958,"Excellent build quality, feels premium",5,2025-06-21
+laptop_0959,Screen colors are vivid and sharp,4,2025-06-07
+laptop_0960,"Fast charging works great, very handy",4,2025-10-27
+laptop_0961,Customer support was useless,1,2025-01-28
+laptop_0962,Trackpad gestures work perfectly,5,2025-11-14
+laptop_0963,"Screen flickers sometimes, annoying",2,2025-12-15
+laptop_0964,Overheats quickly during heavy work,1,2025-03-19
+laptop_0965,"Screen flickers sometimes, annoying",1,2025-10-19
+laptop_0966,Runs quiet and cool during normal use,4,2025-04-03
+laptop_0967,Runs quiet and cool during normal use,4,2025-04-01
+laptop_0968,"Battery drains very fast, dies in 2 hours",1,2025-05-21
+laptop_0969,"SSD storage is too small, 256GB only",1,2025-03-23
+laptop_0970,"Love this laptop, fast and lightweight",4,2025-08-11
+laptop_0971,"Great value for money, worth it",5,2025-09-02
+laptop_0972,"Battery drains very fast, dies in 2 hours",2,2025-07-11
+laptop_0973,"Fast charging works great, very handy",5,2025-09-29
+laptop_0974,The hinge broke after 3 months,1,2025-05-08
+laptop_0975,Fan is loud and noisy while charging,1,2025-02-22
+laptop_0976,Price is too high for the specs,1,2025-02-03
+laptop_0977,"Boots up in seconds, very snappy",5,2025-08-22
+laptop_0978,Trackpad gestures work perfectly,5,2025-08-11
+laptop_0979,"Excellent build quality, feels premium",4,2025-09-08
+laptop_0980,"Screen flickers sometimes, annoying",1,2025-07-26
+laptop_0981,"Screen flickers sometimes, annoying",2,2025-03-09
+laptop_0982,"Battery drains very fast, dies in 2 hours",2,2025-03-28
+laptop_0983,Wifi keeps disconnecting frequently,2,2025-01-20
+laptop_0984,The hinge broke after 3 months,1,2025-10-01
+laptop_0985,Trackpad gestures work perfectly,5,2025-12-05
+laptop_0986,Customer support was useless,1,2025-12-20
+laptop_0987,Keyboard feels cheap and keys stick,1,2025-10-08
+laptop_0988,Wifi keeps disconnecting frequently,1,2025-12-22
+laptop_0989,"Great performance, everything runs smoothly",4,2025-12-05
+laptop_0990,Touchpad is unresponsive and jittery,1,2025-11-07
+laptop_0991,"Great value for money, worth it",5,2025-02-23
+laptop_0992,Trackpad gestures work perfectly,4,2025-02-28
+laptop_0993,Runs quiet and cool during normal use,4,2025-04-13
+laptop_0994,"Display is great, crisp and bright",5,2025-07-03
+laptop_0995,"Boots up in seconds, very snappy",4,2025-10-08
+laptop_0996,Screen colors are vivid and sharp,5,2025-09-04
+laptop_0997,"Battery drains very fast, dies in 2 hours",1,2025-02-15
+laptop_0998,Trackpad gestures work perfectly,5,2025-03-18
+laptop_0999,"Display is great, crisp and bright",4,2025-02-21
+laptop_1000,Screen colors are vivid and sharp,5,2025-06-01

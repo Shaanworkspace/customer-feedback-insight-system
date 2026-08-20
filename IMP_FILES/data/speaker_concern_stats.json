@@ -1,0 +1,27 @@
+{
+  "total_reviews": 1000,
+  "total_mentions": 1112,
+  "concerns": [
+    {
+      "name": "connectivity",
+      "count": 67,
+      "positive": 10,
+      "negative": 57,
+      "negative_pct": 85.1
+    },
+    {
+      "name": "battery",
+      "count": 94,
+      "positive": 49,
+      "negative": 45,
+      "negative_pct": 47.9
+    },
+    {
+      "name": "price",
+      "count": 32,
+      "positive": 8,
+      "negative": 24,
+      "negative_pct": 75.0
+    }
+  ]
+}
