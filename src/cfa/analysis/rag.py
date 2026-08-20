@@ -19,9 +19,6 @@ It never generates or invents review quotes.
 import logging
 from typing import Any, Dict, List, Optional
 
-import chromadb
-from sentence_transformers import SentenceTransformer
-
 from cfa.core.config import (
     RAG_DB_PATH,
     RAG_COLLECTION_NAME,
@@ -42,17 +39,19 @@ EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 # ChromaDB / Embedding model
 # ---------------------------------------------------------------------------
 
-_model: Optional[SentenceTransformer] = None
+_model = None
 _client = None
 _collection = None
 
 
-def _get_model() -> SentenceTransformer:
+def _get_model():
     """Load the embedding model once and reuse it."""
 
     global _model
 
     if _model is None:
+        from sentence_transformers import SentenceTransformer
+
         logger.info(
             "Loading embedding model: %s",
             EMBEDDING_MODEL_NAME,
@@ -71,6 +70,7 @@ def _get_collection():
     global _client, _collection
 
     if _collection is None:
+        import chromadb
 
         RAG_DB_PATH.mkdir(
             parents=True,
