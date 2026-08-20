@@ -20,6 +20,7 @@ from cfa.api.config import (
 )
 from cfa.api.llm import call_llm_batch
 from cfa.ranking.priority import rank_concerns
+from cfa.analysis.rag import load_rag_index, get_proof
 
 STATUS = {"status": "idle", "done": 0, "total": 0}
 
@@ -102,6 +103,7 @@ def _pick_representative(reviews_log: List[Dict], kept: Dict[str, Dict], n: int 
 
 def run_pipeline(new_reviews: List[str]) -> Dict:
     registry: Dict[str, Dict] = _load_json(REGISTRY_PATH, {})
+    rag_index = load_rag_index()
     reviews_log: List[Dict] = _load_json(REVIEWS_PATH, [])
     prev_stats = _load_json(CONCERN_STATS_PATH, {"total_reviews": 0})
 
@@ -129,6 +131,18 @@ def run_pipeline(new_reviews: List[str]) -> Dict:
         name: entry for name, entry in registry.items()
         if entry["count"] >= SUPPORT_THRESHOLD and entry["negative_pct"] > overall_negative_pct
     }
+    proof_by_concern = {}
+
+    if rag_index:
+      for concern in kept:
+        try:
+            proof_by_concern[concern] = get_proof(
+                concern,
+                rag_index,
+                top_k=5,
+            )
+        except Exception:
+            proof_by_concern[concern] = []
 
     ranked = rank_concerns({
         "concerns": [
@@ -142,6 +156,7 @@ def run_pipeline(new_reviews: List[str]) -> Dict:
         "sentiment_distribution": {"positive": positive, "negative": negative},
         "ranked_concerns": ranked,
         "representative_reviews": _pick_representative(reviews_log, kept),
+        "proof_by_concern": proof_by_concern,
     }
 
     REGISTRY_PATH.write_text(json.dumps(registry, indent=2))
