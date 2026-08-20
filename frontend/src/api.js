@@ -13,3 +13,27 @@ export async function analyzeReview(text) {
   })
   return res.json()
 }
+export async function uploadReviews(file) {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const res = await fetch(`${API_BASE}/api/v1/upload`, {
+    method: 'POST',
+    body: formData,
+  })
+
+  if (!res.ok) {
+    let message = 'Upload failed. Please try again.'
+
+    try {
+      const data = await res.json()
+      message = data.detail || message
+    } catch {
+      // Keep default error message
+    }
+
+    throw new Error(message)
+  }
+
+  return res.json()
+}
