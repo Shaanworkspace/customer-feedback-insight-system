@@ -1,4 +1,4 @@
-export default function Login({ onLogin }) {
+export default function Login({ onLogin, onBack }) {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f4f7fb] px-8 py-8">
       <div
@@ -11,6 +11,14 @@ export default function Login({ onLogin }) {
       ></div>
 
       <div className="relative z-10 w-[min(430px,100%)] rounded-[20px] border border-white/50 bg-white/70 p-8 shadow-[0_20px_50px_rgba(23,63,115,0.15)] backdrop-blur-xl">
+        <button
+          type="button"
+          className="mb-5 cursor-pointer rounded-lg border-0 bg-transparent px-0 py-1 text-[13px] font-semibold text-[#315f89] transition hover:text-[#173f73]"
+          onClick={onBack}
+        >
+          ← Back
+        </button>
+
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#173f73] font-extrabold text-white">
             CF

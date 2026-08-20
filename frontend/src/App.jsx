@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import AppHeader from './components/layout/AppHeader'
@@ -9,29 +9,56 @@ import Dashboard from './components/dashboard/Dashboard'
 import Analyzer from './components/analyzer/Analyzer'
 import Explorer from './components/explorer/Explorer'
 
+function parseRoute() {
+  const hash = window.location.hash.replace(/^#\/?/, '')
+  const [segment, tab] = hash.split('/')
+
+  if (segment === 'login') return { stage: 'login', tab: 'dashboard' }
+  if (segment === 'upload') return { stage: 'upload', tab: 'dashboard' }
+  if (segment === 'app') return { stage: 'app', tab: tab || 'dashboard' }
+  return { stage: 'landing', tab: 'dashboard' }
+}
+
 export default function App() {
-  const [stage, setStage] = useState('landing')
-  const [tab, setTab] = useState('dashboard')
+  const [route, setRoute] = useState(parseRoute)
+
+  useEffect(() => {
+    const onHash = () => {
+      setRoute(parseRoute())
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const go = (stage, tab = 'dashboard') => {
+    if (stage === 'app') {
+      window.location.hash = `#/app/${tab}`
+    } else {
+      window.location.hash = `#/${stage}`
+    }
+    setRoute({ stage, tab })
+  }
+
+  const { stage, tab } = route
 
   const handleLogin = () => {
     localStorage.setItem('cfa_signed_in', 'true')
-    setStage('upload')
+    go('upload')
   }
 
   const handleUploadDone = () => {
-    setStage('app')
-    setTab('dashboard')
+    go('app', 'dashboard')
   }
 
   const handleUploadCancel = () => {
-    setStage('app')
+    go('app')
   }
 
   if (stage === 'landing') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader onStart={() => setStage('login')} />
-        <Landing onStart={() => setStage('login')} />
+        <SiteHeader onStart={() => go('login')} />
+        <Landing onStart={() => go('login')} />
         <SiteFooter />
       </div>
     )
@@ -40,8 +67,8 @@ export default function App() {
   if (stage === 'login') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader onStart={() => setStage('login')} />
-        <Login onLogin={handleLogin} />
+        <SiteHeader onStart={() => go('login')} />
+        <Login onLogin={handleLogin} onBack={() => go('landing')} />
         <SiteFooter />
       </div>
     )
@@ -50,7 +77,7 @@ export default function App() {
   if (stage === 'upload') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader onStart={() => setStage('login')} />
+        <SiteHeader onStart={() => go('login')} />
         <Upload onDone={handleUploadDone} onCancel={handleUploadCancel} />
         <SiteFooter />
       </div>
@@ -59,7 +86,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(39,92,145,0.08),transparent_30%),#f4f6f9]">
-      <AppHeader tab={tab} setTab={setTab} onUpload={() => setStage('upload')} />
+      <AppHeader tab={tab} setTab={(t) => go('app', t)} onUpload={() => go('upload')} />
       <main className="mx-auto w-[min(1180px,92%)] py-10 pb-14">
         {tab === 'dashboard' && <Dashboard />}
         {tab === 'analyzer' && <Analyzer />}
