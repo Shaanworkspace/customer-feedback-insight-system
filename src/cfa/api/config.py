@@ -7,6 +7,13 @@ from cfa.core.config import DATA_DIR
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
+_default_origins = "http://localhost:5173"
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("ALLOWED_ORIGINS", _default_origins).split(",")
+    if origin.strip()
+]
+
 BATCH_MAX = 30
 MIN_REVIEW_CHARS = 10
 SUPPORT_THRESHOLD = 5

@@ -13,6 +13,23 @@ class Concern(BaseModel):
     priority: int
 
 
+class AnalyzeRequest(BaseModel):
+    review_text: str
+
+
+class AnalyzedConcern(BaseModel):
+    name: str
+    sentiment: str
+    confidence: float
+
+
+class AnalyzeResponse(BaseModel):
+    overall_sentiment: str
+    overall_confidence: float
+    concerns: List[AnalyzedConcern]
+    ranked_concerns: List[Concern]
+
+
 class RepresentativeReview(BaseModel):
     review_id: str
     text: str

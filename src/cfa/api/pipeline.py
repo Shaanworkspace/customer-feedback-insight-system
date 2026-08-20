@@ -18,7 +18,7 @@ from cfa.api.config import (
     REVIEWS_PATH,
     SUPPORT_THRESHOLD,
 )
-from cfa.api.llm import call_llm_batch
+from cfa.api.llm import call_llm_batch, rule_based_sentiment
 from cfa.ranking.priority import rank_concerns
 
 STATUS = {"status": "idle", "done": 0, "total": 0}
@@ -98,6 +98,43 @@ def _pick_representative(reviews_log: List[Dict], kept: Dict[str, Dict], n: int 
             picks.append({"review_id": row["review_id"], "text": row["text"], "sentiment": "positive"})
             break
     return picks[:n]
+
+
+def analyze_review(text: str) -> Dict:
+    """One-off analysis for the live analyzer. Reads the registry for known
+    entity names but does not write anything (upload is the only writer)."""
+    registry: Dict[str, Dict] = _load_json(REGISTRY_PATH, {})
+    known_entities = list(registry.keys())
+
+    results = call_llm_batch([text], known_entities)
+    aspects = results[0].get("aspects", []) if results else []
+
+    concerns = [
+        {"name": a["entity"], "sentiment": a["sentiment"], "confidence": a.get("confidence", 0.5)}
+        for a in aspects
+        if a.get("entity") and a.get("sentiment") in ("positive", "negative")
+    ]
+
+    if concerns:
+        negative = sum(1 for c in concerns if c["sentiment"] == "negative")
+        overall_sentiment = "negative" if negative > len(concerns) / 2 else "positive"
+        overall_confidence = round(sum(c["confidence"] for c in concerns) / len(concerns), 2)
+    else:
+        overall_sentiment, overall_confidence = rule_based_sentiment(text)
+
+    ranked = rank_concerns({
+        "concerns": [
+            {"name": c["name"], "count": 1, "negative_pct": 100.0 if c["sentiment"] == "negative" else 0.0}
+            for c in concerns
+        ]
+    })
+
+    return {
+        "overall_sentiment": overall_sentiment,
+        "overall_confidence": overall_confidence,
+        "concerns": concerns,
+        "ranked_concerns": ranked,
+    }
 
 
 def run_pipeline(new_reviews: List[str]) -> Dict:

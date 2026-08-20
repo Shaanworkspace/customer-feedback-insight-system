@@ -1,4 +1,4 @@
-"""FastAPI app: the 4 backend endpoints (upload, stats, reviews, status)."""
+"""FastAPI app: upload, analyze, stats, reviews, status."""
 
 import io
 import json
@@ -9,14 +9,15 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from cfa.api.config import CONCERN_STATS_PATH, REVIEWS_PATH
-from cfa.api.pipeline import STATUS, clean_reviews, run_pipeline
+from cfa.api.config import ALLOWED_ORIGINS, CONCERN_STATS_PATH, REVIEWS_PATH
+from cfa.api.pipeline import STATUS, analyze_review, clean_reviews, run_pipeline
+from cfa.api.schemas import AnalyzeRequest
 
 app = FastAPI(title="Customer Feedback Insight System")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -53,6 +54,14 @@ def upload(file: UploadFile = File(...)):
         return JSONResponse(status_code=400, content={"error": "No valid reviews found."})
 
     return run_pipeline(reviews)
+
+
+@app.post("/api/v1/analyze")
+def analyze(payload: AnalyzeRequest):
+    text = payload.review_text.strip()
+    if not text:
+        return JSONResponse(status_code=400, content={"error": "review_text is empty."})
+    return analyze_review(text)
 
 
 @app.get("/api/v1/stats")
