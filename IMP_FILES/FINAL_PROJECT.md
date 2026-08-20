@@ -464,7 +464,198 @@ CSV reviews (1000)
 
 ---
 
-## PART 5 — THE FULL USER FLOW (step by step)
+## PART 5 — TECH DECISIONS (finalized) + INTERVIEW TRAPS
+
+This part is the most important for the interview.
+It stores every decision we made and the answer
+to every question we expect.
+
+### 5.1 The final tech stack
+
+```text
+LLM:            Groq + Llama 3.3 70B (open source, free)
+                does entity extraction + sentiment
+
+Python:         counting, filters, ranking, RAG, saving
+
+Fallback:       rule-based (keywords), works without LLM
+
+No trained model. The LLM + fallback is the whole ML part.
+```
+
+### 5.2 What the LLM does vs what Python does
+
+```text
+LLM (Groq + Llama):
+  - reads reviews in batches of 25-30
+  - returns entities + sentiment + confidence
+  - merges same-meaning entities (battery life -> battery)
+
+Python (our code):
+  - splits reviews into batches
+  - counts concerns in the global registry
+  - filters (support >= 5, negative ratio > overall)
+  - RAG proof quotes
+  - ranking (impact = count x negative_pct)
+  - saving JSON files
+```
+
+### 5.3 Why we did NOT train a model
+
+Training a model takes time (10-15 days), needs data and GPU.
+The LLM does the same job faster (4-5 days) and better.
+The trained model is only useful for 1M reviews in production.
+
+### 5.4 The global registry (how duplicates are stopped)
+
+We keep ONE file: concern_registry.json.
+
+```json
+{
+  "battery": {"count": 48, "positive": 10, "negative": 38, "negative_pct": 79.2},
+  "delivery": {"count": 20, "positive": 9, "negative": 11, "negative_pct": 55.0}
+}
+```
+
+Every batch adds to this file.
+The known entities are sent to the LLM with every prompt,
+so the LLM reuses the same names and only new things
+get new names. That is how "battery life" and "battery"
+both become "battery".
+
+### 5.5 Why RAG exists (LLM cannot prove quotes)
+
+The LLM is generative: it can answer but it can
+also make things up (hallucination).
+
+So RAG searches the STORED reviews (TF-IDF + cosine
+similarity) and returns REAL review quotes as proof.
+
+```text
+AI finds the problem. RAG proves it with real evidence.
+```
+
+### 5.6 The batch rules (never break these)
+
+- 25 to 30 reviews per call. Never more than 30.
+- Never send the whole dataset in one call.
+- Run batches in parallel to save time.
+- If a batch fails, retry once.
+- If it still fails, skip it and move on.
+- Keep the rule-based fallback for when the LLM is down.
+
+### 5.7 The fallback chain
+
+```text
+Batch -> LLM
+  -> broken JSON or network fail
+  -> retry once
+  -> still fails
+  -> skip that batch, continue
+  -> at the end show: "N reviews skipped (LLM error)"
+```
+
+The app always works, even without the LLM.
+
+---
+
+## INTERVIEW TRAPS AND ANSWERS
+
+These are the questions we expect and our exact answers.
+
+### TRAP 1: "You just used an LLM. Where is the ML?"
+
+Answer:
+
+> "The ML core is our own Python: counting, filters,
+> ranking, and stats. For entity extraction and sentiment
+> we use an open-source LLM, because dynamic concerns
+> would be missed by fixed code. The fallback is
+> rule-based, so the system works even without the LLM."
+
+### TRAP 2: "Why RAG? The LLM can find quotes too."
+
+Answer:
+
+> "The LLM is generative and can hallucinate. RAG searches
+> the stored reviews with TF-IDF and cosine similarity, so
+> every quote shown is a REAL review from the data.
+> AI finds the problem, RAG proves it with evidence."
+
+### TRAP 3: "Why didn't you train your own sentiment model?"
+
+Answer:
+
+> "A trained model needs time, data, and GPU (10-15 days).
+> The LLM does it faster and better. For 1M reviews in
+> production we have a hybrid design: LLM for dynamic
+> entities, a trained model for cost-efficient sentiment."
+
+### TRAP 4: "How do you handle 1 million reviews?"
+
+Answer:
+
+> "Reviews are processed in batches of 25-30, in parallel.
+> Batch one is not sent in one call. We use incremental
+> processing: only new reviews are processed, old counts
+> stay saved. Entities are merged in a global registry."
+
+### TRAP 5: "What if the LLM API fails or is slow?"
+
+Answer:
+
+> "Every batch is retried once. If it still fails, that
+> batch is skipped and the system moves on. A rule-based
+> fallback runs when the LLM is completely down, so the
+> app never stops and works even without internet."
+
+### TRAP 6: "How do you handle duplicates like 'battery'
+vs 'battery life'?"
+
+Answer:
+
+> "Every batch prompt includes the entities already known
+> from the global registry. The LLM reuses those exact
+> names, so 'battery life' becomes 'battery'. Only truly
+> new things get new names."
+
+### TRAP 7: "Is the demo using real or fake numbers?"
+
+Answer:
+
+> "All demo numbers are computed from the uploaded CSV
+> on the spot. Nothing is hardcoded. Proof quotes are
+> real reviews from the file. We never show fake numbers."
+
+### TRAP 8: "Why open-source LLM and not a paid one?"
+
+Answer:
+
+> "Open source is free, auditable, and we can run it
+> anywhere. We use Llama 3.3 through Groq's free tier.
+> It is a real open-source model, not a closed paid one."
+
+### TRAP 9: "How fast is the analysis?"
+
+Answer:
+
+> "1000 reviews become about 35 batches. Batches run in
+> parallel, so the full analysis takes about 30 seconds.
+> The dashboard shows section-level loading, so the page
+> opens immediately and fills in as data arrives."
+
+### TRAP 10: "What is your differentiator from other tools?"
+
+Answer:
+
+> "Other tools show what customers said. We say what to
+> DO: ranked priorities with real proof quotes. We are
+> action-first, evidence-backed, and work for any product
+> because there is no fixed lexicon."
+
+---
+
+## PART 6 — THE FULL USER FLOW (step by step)
 
 Our app has ONE main way of working:
 the user uploads MANY reviews at once (a CSV file).
@@ -778,7 +969,7 @@ The frontend filters them in the browser.
 
 ---
 
-## PART 6 — A REAL BATCH FROM START TO FINISH
+## PART 7 — A REAL BATCH FROM START TO FINISH
 
 This part shows ONE full upload, step by step,
 with REAL data at every step.
@@ -790,7 +981,7 @@ The example uses 100 reviews from one company.
 
 ---
 
-### 6.1 The input (100 reviews)
+### 7.1 The input (100 reviews)
 
 The user uploads a CSV file with 100 reviews.
 A few of them look like this:
@@ -811,7 +1002,7 @@ After cleaning (empty, short, duplicate removed):
 
 ---
 
-### 6.2 Step 1 — LLM module reads the reviews
+### 7.2 Step 1 — LLM module reads the reviews
 
 WHO: the LLM module.
 
@@ -839,7 +1030,7 @@ From here, everything is normal Python.
 
 ---
 
-### 6.3 Step 2 — Analysis module counts the concerns
+### 7.3 Step 2 — Analysis module counts the concerns
 
 WHO: the analysis module.
 
@@ -865,7 +1056,7 @@ Plus the total sentiment:
 
 ---
 
-### 6.4 Step 3 — Analysis module filters the real problems
+### 7.4 Step 3 — Analysis module filters the real problems
 
 WHO: the analysis module.
 
@@ -896,7 +1087,7 @@ Customers mostly like them.
 
 ---
 
-### 6.5 Step 4 — RAG module finds proof
+### 7.5 Step 4 — RAG module finds proof
 
 WHO: the RAG module.
 
@@ -924,7 +1115,7 @@ These are real reviews from the upload.
 
 ---
 
-### 6.6 Step 5 — Ranking module says what to fix first
+### 7.6 Step 5 — Ranking module says what to fix first
 
 WHO: the ranking module.
 
@@ -956,7 +1147,7 @@ priority 3: screen   (impact 24)
 
 ---
 
-### 6.7 Step 6 — Backend saves the result
+### 7.7 Step 6 — Backend saves the result
 
 WHO: the backend module.
 
@@ -992,7 +1183,7 @@ concern_stats.json
 
 ---
 
-### 6.8 Step 7 — Frontend shows the dashboard
+### 7.8 Step 7 — Frontend shows the dashboard
 
 WHO: the frontend module.
 
@@ -1017,7 +1208,7 @@ in the Explorer.
 
 ---
 
-### 6.9 The whole sequence in one table
+### 7.9 The whole sequence in one table
 
 ```text
 STEP | WHO                | WHAT IT GIVES
@@ -1032,7 +1223,7 @@ STEP | WHO                | WHAT IT GIVES
 
 ---
 
-## PART 7 — WHAT THE USER SEES AFTER A FULL BATCH
+## PART 8 — WHAT THE USER SEES AFTER A FULL BATCH
 
 When the whole flow is finished, the user has:
 
@@ -1046,9 +1237,9 @@ All of this comes from ONE CSV upload.
 
 ---
 
-## PART 8 — WHO DOES WHAT (for every module)
+## PART 9 — WHO DOES WHAT (for every module)
 
-### 8.1 Frontend
+### 9.1 Frontend
 
 Job: Show pages and send user actions to the backend.
 
@@ -1062,7 +1253,7 @@ Demand from frontend:
 The backend must always return the exact fields
 written in the contract.
 
-### 8.2 Backend
+### 9.2 Backend
 
 Job: Receive requests, connect all modules, return results.
 
@@ -1077,7 +1268,7 @@ Demand from backend:
 The other modules must return the exact fields
 written in the contract.
 
-### 8.3 LLM module
+### 9.3 LLM module
 
 Job: Read text and return entities + sentiment + confidence.
 
@@ -1093,7 +1284,7 @@ Demand from LLM:
 Return one list of:
 {"index": 0, "aspects": [{"entity", "sentiment", "confidence"}]}
 
-### 8.4 Analysis module
+### 9.4 Analysis module
 
 Job: Turn the LLM results into real concerns.
 
@@ -1108,14 +1299,14 @@ Demand from analysis:
 Return the list of aspects with name, sentiment,
 confidence, and known flag.
 
-### 8.5 RAG module
+### 9.5 RAG module
 
 Job: Find similar old reviews as proof.
 
 - Search old reviews using TF-IDF + cosine similarity.
 - Return the best 3 for every concern with similarity scores.
 
-### 8.6 Ranking module
+### 9.6 Ranking module
 
 Job: Say which problem to fix first.
 
@@ -1126,14 +1317,14 @@ Job: Say which problem to fix first.
 Demand from ranking:
 Return concern, count, negative_pct, impact, priority.
 
-### 8.7 Team lead
+### 9.7 Team lead
 
 Job: Make sure all modules connect, write the demo,
 and prepare the presentation.
 
 ---
 
-## PART 9 — THE CONTRACT (what every module must return)
+## PART 10 — THE CONTRACT (what every module must return)
 
 These fields are fixed. Do not rename or remove them.
 You may only add new fields.
@@ -1141,19 +1332,19 @@ You may only add new fields.
 For exact sample outputs, read the separate file:
 MODULE_CONTRACTS.md
 
-### 9.1 Stats result (dashboard)
+### 10.1 Stats result (dashboard)
 
 - total_reviews (number)
 - sentiment_distribution (positive, negative)
 - ranked_concerns (list)
 - representative_reviews (list)
 
-### 9.2 Concern registry (discovery)
+### 10.2 Concern registry (discovery)
 
 - one entry per concern
 - each entry has: canonical (final name) and terms (matching words)
 
-### 9.3 Ranking result (per concern)
+### 10.3 Ranking result (per concern)
 
 - concern (string)
 - count (number)
@@ -1163,9 +1354,9 @@ MODULE_CONTRACTS.md
 
 ---
 
-## PART 10 — WORK FLOW FOR THE TEAM
+## PART 11 — WORK FLOW FOR THE TEAM
 
-### 10.1 Finish the core modules
+### 11.1 Finish the core modules
 
 1. Build the LLM module (Groq + Llama), batching, parallel calls,
    retry, and the rule-based fallback.
@@ -1176,7 +1367,7 @@ MODULE_CONTRACTS.md
    deploy on Render, get a live URL.
 5. Build the upload button, remove sample data, connect the live URL.
 
-### 10.2 Test everything
+### 11.2 Test everything
 
 Every module must be tested:
 
@@ -1187,7 +1378,7 @@ Every module must be tested:
 - Ranking: is the priority order sensible?
 - API: do all endpoints return the contract fields?
 
-### 10.3 Final demo
+### 11.3 Final demo
 
 1. Show the landing page.
 2. Upload a CSV file with many reviews.
@@ -1199,7 +1390,7 @@ Every module must be tested:
 
 ---
 
-## PART 11 — THINGS WE MUST REMEMBER
+## PART 12 — THINGS WE MUST REMEMBER
 
 - No extra code. Every line must be used.
 - No extra styling. Keep it simple.
@@ -1209,6 +1400,9 @@ Every module must be tested:
 - Never send more than 30 reviews to the LLM in one call.
 - Always keep the fallback. The app must work without the LLM.
 - Counting, ranking, and math stay in Python. Not the LLM.
+- No trained model. The LLM + rule-based fallback is the ML part.
+- RAG is not optional: it proves every number with real quotes.
+- Interview answers are in PART 5. Read them before the demo.
 
 ---
 
