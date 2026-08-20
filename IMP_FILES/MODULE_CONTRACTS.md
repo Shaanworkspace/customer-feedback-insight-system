@@ -498,43 +498,63 @@ in section 2.3. There is no seed list to match against.
 
 ### 3.1 Job
 
-Find old reviews that look like the new review.
+Find the real reviews that talk about a concern,
+and return them as proof quotes.
+
+Stack: sentence-transformers (all-MiniLM-L6-v2) +
+ChromaDB (free vector database). See IMP_FILES/rag/rag.md
+for the full implementation.
 
 ### 3.2 Input
 
-One string of text, and a number `top_k` (default 5).
+A list of the kept concerns.
+
+```json
+["battery", "delivery", "screen"]
+```
+
+The reviews to search are the stored reviews
+(each with review_id, text, entity, sentiment).
 
 ### 3.3 Output (exact JSON)
 
+For every concern, up to 3 quotes:
+
 ```json
-[
-  {
-    "review_id": "an id",
-    "text_preview": "a short quote",
-    "similarity": 0.0 to 1.0
-  }
-]
+{
+  "battery": [
+    {"review_id": "r1", "text": "battery dies in 2 hours", "similarity": 0.92},
+    {"review_id": "r3", "text": "battery drains very fast", "similarity": 0.89}
+  ],
+  "delivery": [
+    {"review_id": "r9", "text": "delivery was very late", "similarity": 0.90}
+  ]
+}
 ```
 
-### 3.4 Real example (run on today's code)
+### 3.4 Real example
 
 ```text
-Input:   "camera is excellent but battery drains fast"
+Input:   ["battery", "delivery"]
 
 Output:
 ```
 ```json
-[
-  {
-    "review_id": "abc123",
-    "text_preview": "battery dies in 2 hours, camera is fine",
-    "similarity": 0.83
-  }
-]
+{
+  "battery": [
+    {"review_id": "r1", "text": "battery dies in 2 hours", "similarity": 0.92},
+    {"review_id": "r3", "text": "battery drains very fast", "similarity": 0.89},
+    {"review_id": "r7", "text": "worst battery life ever", "similarity": 0.85}
+  ],
+  "delivery": [
+    {"review_id": "r9", "text": "delivery was very late", "similarity": 0.90},
+    {"review_id": "r12", "text": "package came after 5 days", "similarity": 0.87}
+  ]
+}
 ```
 
-This is the MOCK result. Replace it later
-with a real TF-IDF index over the stored reviews.
+This is the MOCK result. Build the real one with
+ChromaDB as shown in IMP_FILES/rag/rag.md.
 
 ---
 

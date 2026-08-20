@@ -429,6 +429,10 @@ battery, delivery, screen.
 Input the backend gives:
 the kept concerns (battery, delivery, screen).
 
+RAG implementation: sentence-transformers embeddings +
+ChromaDB (free vector database). Full detail in
+IMP_FILES/rag/rag.md.
+
 Output the backend expects back:
 
 ```text
@@ -646,6 +650,15 @@ before the real modules are ready.
   reviews.json. These are the single source of truth.
 - Do NOT train any ML model. The LLM + rule-based
   fallback is the whole ML part.
+
+## PART 9 — RULES FOR RAG (do not break these)
+
+- Use ChromaDB + sentence-transformers. No other DB.
+- Embed every review ONCE after the upload.
+- Query top 3 per kept concern (cosine similarity).
+- Every quote must be a REAL review from the data.
+- Never make up a quote. Never let the LLM write quotes.
+- Full implementation: IMP_FILES/rag/rag.md.
 
 ---
 

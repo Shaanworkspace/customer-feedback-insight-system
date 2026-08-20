@@ -152,13 +152,14 @@ If we count them separately, the numbers become wrong.
 
 So the app groups similar phrases into ONE concern.
 
-The app changes every phrase into a TF-IDF vector (a number pattern)
-and measures how similar two phrases are.
+The LLM gets the list of already-known entities (the
+global registry) in every batch prompt. When it sees
+"battery life", it reuses the exact name "battery".
 
-IF two phrases have a similarity higher than 0.7
-THEN they are the SAME concern.
+IF the phrase means an existing concern
+THEN the LLM returns the existing name.
 ELSE
-THEN they stay as different concerns.
+THEN the LLM creates a new concern name.
 
 ```text
 "battery life"    ---similar---> "battery"      -> ONE concern: battery
@@ -528,12 +529,15 @@ both become "battery".
 The LLM is generative: it can answer but it can
 also make things up (hallucination).
 
-So RAG searches the STORED reviews (TF-IDF + cosine
-similarity) and returns REAL review quotes as proof.
+So RAG searches the STORED reviews (sentence-transformers
+embeddings + ChromaDB vector search, cosine similarity)
+and returns REAL review quotes as proof.
 
 ```text
 AI finds the problem. RAG proves it with real evidence.
 ```
+
+RAG implementation detail: IMP_FILES/rag/rag.md
 
 ### 5.6 The batch rules (never break these)
 
@@ -578,7 +582,8 @@ Answer:
 Answer:
 
 > "The LLM is generative and can hallucinate. RAG searches
-> the stored reviews with TF-IDF and cosine similarity, so
+> the stored reviews with embeddings in a vector database
+> (ChromaDB) and cosine similarity, so
 > every quote shown is a REAL review from the data.
 > AI finds the problem, RAG proves it with evidence."
 
@@ -1303,7 +1308,8 @@ confidence, and known flag.
 
 Job: Find similar old reviews as proof.
 
-- Search old reviews using TF-IDF + cosine similarity.
+- Search stored reviews with sentence-transformers
+  embeddings in ChromaDB (cosine similarity).
 - Return the best 3 for every concern with similarity scores.
 
 ### 9.6 Ranking module

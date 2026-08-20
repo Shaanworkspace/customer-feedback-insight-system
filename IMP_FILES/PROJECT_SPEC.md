@@ -57,13 +57,15 @@ Static lexicon = project ki death. System ko **khud** pata karna chahiye comment
 4. **Confidence score:** har entity ke saath pakka-ness (0-1)
 
 ### 6.3 Dynamic discovery (finalized concept — optimized)
-- **Zero seed** — koi fixed lexicon nahi. Pehla step khud entities extract karta hai
-- **Extract:** POS noun-phrases (compound = 1, conjunction = 2)
-- **Merge:** TF-IDF + cosine similarity — same-meaning phrases ek concern ("battery life" ≈ "battery")
+
+LLM karta hai extract + merge (khud samajhta hai "battery life" = "battery"). Python karta hai count + filter + rank.
+
+- **Zero seed** — koi fixed lexicon nahi. LLM khud entities extract karta hai
+- **Extract:** LLM (compound = 1, conjunction = 2)
+- **Merge:** LLM ko registry ki known entities prompt me dete hain → wo same naam reuse karta hai ("battery life" → "battery")
 - **Filter 1 (support):** ≥5 reviews me aaye
 - **Filter 2 (discrimination):** phrase ka negative ratio > overall negative ratio — tabhi problem hai
 - **Incremental:** sirf naye reviews process, old counts save → 1M reviews minutes me
-- **NMF fallback:** hidden topics jo ek noun phrase me nahi aate
 - Global registry (`concern_registry.json`) grow hota hai
 - Naya concern aane par purane reviews re-analyze
 - Output: `things_mentioned` + `aspects[]` (entity + sentiment + confidence)
@@ -87,7 +89,7 @@ Complex NLP khud nahi likhenge — **open-source LLM use karenge**:
 
 - Backend: Python 3.11, FastAPI, pandas
 - LLM: Groq API + Llama 3.3 70B (open source, free tier) + rule-based fallback
-- Analysis: scikit-learn (TF-IDF + cosine similarity) for merge/RAG
+- RAG: sentence-transformers (all-MiniLM-L6-v2) + ChromaDB (free vector DB)
 - Frontend: React (Vite) + Recharts
 - Deploy: Render (free tier), CI: GitHub Actions
 
