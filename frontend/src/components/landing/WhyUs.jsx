@@ -36,11 +36,11 @@ const rows = [
 
 export default function WhyUs() {
   return (
-    <section className="landing-section why-section">
-      <div className="section-heading">
+    <section className="why-section">
+      <div className="why-heading">
         <div className="landing-badge">WHY WE ARE BETTER</div>
-        <h2>See the difference</h2>
-        <p>Three ways we beat the alternatives.</p>
+        <h2>Three ways we beat the alternatives</h2>
+        <p>See the real difference — with focus on what matters.</p>
       </div>
 
       <div className="why-rows">

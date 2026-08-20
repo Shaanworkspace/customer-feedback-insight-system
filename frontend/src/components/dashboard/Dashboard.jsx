@@ -18,9 +18,16 @@ export default function Dashboard() {
 
   if (!stats) {
     return (
-      <div className="loading-card">
-        <div className="loader"></div>
-        <p>Loading customer insights...</p>
+      <div className="dashboard-skeleton" aria-label="Loading insights">
+        <div className="skel skel-hero"></div>
+        <div className="skel-grid">
+          <div className="skel skel-card"></div>
+          <div className="skel skel-card"></div>
+          <div className="skel skel-card"></div>
+          <div className="skel skel-card"></div>
+        </div>
+        <div className="skel skel-panel"></div>
+        <div className="skel skel-panel"></div>
       </div>
     )
   }

@@ -7,7 +7,8 @@ export default function StatsSection() {
   ]
 
   return (
-    <section className="landing-section stats-section">
+    <section className="stats-section">
+      <div className="stats-bg" role="presentation"></div>
       <div className="stats-panel">
         {stats.map((s) => (
           <div key={s.label}>
