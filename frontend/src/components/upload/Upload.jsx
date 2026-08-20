@@ -1,5 +1,8 @@
 import { useState } from 'react'
-import { uploadReviews } from '../../api'
+import { uploadReviews, setApiBase } from '../../api'
+
+const LOCAL_BASE = 'http://localhost:8000'
+const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
 
 export default function Upload({ onDone, onCancel }) {
   const [file, setFile] = useState(null)
@@ -38,7 +41,7 @@ export default function Upload({ onDone, onCancel }) {
     acceptFile(e.dataTransfer.files?.[0])
   }
 
-  const handleUpload = async (e) => {
+  const handleUpload = async (e, base) => {
     e.preventDefault()
     if (!file) {
       setError('Please choose a CSV file first.')
@@ -47,6 +50,7 @@ export default function Upload({ onDone, onCancel }) {
 
     setBusy(true)
     setError('')
+    setApiBase(base)
 
     try {
       await uploadReviews(file)
@@ -72,7 +76,7 @@ export default function Upload({ onDone, onCancel }) {
             Drop your CSV here and get ranked, proven insights in seconds.
           </p>
 
-          <form onSubmit={handleUpload}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <label
               className={`mt-6 flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#b9c8d8] bg-[#fafcff] transition ${
                 dragging ? 'border-solid border-[#173f73] bg-[#eef4fb]' : 'hover:border-[#47739e] hover:bg-[#f5f9fd]'
@@ -107,11 +111,21 @@ export default function Upload({ onDone, onCancel }) {
             )}
 
             <button
-              type="submit"
+              type="button"
               className="mt-6 w-full cursor-pointer rounded-[9px] border-0 bg-[#173f73] px-5 py-3 font-bold text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f] disabled:cursor-not-allowed"
               disabled={busy}
+              onClick={(e) => handleUpload(e, LOCAL_BASE)}
             >
-              {busy ? 'Analyzing…' : 'Upload & Continue'}
+              {busy ? 'Analyzing…' : 'Upload & Continue ON LOCAL'}
+            </button>
+
+            <button
+              type="button"
+              className="mt-3 w-full cursor-pointer rounded-[9px] border border-[#173f73] bg-white px-5 py-3 font-bold text-[#173f73] transition hover:bg-[#eef4fb] disabled:cursor-not-allowed"
+              disabled={busy}
+              onClick={(e) => handleUpload(e, DEPLOYED_BASE)}
+            >
+              Upload & Continue ON DEPLOYED
             </button>
           </form>
 

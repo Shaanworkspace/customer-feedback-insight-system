@@ -1,7 +1,20 @@
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
 
+const LOCAL_BASE = 'http://localhost:8000'
+const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
+
+let currentBase = API_BASE
+
+export function setApiBase(base) {
+  currentBase = base
+}
+
+export function getApiBase() {
+  return currentBase
+}
+
 export async function getStats() {
-  const res = await fetch(`${API_BASE}/api/v1/stats`)
+  const res = await fetch(`${currentBase}/api/v1/stats`)
 
   if (!res.ok) {
     throw new Error('Stats request failed')
@@ -11,7 +24,7 @@ export async function getStats() {
 }
 
 export async function analyzeReview(text) {
-  const res = await fetch(`${API_BASE}/api/v1/analyze`, {
+  const res = await fetch(`${currentBase}/api/v1/analyze`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ review_text: text }),
@@ -29,7 +42,7 @@ export async function uploadReviews(file) {
     const formData = new FormData()
     formData.append('file', file)
 
-    const res = await fetch(`${API_BASE}/api/v1/upload`, {
+    const res = await fetch(`${currentBase}/api/v1/upload`, {
       method: 'POST',
       body: formData,
     })
