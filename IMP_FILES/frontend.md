@@ -91,11 +91,13 @@ Password: [____________]
 
 ### 2.3 After login
 
-The user stays signed in.
-If they close the browser and open the app again,
-they do NOT need to sign in again.
+IF the email and password are correct
+THEN the app moves to the Upload page (PART 3).
+The frontend keeps a simple flag in the browser
+("user is signed in").
+No token, no backend login request.
 
-IF they were signed in before
+IF the user opens the app again and the flag is set
 THEN the landing page is skipped
 and the app opens the Upload page directly.
 
@@ -342,28 +344,19 @@ is visible with loading placeholders inside.
 
 ## PART 6 — THE REQUESTS THE FRONTEND MAKES
 
-The frontend needs only these 5 requests.
+The frontend needs only these 4 requests.
+No token, no login request. Login is handled inside the app.
 
-### 6.1 Login
-
-```text
-POST /api/v1/login
-body: {"email": "...", "password": "..."}
-returns: {"token": "..."}
-```
-
-The token is saved in the browser.
-All following requests send this token.
-
-### 6.2 Upload the CSV
+### 6.1 Upload the CSV
 
 ```text
 POST /api/v1/upload
 body: the CSV file (multipart)
-returns: the full stats result
 ```
 
-### 6.3 Get the dashboard stats
+Returns the full stats result (same shape as GET /api/v1/stats).
+
+### 6.2 Get the dashboard stats
 
 ```text
 GET /api/v1/stats
@@ -374,7 +367,10 @@ Returns:
 ```json
 {
   "total_reviews": 100,
-  "sentiment_distribution": {"positive": 61, "negative": 39},
+  "sentiment_distribution": {
+    "positive": 61,
+    "negative": 39
+  },
   "ranked_concerns": [
     {"concern": "battery", "count": 48, "negative_pct": 79.2, "impact": 100, "priority": 1},
     {"concern": "delivery", "count": 20, "negative_pct": 55.0, "impact": 29, "priority": 2},
@@ -387,7 +383,7 @@ Returns:
 }
 ```
 
-### 6.4 Get the reviews for the Reviews tab
+### 6.3 Get the reviews for the Reviews tab
 
 ```text
 GET /api/v1/reviews
@@ -402,13 +398,22 @@ Returns:
 ]
 ```
 
-### 6.5 Check if analysis is still running
+### 6.4 Check if analysis is still running
 
 The dashboard sections poll this while they are loading:
 
 ```text
 GET /api/v1/status
-returns: {"status": "processing", "done": 40, "total": 100}
+```
+
+Returns:
+
+```json
+{
+  "status": "processing",
+  "done": 40,
+  "total": 100
+}
 ```
 
 When status becomes "done", the sections fill with data.
@@ -433,7 +438,7 @@ It never decides the data.
 - Keep it simple. No extra styling, no extra pages.
 - Never show fake numbers. The numbers come from the backend.
 - Never show a blank full screen. Every section loads itself.
-- The 5 requests in PART 6 are the only ones allowed.
+- The 4 requests in PART 6 are the only ones allowed.
 - Field names come from the contract. Do not rename them.
 
 ---
