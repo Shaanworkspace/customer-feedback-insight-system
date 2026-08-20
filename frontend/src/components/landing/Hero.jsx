@@ -1,8 +1,8 @@
 export default function Hero({ onStart }) {
   return (
-    <section className="relative flex min-h-[68vh] items-center justify-center overflow-hidden px-6 py-20">
+    <section className="relative flex min-h-[68vh] items-center justify-center overflow-hidden px-6 pb-20 pt-[74px]">
       <div
-        className="absolute inset-0 bg-cover bg-center blur-[2px] saturate-120"
+        className="absolute inset-0 bg-cover bg-top blur-[2px] saturate-120"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1800&q=70')",
