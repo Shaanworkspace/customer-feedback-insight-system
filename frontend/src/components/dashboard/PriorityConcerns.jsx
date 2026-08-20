@@ -1,4 +1,6 @@
 export default function PriorityConcerns({ concerns }) {
+  const top = concerns[0]
+
   return (
     <div className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
       <div className="mb-5 flex items-start justify-between">
@@ -14,24 +16,38 @@ export default function PriorityConcerns({ concerns }) {
       <div className="flex flex-col gap-5">
         {concerns.map((item, index) => (
           <div className="grid grid-cols-[32px_1fr_42px] items-center gap-3" key={item.concern}>
-            <div className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-[#edf3fa] text-[12px] font-extrabold text-[#173f73]">
+            <div
+              className={`flex h-[30px] w-[30px] items-center justify-center rounded-lg text-[12px] font-extrabold ${
+                index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'
+              }`}
+            >
               {index + 1}
             </div>
 
             <div>
               <div className="mb-2 flex justify-between">
                 <strong className="text-[13px] capitalize">{item.concern}</strong>
-                <span className="text-[10px] text-[#8a96a8]">{item.count.toLocaleString()} mentions</span>
+                <span className="text-[10px] text-[#8a96a8]">
+                  {item.count.toLocaleString()} mentions
+                  {top && ` · ${Math.round((item.count / concerns.reduce((a, c) => a + c.count, 0)) * 100)}% share`}
+                </span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-[10px] bg-[#edf1f5]">
-                <div className="h-full rounded-[10px] bg-[#173f73]" style={{ width: `${item.impact}%` }}></div>
+                <div
+                  className={`h-full rounded-[10px] ${index === 0 ? 'bg-[#c94a3d]' : 'bg-[#173f73]'}`}
+                  style={{ width: `${item.impact}%` }}
+                ></div>
               </div>
               <small className="mt-1 block text-[10px] text-[#8a96a8]">
                 {item.negative_pct}% negative sentiment
               </small>
             </div>
 
-            <div className="rounded-lg bg-[#edf3fa] px-1 py-2 text-center text-[12px] font-extrabold text-[#173f73]">
+            <div
+              className={`rounded-lg px-1 py-2 text-center text-[12px] font-extrabold ${
+                index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'
+              }`}
+            >
               {item.impact}
             </div>
           </div>

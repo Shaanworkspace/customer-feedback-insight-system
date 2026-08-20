@@ -41,6 +41,15 @@ export default function Dashboard() {
   const reviews = stats.representative_reviews || []
   const concernNames = [...new Set(concerns.map((item) => item.concern))]
 
+  const emailBody = encodeURIComponent(
+    `Customer Feedback Insight System — Summary\n\n` +
+    `Total reviews: ${total.toLocaleString()}\n` +
+    `Positive: ${positive.toLocaleString()} (${positivePct}%)\n` +
+    `Negative: ${negative.toLocaleString()} (${negativePct}%)\n\n` +
+    `Priority concerns:\n` +
+    concerns.map((c, i) => `${i + 1}. ${c.concern} — ${c.count.toLocaleString()} mentions, ${c.negative_pct}% negative (impact ${c.impact})`).join('\n')
+  )
+
   return (
     <div className="w-full">
       <section className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
@@ -53,9 +62,17 @@ export default function Dashboard() {
             Turn thousands of customer reviews into clear, actionable insights.
           </p>
         </div>
-        <div className="rounded-full border border-[#ccebd7] bg-[#edf8f1] px-3.5 py-2 text-[12px] font-bold text-[#23834a]">
-          <span className="mr-2 inline-block h-[7px] w-[7px] rounded-full bg-[#2eaf62]"></span>
-          Analysis ready
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <div className="rounded-full border border-[#ccebd7] bg-[#edf8f1] px-3.5 py-2 text-[12px] font-bold text-[#23834a]">
+            <span className="mr-2 inline-block h-[7px] w-[7px] rounded-full bg-[#2eaf62]"></span>
+            Analysis ready
+          </div>
+          <a
+            className="rounded-full border border-[#173f73] bg-[#173f73] px-4 py-2 text-[12px] font-bold text-white shadow-[0_5px_14px_rgba(23,63,115,0.22)] transition hover:-translate-y-0.5 hover:bg-[#12345f]"
+            href={`mailto:?subject=${encodeURIComponent('Customer Feedback Summary')}&body=${emailBody}`}
+          >
+            Send as email
+          </a>
         </div>
       </section>
 

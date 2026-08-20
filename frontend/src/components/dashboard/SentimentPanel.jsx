@@ -24,7 +24,7 @@ export default function SentimentPanel({ positive, negative, positivePct, negati
           </div>
         </div>
 
-        <div className="flex-1">
+        <div className="w-full flex-1">
           <div className="mb-5 grid grid-cols-[12px_1fr_auto] items-center gap-2.5">
             <span className="h-[9px] w-[9px] rounded-full bg-[#173f73]"></span>
             <div className="flex flex-col">
@@ -34,13 +34,24 @@ export default function SentimentPanel({ positive, negative, positivePct, negati
             <b className="text-[13px] text-[#53647a]">{positivePct}%</b>
           </div>
 
-          <div className="grid grid-cols-[12px_1fr_auto] items-center gap-2.5">
+          <div className="mb-6 grid grid-cols-[12px_1fr_auto] items-center gap-2.5">
             <span className="h-[9px] w-[9px] rounded-full bg-[#e05252]"></span>
             <div className="flex flex-col">
               <strong className="text-[13px]">Negative</strong>
               <span className="mt-0.5 text-[11px] text-[#8a96a8]">{negative.toLocaleString()} reviews</span>
             </div>
             <b className="text-[13px] text-[#53647a]">{negativePct}%</b>
+          </div>
+
+          <div className="h-2.5 overflow-hidden rounded-full bg-[#eef1f5]">
+            <div
+              className="h-full rounded-full bg-[#173f73]"
+              style={{ width: `${positivePct}%` }}
+            ></div>
+          </div>
+          <div className="mt-2 flex justify-between text-[10px] text-[#8a96a8]">
+            <span>Positive {positivePct}%</span>
+            <span>Negative {negativePct}%</span>
           </div>
         </div>
       </div>
