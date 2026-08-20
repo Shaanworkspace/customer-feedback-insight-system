@@ -82,6 +82,57 @@ def load_rag_index() -> Optional[Dict]:
     return index
 
 
+def ensure_index() -> Dict:
+    """Load an existing RAG index, or build the TF-IDF one from the
+    bundled sample reviews so proofs always work on a fresh server."""
+    index = load_rag_index()
+
+    if index is not None:
+        return index
+
+    logger.info("No RAG index found, building TF-IDF from sample data.")
+    index = tfidf_backend.build_index(_load_sample_records())
+    index["backend"] = tfidf_backend.NAME
+    tfidf_backend.save_index(index)
+    return index
+
+
+def _load_sample_records() -> List[Dict]:
+    import pandas as pd
+
+    from cfa.core.config import RAG_DATA_DIR
+
+    records = []
+
+    for filename in ("laptop_reviews.csv", "speaker_reviews.csv", "watch_reviews.csv"):
+        path = RAG_DATA_DIR / filename
+
+        if not path.exists():
+            logger.warning("Sample file not found: %s", path)
+            continue
+
+        df = pd.read_csv(path)
+
+        for _, row in df.iterrows():
+            text = str(row.get("review_text", "")).strip()
+
+            if not text:
+                continue
+
+            records.append({
+                "review_id": str(row.get("review_id", "")).strip(),
+                "text": text,
+                "rating": row.get("rating"),
+                "date": row.get("date"),
+            })
+
+    if not records:
+        raise ValueError("No sample review records found.")
+
+    logger.info("Loaded %d sample reviews for RAG.", len(records))
+    return records
+
+
 def retrieve_similar_reviews(
     query: str,
     rag_index: Optional[Dict],
