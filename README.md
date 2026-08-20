@@ -44,7 +44,7 @@ python -m cfa.ml.train
 uvicorn cfa.api.main:app --reload
 ```
 
-API docs available at http://localhost:8000/docs
+API docs available at https://cfa-api.onrender.com/docs (live) or http://localhost:8000/docs (local)
 
 ## API endpoints
 

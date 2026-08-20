@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
 
 export async function getStats() {
   const res = await fetch(`${API_BASE}/api/v1/stats`)
