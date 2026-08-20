@@ -12,3 +12,5 @@ services:
         value: /opt/render/project/src/data
       - key: MODELS_DIR
         value: /opt/render/project/src/models
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:5173,https://customer-feedback-insight-system.vercel.app

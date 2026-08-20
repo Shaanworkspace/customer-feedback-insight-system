@@ -7,7 +7,7 @@ from cfa.core.config import DATA_DIR
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
-_default_origins = "http://localhost:5173"
+_default_origins = "http://localhost:5173,https://customer-feedback-insight-system.vercel.app"
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get("ALLOWED_ORIGINS", _default_origins).split(",")
