@@ -20,7 +20,7 @@ from cfa.api.config import (
 )
 from cfa.api.llm import call_llm_batch, rule_based_sentiment
 from cfa.ranking.priority import rank_concerns
-from cfa.analysis.rag import load_rag_index, get_proof
+from cfa.analysis.rag import get_proof, tfidf_backend
 
 STATUS = {"status": "idle", "done": 0, "total": 0}
 
@@ -140,7 +140,6 @@ def analyze_review(text: str) -> Dict:
 
 def run_pipeline(new_reviews: List[str]) -> Dict:
     registry: Dict[str, Dict] = _load_json(REGISTRY_PATH, {})
-    rag_index = load_rag_index()
     reviews_log: List[Dict] = _load_json(REVIEWS_PATH, [])
     prev_stats = _load_json(CONCERN_STATS_PATH, {"total_reviews": 0})
 
@@ -170,16 +169,18 @@ def run_pipeline(new_reviews: List[str]) -> Dict:
     }
     proof_by_concern = {}
 
-    if rag_index:
-      for concern in kept:
-        try:
-            proof_by_concern[concern] = get_proof(
-                concern,
-                rag_index,
-                top_k=5,
-            )
-        except Exception:
-            proof_by_concern[concern] = []
+    if kept and reviews_log:
+        rag_records = [
+            {"review_id": r["review_id"], "text": r["text"]}
+            for r in reviews_log
+        ]
+        rag_index = tfidf_backend.build_index(rag_records)
+        rag_index["backend"] = tfidf_backend.NAME
+        for concern in kept:
+            try:
+                proof_by_concern[concern] = get_proof(concern, rag_index, top_k=5)
+            except Exception:
+                proof_by_concern[concern] = []
 
     ranked = rank_concerns({
         "concerns": [

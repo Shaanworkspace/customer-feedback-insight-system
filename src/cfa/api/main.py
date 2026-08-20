@@ -12,7 +12,6 @@ from fastapi.responses import JSONResponse
 from cfa.api.config import ALLOWED_ORIGINS, CONCERN_STATS_PATH, REVIEWS_PATH
 from cfa.api.pipeline import STATUS, analyze_review, clean_reviews, run_pipeline
 from cfa.api.schemas import AnalyzeRequest
-from cfa.analysis.rag import ensure_index
 
 app = FastAPI(title="Customer Feedback Insight System")
 
@@ -29,14 +28,6 @@ _DEFAULT_STATS = {
     "ranked_concerns": [],
     "representative_reviews": [],
 }
-
-
-@app.on_event("startup")
-def _startup():
-    try:
-        ensure_index()
-    except Exception as exc:
-        print(f"RAG index init skipped: {exc}")
 
 
 @app.get("/health")
