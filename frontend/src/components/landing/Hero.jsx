@@ -1,6 +1,7 @@
 export default function Hero({ onStart }) {
   return (
     <section className="landing-hero">
+      <div className="hero-bg" role="presentation"></div>
       <div className="landing-content">
         <div className="landing-badge">CUSTOMER INTELLIGENCE PLATFORM</div>
         <h1>

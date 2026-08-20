@@ -2,7 +2,7 @@ export default function AppHeader({ tab, setTab, onUpload }) {
   const tabs = ['dashboard', 'analyzer', 'explorer']
 
   return (
-    <header className="topbar">
+    <header className="topbar glass">
       <div className="brand">
         <div className="brand-icon">CF</div>
         <div>

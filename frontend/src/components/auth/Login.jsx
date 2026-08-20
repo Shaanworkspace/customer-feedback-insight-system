@@ -1,7 +1,8 @@
 export default function Login({ onLogin }) {
   return (
     <div className="auth-page">
-      <div className="auth-card">
+      <div className="auth-bg" role="presentation"></div>
+      <div className="auth-card glass-card">
         <div className="auth-brand">
           <div className="brand-icon">CF</div>
           <div>

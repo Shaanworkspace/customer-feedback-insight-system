@@ -1,6 +1,6 @@
 export default function SiteHeader() {
   return (
-    <header className="site-header">
+    <header className="site-header glass">
       <div className="site-brand">
         <div className="site-logo">CF</div>
         <div>
@@ -8,9 +8,7 @@ export default function SiteHeader() {
           <span>Insight System</span>
         </div>
       </div>
-      <div className="site-header-badge">
-        AI-powered insights
-      </div>
+      <div className="site-header-badge">AI-powered insights</div>
     </header>
   )
 }
