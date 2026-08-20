@@ -29,7 +29,7 @@ export default function App() {
 
   if (stage === 'landing') {
     return (
-      <div className="site-page">
+      <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
         <SiteHeader />
         <Landing onStart={() => setStage('login')} />
         <SiteFooter />
@@ -39,7 +39,7 @@ export default function App() {
 
   if (stage === 'login') {
     return (
-      <div className="site-page">
+      <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
         <SiteHeader />
         <Login onLogin={handleLogin} />
         <SiteFooter />
@@ -49,7 +49,7 @@ export default function App() {
 
   if (stage === 'upload') {
     return (
-      <div className="site-page">
+      <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
         <SiteHeader />
         <Upload onDone={handleUploadDone} onCancel={handleUploadCancel} />
         <SiteFooter />
@@ -58,14 +58,14 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(39,92,145,0.08),transparent_30%),#f4f6f9]">
       <AppHeader tab={tab} setTab={setTab} onUpload={() => setStage('upload')} />
-      <main className="page-container">
+      <main className="mx-auto w-[min(1180px,92%)] py-10 pb-14">
         {tab === 'dashboard' && <Dashboard />}
         {tab === 'analyzer' && <Analyzer />}
         {tab === 'explorer' && <Explorer />}
       </main>
-      <footer className="footer">
+      <footer className="mx-auto flex w-[min(1180px,92%)] justify-between border-t border-[#e2e7ee] py-6 text-[11px] text-[#8b98a9]">
         <span>Customer Feedback Insight System</span>
         <span>AI-powered customer intelligence</span>
       </footer>
