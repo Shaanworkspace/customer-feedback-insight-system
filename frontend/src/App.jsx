@@ -30,7 +30,7 @@ export default function App() {
   if (stage === 'landing') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader />
+        <SiteHeader onStart={() => setStage('login')} />
         <Landing onStart={() => setStage('login')} />
         <SiteFooter />
       </div>
@@ -40,7 +40,7 @@ export default function App() {
   if (stage === 'login') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader />
+        <SiteHeader onStart={() => setStage('login')} />
         <Login onLogin={handleLogin} />
         <SiteFooter />
       </div>
@@ -50,7 +50,7 @@ export default function App() {
   if (stage === 'upload') {
     return (
       <div className="flex min-h-screen flex-col bg-[#f4f6f9]">
-        <SiteHeader />
+        <SiteHeader onStart={() => setStage('login')} />
         <Upload onDone={handleUploadDone} onCancel={handleUploadCancel} />
         <SiteFooter />
       </div>
