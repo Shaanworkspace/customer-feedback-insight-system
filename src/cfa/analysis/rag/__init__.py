@@ -14,13 +14,13 @@ to the correct backend.
 import logging
 from typing import Any, Dict, List, Optional
 
-from cfa.core.config import RAG_TOP_K
+from cfa.core.config import RAG_BACKEND, RAG_TOP_K
 
 from cfa.analysis.rag import chroma_backend, tfidf_backend
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_BACKEND = "chroma"
+DEFAULT_BACKEND = RAG_BACKEND
 
 
 def _resolve_backend(name: str):
@@ -30,6 +30,12 @@ def _resolve_backend(name: str):
 
 
 def build_rag_index(records: List[Dict], vectorizer: Any = None) -> Dict:
+    if DEFAULT_BACKEND == "tfidf":
+        index = tfidf_backend.build_index(records)
+        index["backend"] = tfidf_backend.NAME
+        tfidf_backend.save_index(index)
+        return index
+
     backend = chroma_backend
 
     try:
@@ -64,6 +70,13 @@ def save_rag_index(index: Dict) -> None:
 
 
 def load_rag_index() -> Optional[Dict]:
+    if DEFAULT_BACKEND == "tfidf":
+        index = tfidf_backend.load_index()
+        if index is None:
+            return None
+        index["backend"] = tfidf_backend.NAME
+        return index
+
     backend = chroma_backend
     index = backend.load_index()
 

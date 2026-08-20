@@ -1,5 +1,6 @@
 """Central configuration for the project."""
 
+import os
 from pathlib import Path
 
 # src/cfa/core/config.py -> src/cfa -> project root
@@ -45,6 +46,9 @@ RAG_ANALYTICS_PATH = ARTIFACTS_DIR / "rag_analytics.joblib"
 
 # ChromaDB collection name
 RAG_COLLECTION_NAME = "reviews"
+
+# RAG backend: chroma (vector DB) or tfidf (lightweight fallback)
+RAG_BACKEND = os.getenv("RAG_BACKEND", "chroma")
 
 # RAG returns up to 3 proof reviews per concern
 RAG_TOP_K = 5
