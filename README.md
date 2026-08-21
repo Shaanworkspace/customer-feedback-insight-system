@@ -1,102 +1,244 @@
 # Customer Feedback Insight System
 
-Hackathon project: Sentiment Analysis of Customer Reviews using the Amazon Reviews Dataset.
+> Upload your customer reviews. Get a ranked, proven list of what customers hate, why they hate it, and what to fix first — backed by real customer quotes.
 
-The system reads customer reviews, classifies sentiment, finds which product aspects
-customers complain about (battery, camera, delivery, price), and shows what needs fixing
-first. It has a dashboard for aggregate analysis and a live analyzer for single reviews.
+[![Live Frontend](https://img.shields.io/badge/Live-Frontend-blue?style=flat&logo=vercel)](https://customer-feedback-insight-system.vercel.app)
+[![Live API](https://img.shields.io/badge/Live-API-green?style=flat&logo=render)](https://cfa-api.onrender.com/health)
+[![Built with React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://react.dev)
+[![Built with FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![ML](https://img.shields.io/badge/ML-TF--IDF%20%2B%20LogReg-orange)](https://scikit-learn.org)
 
-## How it works
+---
 
-Review -> overall sentiment -> detected concerns -> concern-level sentiment ->
-concern frequency -> negative percentage -> priority ranking.
+## What is this?
 
-## Project structure
+Companies get thousands of reviews, but reading them one by one is impossible. This system takes a CSV of customer reviews and automatically answers three questions:
 
-```
-src/cfa/           backend package
-  api/             FastAPI endpoints + upload pipeline
-  analysis/        concern detection + aspect sentiment + RAG retrieval
-  ranking/         impact score + priority ranking
-  ml/              sentiment prediction
-  core/            config
-frontend/          React app (dashboard, analyzer, explorer)
-tests/             module tests
-data/              dataset + saved stats (gitignored)
-models/            trained artifacts (gitignored)
-```
+1. **What are customers complaining about?** (concerns like battery, delivery, camera, price…)
+2. **How do they feel?** (positive or negative sentiment)
+3. **What should we fix first?** (a ranked list of problems, each with real customer proof)
 
-## Setup
+It is built for the Cognizant hackathon. The whole point is: **no fake numbers**. Every chart on the dashboard comes directly from the CSV you upload. Nothing is hardcoded.
 
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+---
 
-# run the API
-uvicorn cfa.api.main:app --reload
+## Key Features
 
-# run the frontend
-cd frontend && npm install && npm run dev
-```
+- **CSV upload** that understands both the real Kaggle Amazon format and a simple `review_text,rating,date` format.
+- **Sentiment analysis** on every review (positive / negative) using an ML model, with a safe keyword fallback.
+- **Concern detection** that tags each review with what it is about (battery, camera, delivery, screen, price, customer service, and more).
+- **Priority ranking** that scores each concern by *how often it appears* × *how negative it is*, so the worst problems rise to the top.
+- **Dashboard with charts**: sentiment split, priority concerns, rating distribution, reviews over time, and market-by-country.
+- **Real proof per concern**: open a concern and see the actual customer reviews that mention it (this is the RAG part).
+- **Works locally and on the deployed cloud** with a one-click switch between LOCAL and DEPLOYED backends.
 
-API docs available at http://localhost:8000/docs
+---
 
-## API endpoints
+## How it works (in three lines)
 
-- GET /health - app status + counters
-- POST /api/v1/analyze - one review -> sentiment, concerns, priority
-- POST /api/v1/upload - CSV file -> full pipeline, returns dashboard stats
-- GET /api/v1/stats - dashboard aggregates (real saved data)
-- GET /api/v1/reviews - raw reviews for the explorer
+1. You upload a CSV of reviews.
+2. The backend reads every row, figures out the sentiment and the concern, and saves the results.
+3. The frontend reads those results and draws the charts.
 
-## Data source
+That is the whole idea. The rest of this document explains each step in plain English, with examples.
 
-Amazon Reviews Dataset. Each review keeps its review text, entity and
-sentiment in data/reviews.json. Aggregates (sentiment split, ranked
-concerns, proof quotes) live in data/concern_stats.json.
+---
 
 ## Architecture
 
-### Current (simple)
+```
+┌──────────────────────────┐         ┌──────────────────────────────┐
+│  Browser (React)         │         │  Backend (FastAPI)           │
+│  Vercel / localhost      │         │  Render / localhost:8000     │
+│                          │         │                              │
+│  Landing → Login →       │  HTTP   │  /api/v1/upload  (CSV in)    │
+│  Upload → Dashboard      │ ──────▶ │  /api/v1/stats   (JSON out) │
+│  (charts via Recharts)   │ ◀────── │  /api/v1/reviews            │
+│                          │         │  /api/v1/analyze            │
+│  api.js  ──fetch()──▶    │         │  /api/v1/concern-comments   │
+└──────────────────────────┘         └───────────┬──────────────────┘
+                                                 │ calls
+                                                 ▼
+                                    ┌────────────────────────────┐
+                                    │  Analysis modules          │
+                                    │  • concerns.py (detect)    │
+                                    │  • ml/serve.py (sentiment) │
+                                    │  • rag.py (find similar)   │
+                                    │  • ranking/priority.py     │
+                                    │  • analysis/stats.py       │
+                                    └───────────┬────────────────┘
+                                                │ writes/reads
+                                                ▼
+                                    ┌────────────────────────────┐
+                                    │  data/  (gitignored)       │
+                                    │  • reviews.json            │
+                                    │  • concern_stats.json      │
+                                    └────────────────────────────┘
+```
 
-Monolith: FastAPI serves both the analysis logic and the saved data.
-Concerns are detected with a lexicon, sentiment with a keyword model.
-Works end to end with one server process.
+The `data/` folder is **gitignored** on purpose. That means the app never ships with fake/stored results. The moment you upload a CSV, the backend writes fresh `reviews.json` and `concern_stats.json` from *your* data only.
 
-### Alternative A (async + queue)
+---
 
-Add a task queue (Celery + Redis) so large CSV uploads run in the
-background. The upload endpoint returns a job id, the frontend polls
-until the job finishes. Better for very large datasets.
+## Tech Stack
 
-### Alternative B (LLM pipeline)
+| Layer | Technology | Why |
+|-------|------------|-----|
+| Frontend | React + Vite + Tailwind CSS v4 + Recharts | Fast, modern, easy charts |
+| Backend | FastAPI (Python) | Auto docs, async, simple |
+| ML | scikit-learn (TF-IDF + Logistic Regression) | Small, fast, no GPU, explainable |
+| Retrieval (RAG) | Word-overlap similarity over saved reviews | No vector DB, no model needed |
+| Deploy | Vercel (frontend) + Render (backend) | Free, one-click |
 
-Replace the keyword sentiment model with a batched LLM (e.g. Llama 3.3
-via Groq). An LLM reads reviews in batches, returns entity + sentiment +
-confidence for every review, and the Python side keeps counting, ranking
-and RAG. Same output shape, higher accuracy on real-world language.
+---
 
-### Alternative C (vector RAG)
+## Project Structure
 
-Replace the word-overlap RAG with embeddings (sentence-transformers)
-stored in a vector store. Retrieval becomes semantic instead of exact
-word match, so paraphrases are found too.
+```
+.
+├── frontend/                  # React app
+│   ├── src/
+│   │   ├── api.js             # all backend calls (base URL switch)
+│   │   ├── App.jsx            # routing + view state
+│   │   ├── components/
+│   │   │   ├── layout/        # SiteHeader, AppHeader, SiteFooter
+│   │   │   ├── landing/       # Landing + Hero
+│   │   │   ├── auth/          # Login
+│   │   │   ├── upload/        # Upload (LOCAL / DEPLOYED buttons)
+│   │   │   ├── Dashboard.jsx  # charts + proof modal
+│   │   │   ├── Analyzer.jsx   # single-review analyzer
+│   │   │   └── Explorer.jsx   # review table
+│   │   └── index.css          # Tailwind + custom styles
+│   └── index.html             # tab title + logo favicon
+│
+├── src/cfa/                   # Python backend package
+│   ├── api/
+│   │   ├── main.py            # FastAPI endpoints
+│   │   ├── pipeline.py        # CSV → analyze → save
+│   │   └── schemas.py         # request models
+│   ├── analysis/
+│   │   ├── concerns.py        # concern detection
+│   │   ├── rag.py             # find similar reviews
+│   │   ├── stats.py           # read saved results
+│   │   └── concern_lexicon.json  # concern → keywords
+│   ├── ml/
+│   │   └── serve.py           # sentiment prediction
+│   ├── ranking/
+│   │   └── priority.py        # impact scoring
+│   └── core/
+│       └── config.py          # paths
+│
+├── data/                      # gitignored — runtime results only
+├── models/                    # gitignored — trained model files
+├── tests/                     # pytest suite
+├── IMP_FILES/                 # docs + sample CSVs (this repo's notes)
+│   └── sample_csvs/           # 6 product CSVs for testing
+└── README.md
+```
 
-## Roadmap
+---
 
-- Phase 1 (done): dataset, lexicon concern detection, keyword sentiment,
-  priority ranking, FastAPI endpoints, React dashboard, tests, CI/CD.
-- Phase 2: batch LLM sentiment + entity extraction for real-world accuracy.
-- Phase 3: background jobs for large uploads, semantic RAG.
-- Phase 4: monitoring (latency, review counters), model evaluation
-  (precision, recall, F1) on a labelled holdout set.
+## Getting Started (Local)
 
-## Team
+### Prerequisites
+- Node.js 18+ and npm
+- Python 3.11+
 
-- Team lead - integration, docs, presentation
-- Data + ML model
-- Concern analysis + RAG
-- Priority ranking + impact score
-- Backend API + deployment
-- Frontend UI
+### 1. Backend
+```bash
+cd src/cfa
+python -m venv .venv        # or: python -m venv ../../.venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn api.main:app --reload --port 8000
+```
+Backend is now at `http://localhost:8000`. Check `http://localhost:8000/health`.
+
+### 2. Frontend (new terminal)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend is now at `http://localhost:5173`. Open it and click **Upload & Continue ON LOCAL**.
+
+### 3. Try it
+Use one of the sample CSVs in `IMP_FILES/sample_csvs/`. For example `6_luxewatch_price.csv` makes "price" the top concern.
+
+---
+
+## Deployment
+
+- **Frontend** → Vercel, root = `frontend/`, build = `npm run build`, output = `dist`.
+- **Backend** → Render, root = `src/cfa/`, start = `uvicorn api.main:app --host 0.0.0.0 --port 10000`.
+- CORS on the backend allows the Vercel domain and any `*.vercel.app` URL, plus localhost.
+
+> Note: because `data/` is gitignored, a fresh deploy starts empty. Upload a CSV once and the dashboard fills with your data.
+
+---
+
+## API Reference
+
+Base URL (deployed): `https://cfa-api.onrender.com`
+
+| Method | Endpoint | What it does | Request | Response (short) |
+|--------|----------|--------------|---------|------------------|
+| GET | `/health` | Health check | — | `{status, reviews_analyzed, avg_latency_ms}` |
+| GET | `/api/v1/ping` | Is backend alive | — | `{message}` |
+| POST | `/api/v1/upload` | Upload CSV, analyze all rows | `file` (multipart) | full stats JSON |
+| GET | `/api/v1/stats` | Dashboard numbers | — | `{total_reviews, sentiment_distribution, ranked_concerns, ratings, countries, time_trend, …}` |
+| GET | `/api/v1/reviews` | All saved reviews | — | `[{review_id, text, entity, sentiment, rating, country, date}, …]` |
+| POST | `/api/v1/analyze` | Analyze one review | `{review_text}` | `{overall_sentiment, concerns, …}` |
+| GET | `/api/v1/concern-comments` | Proof reviews for a concern | `?concern=battery` | `[{reviewer, text, rating, country, date, similarity}, …]` |
+
+Example upload response (trimmed):
+```json
+{
+  "total_reviews": 30,
+  "sentiment_distribution": {"positive": 20, "negative": 10},
+  "ranked_concerns": [
+    {"concern": "battery", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1},
+    {"concern": "screen",  "count": 5,  "negative_pct": 20.0, "impact": 40,  "priority": 2}
+  ],
+  "ratings": {"1": 10, "2": 8, "4": 2, "5": 10},
+  "countries": {"US": 5, "GB": 5, "CA": 4},
+  "time_trend": [{"year": "2024", "count": 30}]
+}
+```
+
+---
+
+## Mapping to the 9 KIET Factors
+
+This project was built against a 9-point evaluation checklist. Short status:
+
+| # | Factor | Status |
+|---|--------|--------|
+| 1 | Model evaluation metrics surfaced | ⏳ Documented approach, eval deferred |
+| 2 | Real data, no fake numbers | ✅ All numbers come from the uploaded CSV |
+| 3 | Reproducible tests | ✅ `pytest` suite in `tests/` |
+| 4 | Visual charts | ✅ Recharts dashboard |
+| 5 | Rating distribution | ✅ Parsed and charted |
+| 6 | Time trend | ✅ Year extracted, charted |
+| 7 | Country segmentation | ✅ Parsed and charted |
+| 8 | Architecture alternatives | ✅ See `IMP_FILES/` docs |
+| 9 | Roadmap / effort | ✅ See `IMP_FILES/` docs |
+
+---
+
+## Documentation Index (for readers & presenters)
+
+All deep-dive docs live in `IMP_FILES/`:
+
+- `user_flow.md` — exactly what the user sees and clicks, step by step (great for a presentation).
+- `internal_flow.md` — how frontend and backend talk, with real request/response examples.
+- `backend.md` — backend endpoints and the upload pipeline explained line by line.
+- `rag.md` — how "real proof per concern" works, plus interview-style questions.
+- `ml.md` — the sentiment model explained from zero, step by step, with examples.
+- `sample_csvs/` — 6 ready-to-upload product CSVs, each highlighting a different concern.
+
+---
+
+## License
+
+For hackathon / educational use.
