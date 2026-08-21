@@ -1,0 +1,217 @@
+{
+  "total_reviews": 1000,
+  "sentiment_distribution": {
+    "positive": 122,
+    "negative": 878
+  },
+  "ranked_concerns": [
+    {
+      "concern": "delivery",
+      "count": 441,
+      "negative_pct": 92.3,
+      "impact": 100,
+      "priority": 1
+    },
+    {
+      "concern": "price",
+      "count": 201,
+      "negative_pct": 88.1,
+      "impact": 44,
+      "priority": 2
+    },
+    {
+      "concern": "performance",
+      "count": 142,
+      "negative_pct": 87.3,
+      "impact": 30,
+      "priority": 3
+    },
+    {
+      "concern": "battery",
+      "count": 92,
+      "negative_pct": 98.9,
+      "impact": 22,
+      "priority": 4
+    },
+    {
+      "concern": "size",
+      "count": 49,
+      "negative_pct": 93.9,
+      "impact": 11,
+      "priority": 5
+    },
+    {
+      "concern": "ease_of_use",
+      "count": 45,
+      "negative_pct": 93.3,
+      "impact": 10,
+      "priority": 6
+    },
+    {
+      "concern": "camera",
+      "count": 39,
+      "negative_pct": 100.0,
+      "impact": 10,
+      "priority": 7
+    },
+    {
+      "concern": "screen",
+      "count": 27,
+      "negative_pct": 100.0,
+      "impact": 7,
+      "priority": 8
+    },
+    {
+      "concern": "sound",
+      "count": 11,
+      "negative_pct": 100.0,
+      "impact": 3,
+      "priority": 9
+    }
+  ],
+  "representative_reviews": [
+    {
+      "review_id": "38dada98",
+      "text": "I registered on the website, tried to order a laptop, entered all the details, but instead of charging me and sending the product, they froze my account, demanding various verification documents. I sent them over. They said they would review them within 24 hours. In reality, it's been a week, and no one can help or give any (truthful) estimate of when it will be resolved; they just tell me to 'wait.' I've never seen such a horrible marketplace in my life. I hope those who came up with this can't buy food in a store, receiving a 'document review request' that takes forever to process.",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "d2f76582",
+      "text": "Had multiple orders one turned up and driver had to phone as no door number on packaging, then waited all day for second package to get a message saying couldn't deliver as no number on packaging, 12 hours waiting in now don't even know when I'm getting delivery. Terrible will never use again",
+      "sentiment": "negative"
+    },
+    {
+      "review_id": "1ba90c89",
+      "text": "I informed these reprobates that I WOULD NOT BE IN as I was going to visit a sick relative, they told me they were going to send a OTP, I told them I could not receive it as I was travelling a long way on the underground, their reply was don\u2019t worry we can text. I pointed out I can\u2019t receive texts EITHER!!They said parcel was on its way so couldn\u2019t stop it. I pointed out I WOULD NOT WANT IT as, I had PERMANENTLY CLOSED my account!The driver came whilst I was out and failed to even follow my settings info that said to deliver to a specific neighbour if I was out, since then my account has now been deleted",
+      "sentiment": "negative"
+    }
+  ],
+  "proof_by_concern": {
+    "battery": [
+      {
+        "text": "I registered on the website, tried to order a laptop, entered all the details, but instead of charging me and sending the product, they froze my account, demanding various verification documents. I sent them over. They said they would review them within 24 hours. In reality, it's been a week, and no one can help or give any (truthful) estimate of when it will be resolved; they just tell me to 'wait.' I've never seen such a horrible marketplace in my life. I hope those who came up with this can't buy food in a store, receiving a 'document review request' that takes forever to process.",
+        "similarity": 1.0
+      },
+      {
+        "text": "If I could give a lower rate I would! I cancelled my Amazon Prime in February and subsequently found that they had continued to charge me. When I contacted them they refused to give details of who had set up the payment as I didn't have Prime membership at that time. My credit card company cancelled the payment for me and refunded the payments made in June. I have just discovered that Amazon Prime has set up payments again without me being a Prime member!! I have had to cancel my credit card to stop them!!Do not trust Amazon Prime.",
+        "similarity": 1.0
+      },
+      {
+        "text": "They should verify what sellers are selling... a solar panel of 10 by 20 cm can never be 50wp as an example.Solarchargers of type mppt that are not that type at all, bad performances. Not every buyer is an expert.And all these rubbish sellers are bad for Amazon, despite Amazons good delivery procedures",
+        "similarity": 1.0
+      }
+    ],
+    "delivery": [
+      {
+        "text": "Had multiple orders one turned up and driver had to phone as no door number on packaging, then waited all day for second package to get a message saying couldn't deliver as no number on packaging, 12 hours waiting in now don't even know when I'm getting delivery. Terrible will never use again",
+        "similarity": 1.0
+      },
+      {
+        "text": "I love amazon! I use it for half my shopping. The prime membership is worth it as you can receive free 2-day shipping on most purchases. The online store also has almost anything you can think of ranging from toiletries, clothes, to electronics and furniture!",
+        "similarity": 1.0
+      },
+      {
+        "text": "Sadly, Amazon no longer provides the quality customer service they once did. I've had several orders never delivered and they always ask if I \"checked neighbor's homes\" etc. This is not my responsibility. My last missing order actually says the driver handed it to the resident. I live alone and was at work at the time of the delivery. They insisted that I need to wait another 24 hours to see if it mysteriously shows up. If it was still coming why do I have a tracking that says the delivery was handed to me? They are also very inconsistent with delivery times. When you call customer service they just don't care. This company is not standing behind its products or deliveries. It's time another company jumps in the game with good customer service.",
+        "similarity": 1.0
+      }
+    ],
+    "price": [
+      {
+        "text": "I have bought from Amazon before and no problems being very happy with the service and price. Amazon advertise the product at 61.23 us as soon as I logged in and tried to buy two of the items they were 86.75 for each.There is no way of contacting customer service I've spent an hour going round and round in circles. Very disappointing. I would leave a negative star review for the customer service and what I consider to be really poor advertising.",
+        "similarity": 1.0
+      },
+      {
+        "text": "I love amazon! I use it for half my shopping. The prime membership is worth it as you can receive free 2-day shipping on most purchases. The online store also has almost anything you can think of ranging from toiletries, clothes, to electronics and furniture!",
+        "similarity": 1.0
+      },
+      {
+        "text": "Once again my delivery is late with a message saying \u201cwe\u2019re so sorry\u201d.I\u2019m so tired of this company lying about delivery times. Absolutely nothing shows up when it says it will. I\u2019m starting not to think that prime is worth it. I can get free delivery pretty much anywhere.",
+        "similarity": 1.0
+      }
+    ],
+    "camera": [
+      {
+        "text": "Amazon has a way of tainting a great product due to their inability to separate used goods from the new. I received a great name blush today that was so obviously used. I can\u2019t even fathom why Amazon does this and it is done often so it is not a mistake. I wish I could send you pictures of the product I received, and Amazon wants you to purchase Prime\u2026Oh yeah",
+        "similarity": 1.0
+      },
+      {
+        "text": "Many orders completed with no issue. Needed a photo frame , located one, in stock,  but system flatly refused to deliver to any address or pick up and provided NO reason why. 45 minutes to find CS number - cut of twice, appaling lines, after another 45 minutes CS unable to identify issue fed up with being left on hold so ended call contacted the manufacturer direct, ordered the frame ( same price but paid a bit for delivery) and advised their sales team they could be losing sales due to Amazons system. How good any business model is is really identified and defined by how it deals with brand and customer support & issues. As a long time prime customer I am appalled at Amazons woeful system of uncontactable, cannot communicate with,  cannot understand, tick box customer support.. It is of the VERY worst kind.",
+        "similarity": 1.0
+      },
+      {
+        "text": "Horrible horrendous company. Amazon Fresh just delivered damaged products and expired item and refuse to refund me unless I send pictures. They keep delivering my order and not following instructions. I\u2019m going to Walmart delivery service if they don\u2019t get it together. This is so frustrating!",
+        "similarity": 1.0
+      }
+    ],
+    "ease_of_use": [
+      {
+        "text": "I have no interest in signing up to Amazon Prime, When making a purchase, despite clicking the button not to sign me up, I could not stop Amazon from providing a 30 day free trial. I followed the instructions to remove the trial without success as the instructions took me to a page where there was no evident way to proceed with the cancellation.",
+        "similarity": 1.0
+      },
+      {
+        "text": "For the last 2 - 3 weeks the Amazon delivery driver has NOT been complying with delivery instructions. He leaves parcels/packages outside my front door (even in the rain), does NOT ring the doorbell & drives off.I've complained to the Customer Service Centre 4 times, to No Avail. On my front door is an A3 sign saying \"PLEASE LEAVE PACKAGES IN THE UNLOCKED PORCH\".AMAZON HAS NO CONTROL ON WHO IT EMPLOYS & does Not give TRAINING.",
+        "similarity": 1.0
+      },
+      {
+        "text": "If I could give Amazon a zero i would. I have a PO Box so I filled out Amazon's delivery instructions but they can't seem to follow the hours of operation of the UPS store where my PO Box is located. They have tried to deliver 13 of my orders after the UPS store was closed since January. I'm done with Amazon, prices aren't as good anymore and since I'm driving to thr UPS store to pickup my packages it isn't saving me money. Ever since they stopped using UPS and Fedex to make their deliveries their service has sucked!",
+        "similarity": 1.0
+      }
+    ],
+    "performance": [
+      {
+        "text": "Amazon customer service has gone downhill for years... the latest thing these  \"customer service\" representatives are doing is tell you \"we can't help you so we're gonna terminate the call\" and then hang up. How is this customer service at all?",
+        "similarity": 1.0
+      },
+      {
+        "text": "They should verify what sellers are selling... a solar panel of 10 by 20 cm can never be 50wp as an example.Solarchargers of type mppt that are not that type at all, bad performances. Not every buyer is an expert.And all these rubbish sellers are bad for Amazon, despite Amazons good delivery procedures",
+        "similarity": 1.0
+      },
+      {
+        "text": "My product was left on the street porch where anyone could pick it up and steal it. I was at home all day waiting for this but the person handling my delivery never bothered to even ring the door bell or anything, just left it outside.I am very disappointed in such service. If it wasn't for the email notification letting me know my parcel had been delivered, I wouldn't have know to look for it as fast as I did.I highly recommend NOT using their delivery services. They are the worst.",
+        "similarity": 1.0
+      }
+    ],
+    "size": [
+      {
+        "text": "Get so fed up with Amazon.  I pay annually for the 'privilege' of free next day delivery etc. Nine times out of 10 I get to checkout and find that the goods offered as next day delivery could actually be any number of days, even weeks away.  Today I've been waiting for a small package which should be delivered by 10pm, it's now 9.20pm and tracking shows it's not even despatched!  Amazon customer dis-service robot says it will  be delivered today although they only have the same information that I  have. Tomorrow I  shall receive the usual \"it's been delayed\" email from Amazon and I  will refuse to take delivery when it eventually arrives. There's no compensation for lost or delayed items, we pay for a poor, unwieldy service.   Not good enough Amazon!",
+        "similarity": 1.0
+      },
+      {
+        "text": "Yesterday I bought kids rubberband for 280 rs.The way the product is showed in the image was satisfactory for me.But today when I got delivered it was too small.Not happy with the product.Shining Diva fashion is the product name",
+        "similarity": 1.0
+      },
+      {
+        "text": "Beware of their review process. Deleted my reviews for mentioning how destroyed the packaging was on a item, and deleted my review on their on Batman tv show because I said it was \u201c\u2018awakened\u2019 and therefore not appropriate for the small children it was marketed towards.\u201d Ads on prime video now, no more two day shipping, and prices that make your savings look like peanuts and you\u2019ve got just another scam preying on people\u2019s probable unlikelihood of going out to find items cheaper elsewhere, run by a billionaire who can\u2019t make enough money to not charge an extra $3 per month to remove ads from a formerly ad-less service.",
+        "similarity": 1.0
+      }
+    ],
+    "sound": [
+      {
+        "text": "AMAZON IS A HORRIBLE ESTABLISHMENT WITH A BUNCH OF RACIST AND RUDE JERKS WHO GOES OUT THEY WAY NOT TO HELP EVEN AFTER YOU HAVE ALL THE NOTES AND EMAILS FROM THERE ON LEADERSHIP TEAM EXPLAINING THE ISSUE!!!! THE THEY GIVE YOU ALL THESE NUMBERS FOR THE USA HELPLINE OR ASK ARE YOU IF YOUR AMERICAN AND YOU TELL THEM YOU ARE YOU STILL ONLY TALK TO SOMEONE WHOSE OVERSEAS AND THEY WILL TELL YOU NO MATTER WHO YOU SPEAK TO THEY HAVE THE SAME SYSTEM WE HAVE SO THEY CAN'T HELP YOU ANYWAY NOW WHAT KINDA CUSTOMER SERVICE DOES THAT? I'LL TELL YOU WHAT AMAZON ONE WHO DON'T CARE ABOUT YOU AS A CUSTOMER THEY JUST SEE YOU AS A DOLLAR $!!!! AFTER THIS I'LL NEVER BUY HIGH PRICE ITEMS FROM THEM AGAIN!!!! MY $850 SAMSUNG TV THAT SITS ON A STAND DECIDES TO BREAK AND FALL OFF CAUSING MY TV TO FALL OVER AND CRASH DOWN ON MY SOUNDBAR AND PS5!!!! I CALL AMAZON TO GET IT REPLACE FIRST THEY TELL ME TO TAKE IT TO A AMAZON WAREHOUSE WHICH I DID AND THEY TOLD YOU CAN GIVE IT TO THEM YOU HAVE TO CALL AMAZON AND GET A UPS CODE OR LINK TO SEND IT BACK WHICH I DID AND I SENT IT OFF AND TOLD THAT AMAZON WOULD SEND ME A CONFIRMATION EMAIL IN A HOUR NEVER RECEIVED IT!!!!I EVEN CALLED BACK AND TOLD I DROPPED THE ITEMS THEY TOLD YOUR RECEIVE A EMAIL IN 24 TO 48 HOURS IF NOT THEY JUST PROCEED WITH THE REPLACEMENT AND I'LL RECEIVE IT IN 1 TO 2 WEEKS!!!! WELL FAST FORWARD TO 3 WEEKS LATER I HAVEN'T RECEIVED MY REPLACEMENT ORDER AND OHHHHHHHHH NOW THEY CAN'T FIND MY ORIGINAL ORDER NOW AS WELL!!!! SO I THINK THEY'VE LOST MY ITEMS AND NOW HAVE EITHER DELETED OR SURPRESS THE ORIGINAL ORDER TO COVER THERE TRACKS SO THEY DON'T HAVE TO GIVE ME A REFUND OR GIVE ME THE NEW ITEMS THEY OWE ME!!!! EVEN AFTER A SUPERVISOR IN THERE LEADERSHIP TEAM HE'S SEEN THIS HAPPEN BEFORE AND PROMISED ME A GIFT CARD OR CREDIT TO MAKE A NEW ORDER THEY WON'T HONOR IT!!!! SO EVERYDAY THEY REROUTE ME TO THESE RUDE AND RACIST AGENT WHO EITHER DON'T KNOW WHAT THEY ARE DOING OR JUST WASTE YOUR TIME UNTIL YOU GET MAD AND HANG UP!!!! IS THIS WHAT YALL DO AMAZON AND IS THIS WHAT YALL CALL CUSTOMER SERVICE IF SO PEOPLE NEED TO STOP BUYING PRODUCT FROM YALL ASAP!!!!",
+        "similarity": 1.0
+      },
+      {
+        "text": "Ever since they started placing adverts on their paid subscription I stopped watching their movies as I think its a bloody liberty so all that is left me for me on amazon was the fact I thought I was getting a semi reasonable deal with guaranteed next day! well not only do I find that anything with prime attatched with it is \u00a310 and above dearer than everyone else on selling on amazon they are no longer worried about compition as eBay is usualy cheaper than these muggeres I now use eBay more than a paid subcription and that speaks volumes so I guess its time to stop paying the hairless wonder Mr Greedy for his dearer products and stopped being conned as most of his prime delievery is now two to threre days!. amazons's going down hill fast time to get off this abusive ride. gluttony is undoubtably one of the worst deadly sins and I bet Bezos fullfills them all!.. hello eBay old friend I'll put up with crappy delivery times from useless royal snailmail just to avoid being taken for a ride by these muggers!. I would suggest others do like wise if your not happy at being mugged off that is!",
+        "similarity": 1.0
+      },
+      {
+        "text": "GFY Amazon lying about an attempted delivery two minutes ago yet when contacting Amazon was told they\u2019re already back at the warehouse. NO! This was a rush delivery to be delivered between 4am and 8am and your ignorant driver straight up LIED. All delivery instructions are clearly noted on my Amazon account for access to the building including my phone number and unit buzzer number to contact me for delivery if there is difficulty with the buzzer. My phone is ON and on full volume NO ONE MADE AN ATTEMPT! Stop hiring foreigners who don\u2019t give a crap about any customer service whatsoever and lie about not finding addresses. You disgusting scammers.",
+        "similarity": 1.0
+      }
+    ],
+    "screen": [
+      {
+        "text": "Sell used products and has horrible customer service, i just to be a prime member but i live in a rural area, so I just wasn\u2019t getting my items any faster then what i would not paying\u2026. I have a few experiences LAST YEAR: I do Christmas shopping early, and I homeschool so my kids are with me all the time and well i thought Amazon would be convenient source. Upon going through my packages, i had noticed i was sold used boys underwear, I usually use the chat option and the girl started to interrogate me and said i had to send a photo of my license, i was like no, so i called instantly and I got this girl and she said no, and \u201csupposedly\u201d gave me 50 promo to repurchase the underwear, well\u2026. It never got added to my account, never i went through associate after associate, one in which screamed so loudly at me and blamed me of lying and then hung up, finally i got this girl who said i had used it, so I asked her on what she goes a toolbox for a back of a truck it was used in part of that order, i assured her that i indeed did not own a truck\u2026. And that my account must of been hacked, i got through associate after associate, nothing was done at all, in fact the Hanes company themselves refunded me for the underwear sent me replacements, i did get a call from there higher up office and they have me a $50 gift balance, well ok it gets even better, i get my son a gaming laptop $800, the seller was very unreasonable, the associate promised it was A-Z well needless to say we had to send this laptop out and have if fixed $400 in extra damages, finally after i complained so much they wrote us a letter to dispute he charges on our card, after that i bought some leggings, there was a whole in the leggings, the associate said I must of been so heavy i stretched them out and i could not get a refund.  Half of the items i got last year were either not as described by the sellers or just used and retaped back up and sold as new. Then they sold me a pairs of winter boots, and there was white power all over them i complained about those too\u2026.i sent items back and didn\u2019t get a return they kept it numerous times, i had to involve the bbb to get anywheres Well this year i decided nope no way am i going to deal with Amazon, well i found a wahl clipper set i paid $200 for this set, it took a gouge of skin out of my husbands head, amazon refused to refund me because i was one day over the deadline. I had to go to bbb for that i just sent it back and finally they did refund me after a fight, but they wanted me to contact the company,So i decided well I\u2019m going to go to Walmart for know on they have all the same items and it will be much easier to return if necessary, but with dread a few items Walmart did not have so I had to purchase with Amazon, i ordered a camera bundle for 141.58 it came with accessories, well upon opening my back there\u2019s no accessories, so well i thought ill deal with the seller, usually there earlier they will just send what\u2019s missing, i talk to the seller and he\u2019s just unreasonable, saying he can\u2019t send it because it will cost him money. Like no reason at all, well with complete dread i chat with amazon and speak with an agent named Joey Mae, he was polite and gave me two options 1. I return for a replacement, or 2, they give me half a refund to my original payment method. I chose option 2, he said id get a email\u2026\u2026 well waiting no email, then another agents said the same thing, no email, then the 3rd said they approved it and ill be getting back 64.58 and i should get a email. I got a email there like return it for 141.58 for a full refund and you\u2019ll have to repurchase the item, so i wrote back and said there must be a mistake and told them and shared the screenshots i took, because i had one to many ptsd experiences, there like no we have to take this to a higher level. So i called and got this English lady who screams at me has me on hold for 20mins and just comes back yelling. I wrote to the highest up, and they still didn\u2019t budge even with the screen shots as proof, so i took it to the bbb, and still will not budge, so I\u2019m out 141.58. Also they sold me toy in the same order that was used and the amount of dust on it was so thick you could write your name in it, and it was stabbed repeated over and over again with something sharp, i was able to send photos of that and they replaced that and told me to keep and donate the other one.They changed there return policy around know they use a QR code and you take your item to the ups store and they scan it do all the packaging, I live in a rural area, the nearest ups store is 2 hours away, and you have to pay $7.99 to print your own label, and $14.99 to have ups pick up at your door. We have little ups mailbox at a gas station but it\u2019s for small items. They rob ppl, I\u2019m going to write them with intent to sue unless they give me my refund, I\u2019ve had it, and they don\u2019t even give you a full refund when you return items. It\u2019s gross",
+        "similarity": 1.0
+      },
+      {
+        "text": "Your agent is a damn liar. Said you can't lock accounts, well mine was locked for 2 months and I'm not dumb i took screen shots and videos of me trying to log into my account and it saying it was locked and all of the hassle i went through and stuff i had to keep sending in to prove i am who i say i am and finally got my account back, then go to say that i didn't get one of my packages only for him to say its been 2 months and that's to long so i explain that my account was locked and that my lawyer will be contacting you and i will be suing and going for his job for lying because before i could even tell him i have actual screen shots and videos of my account being locked and everything i had to do and send in to have my account unlocked he hung up on me. I have several others at least 30-50 people that has had the same issues with this so I'm contacting my lawyer today one everyone emails me their proof too and we are definitely taking this to court and also bringing up the fact that you charge us for faster delivery but never get it on that day ever so that's false advertising, fraud, and theft. So, he just screwed the whole Amazon company baby being the way he was. All because i was very polite and tried explaining and only wanted the $30 red put on many Amazon gift card balance so that i could even still purchase from you, but he wanted to be an punk and not listen over $30 which will be costing you a whole lot more.",
+        "similarity": 1.0
+      },
+      {
+        "text": "I purchased 4 quarts stain from Amazon July 2024, one of the can was leaked and messed my patio, I contacted  Amazon they agreed refund but not to pay mess my patio they said USPS delivered so it's their fault,  they sent me return label thru UPS and I returned it next day,when you return item it appears  on Amazon few minutes  later but thus time it didn't so I call Amazon again person I spoke told me it doesn't appear  on my screen but she sees it so I shouldn't  worry about it I would get my Money with in 7 to 10 business day which was not the case , I called  Amazon  customer service  2 more times I get the similar reactions  they said they will refund me but they never did so I write to BBB they contacted me thru BBB and told me they don't  see my return and they asked me to go check Whole food market ?? Really so I sent them trucking  Number , they got back to and said you supposed to returned it whole food market not to UPS, I write back I don't  have a power to return where ever I please Amazon send me return sleep and I fallow their order, person write back to me sir we see you are angry we can not process your claim please contact Amazon Customer  service, and than BBB sent me a letter that I haven't been providing  information  and using offensive language,  Bravo BBB and Bravo Amazon, they are backing each other who cares average  Joe, but this is the reality  with Amazon they don't  want to  be responsible anything  it's  becoming  dishonest business  please becareful with this business  and don't trust them, and don't Think BBB help you.",
+        "similarity": 1.0
+      }
+    ]
+  }
+}
