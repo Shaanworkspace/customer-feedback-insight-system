@@ -24,7 +24,7 @@ def process_csv(content: bytes) -> dict:
         text = (row.get(text_col) or "").strip()
         if not text:
             continue
-        result = analyze_review(text)
+        result = analyze_review(text, include_similar=False)
         sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
         reviews.append(
             {

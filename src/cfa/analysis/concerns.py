@@ -25,25 +25,24 @@ def detect_concerns(text: str) -> list:
     return [name for name, terms in _load_lexicon().items() if any(t in text_lower for t in terms)]
 
 
-def analyze_review(text: str) -> dict:
+def analyze_review(text: str, include_similar: bool = True) -> dict:
     concerns = detect_concerns(text)
+    overall = predict_sentiment(text)
     concern_sentiments = []
     for name in concerns:
-        sentiment = predict_sentiment(text)
         concern_sentiments.append(
             {
                 "name": name,
-                "sentiment": sentiment["label"],
+                "sentiment": overall["label"],
                 "matched_terms": [_load_lexicon()[name][0]],
-                "confidence": sentiment["confidence"],
+                "confidence": overall["confidence"],
             }
         )
     labels = {c["sentiment"] for c in concern_sentiments}
-    overall = predict_sentiment(text)
     return {
         "review_text": text,
         "overall_sentiment": "mixed" if len(labels) > 1 else overall["label"],
         "overall_confidence": overall["confidence"],
         "concerns": concern_sentiments,
-        "similar_reviews": find_similar(text),
+        "similar_reviews": find_similar(text) if include_similar else [],
     }
