@@ -48,11 +48,13 @@ def main():
         df["Review Text"], df["label"], test_size=0.2, random_state=42, stratify=df["label"]
     )
 
-    vectorizer = TfidfVectorizer(max_features=20000, stop_words="english", sublinear_tf=True)
+    vectorizer = TfidfVectorizer(
+        max_features=30000, stop_words="english", ngram_range=(1, 2), sublinear_tf=True, min_df=2
+    )
     X_train_vec = vectorizer.fit_transform(X_train)
     X_test_vec = vectorizer.transform(X_test)
 
-    model = LogisticRegression(max_iter=1000, C=1.0)
+    model = LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced")
     model.fit(X_train_vec, y_train)
 
     pred = model.predict(X_test_vec)

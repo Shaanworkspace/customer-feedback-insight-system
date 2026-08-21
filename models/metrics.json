@@ -1,0 +1,12 @@
+{
+  "accuracy": 0.9343083787803669,
+  "precision": 0.8627925746569814,
+  "recall": 0.9183848797250859,
+  "f1": 0.8897211818560133,
+  "train_rows": 16136,
+  "test_rows": 4034,
+  "label_counts": {
+    "negative": 14350,
+    "positive": 5820
+  }
+}

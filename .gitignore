@@ -14,11 +14,14 @@ dist/
 dist-ssr/
 *.local
 
-# Data and trained artifacts (never commit)
+# Data and trained artifacts (commit trained model, never raw data)
 data/
-models/
-*.joblib
 *.pkl
+models/
+!models/
+!models/sentiment_model.joblib
+!models/sentiment_vectorizer.joblib
+!models/metrics.json
 
 # Environment and secrets
 .env
