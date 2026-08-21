@@ -4,7 +4,7 @@ import { uploadReviews, setApiBase } from '../../api'
 const LOCAL_BASE = 'http://localhost:8000'
 const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
 
-export default function Upload({ onDone, onCancel }) {
+export default function Upload({ onStart, onDone, onCancel }) {
   const [file, setFile] = useState(null)
   const [dragging, setDragging] = useState(false)
   const [error, setError] = useState('')
