@@ -79,9 +79,3 @@ def stats():
 @app.get("/api/v1/reviews")
 def reviews():
     return get_reviews()
-
-
-@app.get("/api/v1/concern-comments")
-def concern_comments(concern: str = ""):
-    data = get_stats()
-    return data.get("comments_by_concern", {}).get(concern, [])

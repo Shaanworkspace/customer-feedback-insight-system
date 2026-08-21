@@ -7,7 +7,6 @@ import re
 import uuid
 
 from cfa.analysis.concerns import analyze_review
-from cfa.analysis.rag import find_similar
 from cfa.core.config import CONCERN_STATS_PATH, REVIEWS_PATH
 from cfa.ranking.priority import rank_concerns
 
@@ -32,10 +31,6 @@ def process_csv(content: bytes) -> dict:
         (name for name in (reader.fieldnames or []) if name.strip().lower() in ("date", "review date", "date of experience")),
         None,
     )
-    reviewer_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("reviewer name", "reviewer", "author", "user")),
-        None,
-    )
     for row in reader:
         if not text_col:
             break
@@ -56,7 +51,6 @@ def process_csv(content: bytes) -> dict:
                 "rating": rating,
                 "country": (row.get(country_col) or "").strip() if country_col else "",
                 "date": (row.get(date_col) or "").strip() if date_col else "",
-                "reviewer": (row.get(reviewer_col) or "").strip() if reviewer_col else "",
             }
         )
         for c in result["concerns"]:
@@ -65,8 +59,6 @@ def process_csv(content: bytes) -> dict:
             if c["sentiment"] == "negative":
                 entry["negative"] += 1
             entry["texts"].append(text)
-
-    REVIEWS_PATH.write_text(json.dumps(reviews, indent=2))
 
     total = len(reviews)
     positive = sum(1 for r in reviews if r["sentiment"] == "positive")
@@ -90,28 +82,6 @@ def process_csv(content: bytes) -> dict:
         for name, entry in concern_counts.items()
     }
 
-    reviews_by_id = {r["review_id"]: r for r in reviews}
-    comments_by_concern = {}
-    for name in concern_counts:
-        items = []
-        for s in find_similar(name.replace("_", " "), top_k=5):
-            r = reviews_by_id.get(s["review_id"])
-            if not r:
-                continue
-            items.append(
-                {
-                    "review_id": r["review_id"],
-                    "reviewer": r.get("reviewer") or "Verified Reviewer",
-                    "text": r["text"],
-                    "rating": r.get("rating"),
-                    "country": r.get("country", ""),
-                    "date": r.get("date", ""),
-                    "sentiment": r["sentiment"],
-                    "similarity": s["similarity"],
-                }
-            )
-        comments_by_concern[name] = items
-
     stats = {
         "total_reviews": total,
         "sentiment_distribution": {"positive": positive, "negative": negative},
@@ -121,8 +91,8 @@ def process_csv(content: bytes) -> dict:
             for r in reviews[:3]
         ],
         "proof_by_concern": proof_by_concern,
-        "comments_by_concern": comments_by_concern,
     }
 
     CONCERN_STATS_PATH.write_text(json.dumps(stats, indent=2))
+    REVIEWS_PATH.write_text(json.dumps(reviews, indent=2))
     return stats
