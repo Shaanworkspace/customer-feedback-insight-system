@@ -5,6 +5,7 @@ keyword heuristic only if the model files are missing (fresh checkout).
 """
 
 import joblib
+import re
 
 from cfa.core.config import MODEL_PATH, VECTORIZER_PATH
 
@@ -27,6 +28,7 @@ def predict_sentiment(text: str) -> dict:
             "recommend", "recommended", "satisfied", "impressed", "nice", "works",
             "work", "helpful", "smooth", "quick", "fast", "wonderful", "fantastic",
             "superb",             "reliable", "comfortable", "bright", "vivid", "clear", "crisp",
+            "breakthrough", "exceptional", "outstanding", "value", "durable",
         ]
         negative_words = [
             "bad", "terrible", "poor", "awful", "worst", "slow", "drains", "late",
@@ -35,23 +37,27 @@ def predict_sentiment(text: str) -> dict:
             "flicker", "flickers", "rude", "unhelpful", "useless", "expensive",
             "overpriced", "swells", "swell", "hate", "waste", "wasted", "disappoint",
             "disappointing", "regret", "avoid", "faulty", "defective", "fails", "failed",
-            "worthless",
+            "worthless", "dies", "dying", "dropped", "breaking", "cracking", "swelling",
+            "wasting", "failing", "flickering", "overheating", "draining",
         ]
         text_lower = text.lower()
         NEG = ("not ", "no ", "never", "n't", "without", "barely", "hardly")
 
-        def negated(phrase):
-            idx = text_lower.find(phrase)
-            if idx <= 0:
+        def has(word):
+            return re.search(r"\b" + re.escape(word) + r"\b", text_lower) is not None
+
+        def negated(word):
+            m = re.search(r"\b" + re.escape(word) + r"\b", text_lower)
+            if not m:
                 return False
-            return any(n in text_lower[max(0, idx - 6):idx] for n in NEG)
+            return any(n in text_lower[max(0, m.start() - 6):m.start()] for n in NEG)
 
         pos_hits, neg_hits = 0, 0
         for w in positive_words:
-            if w in text_lower and not negated(w):
+            if has(w) and not negated(w):
                 pos_hits += 1
         for w in negative_words:
-            if w in text_lower:
+            if has(w):
                 if negated(w):
                     pos_hits += 1
                 else:
