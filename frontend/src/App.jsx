@@ -13,15 +13,23 @@ export default function App() {
   const [stage, setStage] = useState('landing')
   const [tab, setTab] = useState('dashboard')
   const [signedIn, setSignedIn] = useState(false)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [reload, setReload] = useState(0)
 
   const handleLogin = () => {
     setSignedIn(true)
     setStage('upload')
   }
 
-  const handleUploadDone = () => {
+  const handleUploadStart = () => {
     setStage('app')
     setTab('dashboard')
+    setAnalyzing(true)
+  }
+
+  const handleUploaded = () => {
+    setAnalyzing(false)
+    setReload((r) => r + 1)
   }
 
   if (!signedIn) {
@@ -47,12 +55,12 @@ export default function App() {
     <div className="page-with-chrome">
       <AppHeader tab={tab} setTab={setTab} onUpload={() => setStage('upload')} />
       <main className="page-container">
-        {tab === 'dashboard' && <Dashboard />}
+        {tab === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} />}
         {tab === 'analyzer' && <Analyzer />}
         {tab === 'explorer' && <Explorer />}
       </main>
       {stage === 'upload' && (
-        <Upload onDone={handleUploadDone} onCancel={() => setStage('app')} />
+        <Upload onStart={handleUploadStart} onDone={handleUploaded} onCancel={() => setStage('app')} />
       )}
     </div>
   )

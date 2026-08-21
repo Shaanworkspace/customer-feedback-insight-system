@@ -51,11 +51,12 @@ export default function Upload({ onDone, onCancel }) {
     setBusy(true)
     setError('')
     setApiBase(base)
+    onStart?.()
 
     try {
       await uploadReviews(file)
     } catch (err) {
-      console.error('Upload failed, showing sample data:', err)
+      console.error('Upload failed:', err)
     } finally {
       setBusy(false)
     }

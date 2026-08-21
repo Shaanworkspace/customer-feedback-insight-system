@@ -4,16 +4,22 @@ import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
 
 const COLORS = ['#173f73', '#e05252', '#b8860b', '#25834c', '#8a5a92', '#3d7ea6', '#c9733d', '#5d6d7e']
 
-export default function Dashboard() {
+function Skeleton({ className = '' }) {
+  return <div className={`animate-pulse rounded-[14px] bg-[#e6ecf3] ${className}`} />
+}
+
+export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
   const [stats, setStats] = useState(null)
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState(false)
 
   useEffect(() => {
+    if (analyzing) return
+    setError(false)
     Promise.all([getStats(), getReviews()])
       .then(([s, r]) => { setStats(s); setReviews(r) })
       .catch(() => setError(true))
-  }, [])
+  }, [analyzing, reloadKey])
 
   if (error) {
     return (
@@ -26,7 +32,20 @@ export default function Dashboard() {
     )
   }
 
-  if (!stats) return <p className="p-8 text-center text-[#8a96a8]">Loading insights...</p>
+  if (analyzing || !stats) {
+    return (
+      <div className="w-full">
+        <Skeleton className="mb-8 h-[60px]" />
+        <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[110px]" />)}
+        </div>
+        <Skeleton className="mb-5 h-[240px]" />
+        <Skeleton className="mb-5 h-[240px]" />
+        <Skeleton className="mb-5 h-[300px]" />
+        <Skeleton className="h-[260px]" />
+      </div>
+    )
+  }
 
   const total = stats.total_reviews || 0
   const pos = stats.sentiment_distribution?.positive || 0
