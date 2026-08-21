@@ -3,6 +3,7 @@
 import csv
 import io
 import json
+import re
 import uuid
 
 from cfa.analysis.concerns import analyze_review
@@ -18,6 +19,18 @@ def process_csv(content: bytes) -> dict:
         (name for name in (reader.fieldnames or []) if name.strip().lower() in ("review_text", "review text", "reviewtext", "text", "review")),
         None,
     )
+    rating_col = next(
+        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("rating", "stars", "review rating")),
+        None,
+    )
+    country_col = next(
+        (name for name in (reader.fieldnames or []) if name.strip().lower() == "country"),
+        None,
+    )
+    date_col = next(
+        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("date", "review date", "date of experience")),
+        None,
+    )
     for row in reader:
         if not text_col:
             break
@@ -26,12 +39,18 @@ def process_csv(content: bytes) -> dict:
             continue
         result = analyze_review(text, include_similar=False)
         sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
+        raw_rating = row.get(rating_col) if rating_col else None
+        match = re.search(r"\d+", str(raw_rating)) if raw_rating else None
+        rating = int(match.group()) if match else None
         reviews.append(
             {
                 "review_id": str(uuid.uuid4())[:8],
                 "text": text,
                 "entity": result["concerns"][0]["name"] if result["concerns"] else "general",
                 "sentiment": sentiment,
+                "rating": rating,
+                "country": (row.get(country_col) or "").strip() if country_col else "",
+                "date": (row.get(date_col) or "").strip() if date_col else "",
             }
         )
         for c in result["concerns"]:

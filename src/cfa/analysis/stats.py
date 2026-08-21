@@ -6,6 +6,7 @@ never shows fake numbers.
 """
 
 import json
+import re
 
 from cfa.core.config import CONCERN_STATS_PATH, REVIEWS_PATH
 
@@ -67,10 +68,13 @@ def get_countries() -> dict:
 def get_time_trend() -> list:
     counts = {}
     for r in get_reviews():
-        date = r.get("date", "unknown")
-        if date == "unknown":
+        date = r.get("date", "")
+        if not date:
             continue
-        year = date[:4]
+        match = re.search(r"\d{4}", date)
+        if not match:
+            continue
+        year = match.group()
         counts[year] = counts.get(year, 0) + 1
     return [{"year": y, "count": c} for y, c in sorted(counts.items())]
 

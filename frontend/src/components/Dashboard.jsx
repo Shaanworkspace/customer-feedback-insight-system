@@ -42,6 +42,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
         <Skeleton className="mb-5 h-[240px]" />
         <Skeleton className="mb-5 h-[240px]" />
         <Skeleton className="mb-5 h-[300px]" />
+        <Skeleton className="mb-5 h-[220px]" />
         <Skeleton className="h-[260px]" />
       </div>
     )
@@ -68,6 +69,15 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
     share: totalMentions ? Math.round((c.count / totalMentions) * 100) : 0,
     positive: Math.round(c.count * (1 - c.negative_pct / 100)),
   }))
+
+  const ratingData = Object.entries(stats.ratings || {})
+    .map(([star, count]) => ({ star: Number(star), count }))
+    .sort((a, b) => a.star - b.star)
+  const timeData = stats.time_trend || []
+  const countryData = Object.entries(stats.countries || {})
+    .map(([country, count]) => ({ country, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8)
 
   return (
     <div className="w-full">
@@ -189,6 +199,53 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
           {concernSummary.length === 0 && (
             <div className="p-6 text-center text-[13px] text-[#8a96a8]">No concerns detected yet. Upload reviews to get started.</div>
           )}
+        </div>
+      </section>
+
+      <section className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Rating Distribution</h3>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Star ratings from the reviews</p>
+          <div className="mt-4 h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={ratingData}>
+                <XAxis dataKey="star" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#173f73" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Reviews Over Time</h3>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Volume by year</p>
+          <div className="mt-4 h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={timeData}>
+                <XAxis dataKey="year" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#25834c" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Market by Country</h3>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Where customers are from</p>
+          <div className="mt-4 h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={countryData} layout="vertical">
+                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="country" tick={{ fontSize: 11 }} width={70} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#b8860b" radius={[0, 6, 6, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </section>
 
