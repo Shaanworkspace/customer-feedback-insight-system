@@ -29,6 +29,9 @@ def predict_sentiment(text: str) -> dict:
             "work", "helpful", "smooth", "quick", "fast", "wonderful", "fantastic",
             "superb",             "reliable", "comfortable", "bright", "vivid", "clear", "crisp",
             "breakthrough", "exceptional", "outstanding", "value", "durable",
+            "okay", "fine", "decent", "accurate", "accurately", "solid", "satisfactory",
+            "acceptable", "job", "fair", "like", "adequate", "recommendable", "pleased",
+            "happy with", "good value", "works well", "does the job",
         ]
         negative_words = [
             "bad", "terrible", "poor", "awful", "worst", "slow", "drains", "late",
