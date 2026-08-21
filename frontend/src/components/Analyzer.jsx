@@ -15,7 +15,7 @@ const SENT = {
 }
 
 export default function Analyzer() {
-  const [text, setText] = useState('')
+  const [text, setText] = useState(EXAMPLES[0])
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -57,12 +57,18 @@ export default function Analyzer() {
           </div>
         </div>
 
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Paste a customer review here…"
-          rows={5}
-        />
+        <div className="analyzer-input">
+          <div className="analyzer-input-head">
+            <span className="analyzer-input-label">Paste your review here</span>
+            <span className="char-count">{text.length} characters</span>
+          </div>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Paste a customer review here…"
+            rows={6}
+          />
+        </div>
 
         <div className="analyzer-examples">
           {EXAMPLES.map((ex, i) => (
@@ -76,7 +82,6 @@ export default function Analyzer() {
           <button className="primary-action" onClick={handleAnalyze} disabled={loading || !text.trim()}>
             {loading ? <span className="btn-spinner" /> : 'Analyze review'}
           </button>
-          <span className="char-count">{text.length} characters</span>
         </div>
 
         {error && (
