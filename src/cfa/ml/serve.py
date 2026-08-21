@@ -21,11 +21,24 @@ def _load():
 def predict_sentiment(text: str) -> dict:
     model, vectorizer = _load()
     if model is None:
-        positive_words = ["good", "great", "excellent", "love", "best", "fast", "easy"]
-        negative_words = ["bad", "terrible", "poor", "awful", "worst", "slow", "drains", "late"]
+        positive_words = [
+            "good", "great", "excellent", "love", "loved", "best", "easy", "amazing",
+            "happy", "worth", "stunning", "sharp", "beautiful", "awesome", "perfect",
+            "recommend", "recommended", "satisfied", "impressed", "nice", "works",
+            "work", "helpful", "smooth", "quick", "fast", "wonderful", "fantastic",
+            "superb",             "reliable", "comfortable", "bright", "vivid", "clear", "crisp",
+        ]
+        negative_words = [
+            "bad", "terrible", "poor", "awful", "worst", "slow", "drains", "late",
+            "died", "die", "dead", "overheat", "overheats", "drops", "drop",
+            "broken", "break", "crack", "cracked", "blurry", "grainy", "dim",
+            "flicker", "flickers", "rude", "unhelpful", "useless", "expensive",
+            "overpriced", "swells", "swell", "hate", "waste", "wasted", "disappoint",
+            "disappointing", "regret", "avoid", "faulty", "defective", "fails", "failed",
+        ]
         text_lower = text.lower()
         score = sum(w in text_lower for w in positive_words) - sum(w in text_lower for w in negative_words)
-        label = "positive" if score >= 0 else "negative"
+        label = "positive" if score > 0 else "negative"
         confidence = min(1.0, 0.5 + abs(score) * 0.15)
         return {"label": label, "confidence": round(confidence, 2)}
 
