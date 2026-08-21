@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getStats, getReviews } from '../api'
+import { getStats, getReviews, getConcernComments } from '../api'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
 const COLORS = ['#173f73', '#e05252', '#b8860b', '#25834c', '#8a5a92', '#3d7ea6', '#c9733d', '#5d6d7e']
@@ -12,6 +12,10 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
   const [stats, setStats] = useState(null)
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState(false)
+  const [openConcern, setOpenConcern] = useState(null)
+  const [comments, setComments] = useState([])
+  const [loadingComments, setLoadingComments] = useState(false)
+  const [commentError, setCommentError] = useState(false)
 
   useEffect(() => {
     if (analyzing) return
@@ -20,6 +24,17 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
       .then(([s, r]) => { setStats(s); setReviews(r) })
       .catch(() => setError(true))
   }, [analyzing, reloadKey])
+
+  const openComments = (concern) => {
+    setOpenConcern(concern)
+    setLoadingComments(true)
+    setCommentError(false)
+    setComments([])
+    getConcernComments(concern)
+      .then((c) => setComments(c))
+      .catch(() => setCommentError(true))
+      .finally(() => setLoadingComments(false))
+  }
 
   if (error) {
     return (
@@ -175,7 +190,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
         <p className="mt-1 text-[12px] text-[#8793a5]">Issues to fix first, ranked by impact</p>
         <div className="mt-5 flex flex-col gap-5">
           {concernSummary.map((c, index) => (
-            <div className="grid grid-cols-[32px_1fr_110px] items-center gap-3" key={c.concern}>
+            <div className="grid grid-cols-[32px_1fr_110px_auto] items-center gap-3" key={c.concern}>
               <div className={`flex h-[30px] w-[30px] items-center justify-center rounded-lg text-[12px] font-extrabold ${index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'}`}>
                 {index + 1}
               </div>
@@ -194,6 +209,12 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
               <div className={`rounded-lg px-2 py-2 text-center text-[12px] font-extrabold ${index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'}`}>
                 impact {c.impact}
               </div>
+              <button
+                className="rounded-lg border border-[#d4deea] px-3 py-2 text-[11px] font-bold text-[#173f73] transition hover:bg-[#edf3fa]"
+                onClick={() => openComments(c.concern)}
+              >
+                View Comments
+              </button>
             </div>
           ))}
           {concernSummary.length === 0 && (
@@ -264,6 +285,48 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
           ))}
         </div>
       </section>
+
+      {openConcern && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setOpenConcern(null)}>
+          <div className="w-full max-w-2xl rounded-[16px] bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-[#eef2f6] px-6 py-4">
+              <div>
+                <div className="text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">TOP COMMENTS</div>
+                <h3 className="m-0 text-[18px] font-bold capitalize text-[#142b48]">{openConcern}</h3>
+              </div>
+              <button className="rounded-lg px-3 py-1.5 text-[13px] font-bold text-[#8a96a8] hover:bg-[#f3f6f9]" onClick={() => setOpenConcern(null)}>
+                Close
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-auto p-6">
+              {loadingComments && <div className="py-10 text-center text-[13px] text-[#8a96a8]">Loading comments…</div>}
+              {commentError && <div className="py-10 text-center text-[13px] text-[#b42318]">Could not load comments.</div>}
+              {!loadingComments && !commentError && comments.length === 0 && (
+                <div className="py-10 text-center text-[13px] text-[#8a96a8]">No comments found for this concern.</div>
+              )}
+              <div className="flex flex-col gap-4">
+                {comments.map((c) => (
+                  <div key={c.review_id} className="rounded-[12px] border border-[#e4e9ef] bg-[#fafbfd] p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <strong className="text-[14px] text-[#142b48]">{c.reviewer}</strong>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${c.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
+                        {c.sentiment}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-[#6b7a8d]">
+                      {c.rating != null && <span>★ {c.rating}/5</span>}
+                      {c.country && <span>· {c.country}</span>}
+                      {c.date && <span>· {c.date}</span>}
+                      <span>· {Math.round(c.similarity * 100)}% similar</span>
+                    </div>
+                    <p className="mt-2 text-[13px] leading-relaxed text-[#34465d]">{c.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

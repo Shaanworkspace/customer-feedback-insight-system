@@ -29,6 +29,12 @@ export async function getReviews() {
   return res.json()
 }
 
+export async function getConcernComments(concern) {
+  const res = await fetch(`${currentBase}/api/v1/concern-comments?concern=${encodeURIComponent(concern)}`)
+  if (!res.ok) throw new Error('Concern comments request failed')
+  return res.json()
+}
+
 export async function pingBackend() {
   const res = await fetch(`${currentBase}/api/v1/ping`)
   if (!res.ok) throw new Error('Ping failed')
