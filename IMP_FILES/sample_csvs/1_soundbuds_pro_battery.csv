@@ -1,0 +1,17 @@
+Reviewer Name,Profile Link,Country,Review Count,Review Date,Rating,Review Title,Review Text,Date of Experience
+User1,/users/1,US,1 review,2023-01-01T10:00:00.000Z,Rated 1 out of 5 stars,Review,"Battery drains very fast, dies in 2 hours",2023-01-01T10:00:00.000Z
+User2,/users/2,GB,1 review,2024-02-02T10:00:00.000Z,Rated 1 out of 5 stars,Review,"Battery life is terrible, worst I have used",2024-02-02T10:00:00.000Z
+User3,/users/3,CA,1 review,2023-03-03T10:00:00.000Z,Rated 2 out of 5 stars,Review,Battery overheats while charging,2023-03-03T10:00:00.000Z
+User4,/users/4,IN,1 review,2024-04-04T10:00:00.000Z,Rated 1 out of 5 stars,Review,Battery died completely after 3 months,2024-04-04T10:00:00.000Z
+User5,/users/5,DE,1 review,2023-05-05T10:00:00.000Z,Rated 2 out of 5 stars,Review,Battery percentage drops randomly,2023-05-05T10:00:00.000Z
+User6,/users/6,FR,1 review,2024-06-06T10:00:00.000Z,Rated 1 out of 5 stars,Review,"Battery swells up, very dangerous",2024-06-06T10:00:00.000Z
+User7,/users/7,AU,1 review,2023-07-07T10:00:00.000Z,Rated 5 out of 5 stars,Review,Battery lasts all day with heavy use,2023-07-07T10:00:00.000Z
+User8,/users/8,JP,1 review,2024-08-08T10:00:00.000Z,Rated 5 out of 5 stars,Review,"Fast charging works great, very handy",2024-08-08T10:00:00.000Z
+User9,/users/9,US,1 review,2023-09-09T10:00:00.000Z,Rated 5 out of 5 stars,Review,Battery backup is excellent,2023-09-09T10:00:00.000Z
+User10,/users/10,GB,1 review,2024-10-10T10:00:00.000Z,Rated 5 out of 5 stars,Review,Impressive battery performance,2024-10-10T10:00:00.000Z
+User11,/users/11,CA,1 review,2023-11-11T10:00:00.000Z,Rated 5 out of 5 stars,Review,Battery easily lasts 2 full days,2023-11-11T10:00:00.000Z
+User12,/users/12,IN,1 review,2024-12-12T10:00:00.000Z,Rated 3 out of 5 stars,Review,Camera is decent for the price,2024-12-12T10:00:00.000Z
+User13,/users/13,DE,1 review,2023-01-13T10:00:00.000Z,Rated 3 out of 5 stars,Review,"Screen is fine, nothing special",2023-01-13T10:00:00.000Z
+User14,/users/14,FR,1 review,2024-02-14T10:00:00.000Z,Rated 4 out of 5 stars,Review,Delivery was on time,2024-02-14T10:00:00.000Z
+User15,/users/15,AU,1 review,2023-03-15T10:00:00.000Z,Rated 3 out of 5 stars,Review,Price is okay for what you get,2023-03-15T10:00:00.000Z
+User16,/users/16,JP,1 review,2024-04-16T10:00:00.000Z,Rated 4 out of 5 stars,Review,Support was helpful once,2024-04-16T10:00:00.000Z

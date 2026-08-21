@@ -8,5 +8,6 @@
   "sound": ["sound", "audio", "speaker", "volume"],
   "performance": ["speed", "slow", "fast", "lag", "performance", "hang"],
   "size": ["size", "small", "large", "bulky", "compact"],
-  "ease_of_use": ["easy to use", "user friendly", "setup", "instructions"]
+  "ease_of_use": ["easy to use", "user friendly", "setup", "instructions"],
+  "customer_service": ["customer service", "customer care", "support", "help desk", "service team"]
 }
