@@ -22,7 +22,7 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: #f4f6f9;
+  background: linear-gradient(160deg, #eef3fa 0%, #f4f6f9 45%, #eaf0f7 100%);
   color: #172033;
 }
 
@@ -75,13 +75,8 @@ input {
   width: 42px;
   height: 42px;
   border-radius: 11px;
-  background: #173f73;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  letter-spacing: -1px;
+  box-shadow: 0 6px 16px rgba(23, 63, 115, 0.25);
+  display: block;
 }
 
 .brand h1 {
@@ -1110,11 +1105,11 @@ input {
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 32px rgba(23, 63, 115, 0.08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.38));
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 10px 34px rgba(23, 63, 115, 0.12);
 }
 
 .site-header {
@@ -1139,13 +1134,8 @@ input {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #173f73;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(23, 63, 115, 0.22);
+  display: block;
 }
 
 .site-brand strong,

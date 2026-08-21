@@ -1,0 +1,23 @@
+review_text,rating,date,country
+"Battery lasts all day, very impressed",5,2024-08-16,US
+"Fast delivery, arrived in 2 days",5,2023-03-11,GB
+"Camera quality is stunning, sharp photos",5,2024-01-05,CA
+Screen is bright and vivid colors,5,2024-06-22,IN
+Customer service helped me quickly,5,2023-11-02,US
+Great value for the price,4,2024-04-19,DE
+Refund processed within a week,5,2023-09-30,FR
+"Shipping was smooth, well packaged",5,2024-02-14,AU
+Warranty covered my repair,5,2024-07-08,US
+Software update fixed all the bugs,4,2024-10-01,GB
+Build quality feels premium,5,2024-05-17,CA
+Performance is snappy and fast,5,2023-12-25,IN
+"Battery drains very fast, dies in 2 hours",1,2024-08-20,US
+"Delivery was very late, took 2 weeks",1,2023-03-28,GB
+Camera is blurry and unfocused,2,2024-01-09,CA
+"Screen flickers sometimes, annoying",2,2024-06-03,IN
+Customer service was rude and unhelpful,1,2023-11-15,US
+Price is too high for the specs,2,2024-04-07,DE
+Refund was never processed,1,2023-09-12,FR
+Shipping arrived damaged,2,2024-02-26,AU
+Warranty claim was denied,1,2024-07-19,US
+"Software crashes often, very buggy",2,2024-10-11,GB

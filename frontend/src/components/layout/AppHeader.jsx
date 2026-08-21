@@ -1,10 +1,12 @@
+import logo from '../../assets/logo.svg'
+
 export default function AppHeader({ tab, setTab, onUpload }) {
   const tabs = ['dashboard', 'analyzer', 'explorer']
 
   return (
     <header className="topbar glass">
       <div className="brand">
-        <div className="brand-icon">CF</div>
+        <img src={logo} alt="Customer Feedback Insight System" className="brand-icon" />
         <div>
           <h1>Customer Feedback</h1>
           <span>Insight System</span>

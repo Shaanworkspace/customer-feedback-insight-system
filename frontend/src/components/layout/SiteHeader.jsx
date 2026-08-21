@@ -1,8 +1,10 @@
+import logo from '../../assets/logo.svg'
+
 export default function SiteHeader() {
   return (
     <header className="site-header glass">
       <div className="site-brand">
-        <div className="site-logo">CF</div>
+        <img src={logo} alt="Customer Feedback Insight System" className="site-logo" />
         <div>
           <strong>Customer Feedback</strong>
           <span>Insight System</span>
