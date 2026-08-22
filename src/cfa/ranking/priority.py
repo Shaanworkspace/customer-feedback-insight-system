@@ -6,6 +6,7 @@ Impact = normalized(count x negative_pct), 0-100.
 
 def rank_concerns(concern_stats: dict) -> list:
     concerns = concern_stats.get("concerns", [])
+    by_name = {c["name"]: c for c in concerns}
     scores = [(c["name"], c["count"] * c["negative_pct"]) for c in concerns]
     if not scores:
         return []
@@ -14,13 +15,13 @@ def rank_concerns(concern_stats: dict) -> list:
         max_score = 1
     ranked = []
     for name, score in sorted(scores, key=lambda x: x[1], reverse=True):
-        by_name = next(c for c in concerns if c["name"] == name)
+        concern = by_name[name]
         impact = int(round(score / max_score * 100))
         ranked.append(
             {
                 "concern": name,
-                "count": by_name["count"],
-                "negative_pct": by_name["negative_pct"],
+                "count": concern["count"],
+                "negative_pct": concern["negative_pct"],
                 "impact": impact,
                 "priority": len(ranked) + 1,
             }

@@ -1002,6 +1002,16 @@ input {
   box-shadow: 0 0 0 3px rgba(71, 115, 158, 0.10);
 }
 
+.auth-switch {
+  margin-top: 14px;
+  background: none;
+  border: none;
+  color: #47739e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .form-error {
   padding: 10px 12px;
   border-radius: 8px;

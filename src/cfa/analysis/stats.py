@@ -16,6 +16,7 @@ _EMPTY = {
     "ranked_concerns": [],
     "representative_reviews": [],
     "proof_by_concern": {},
+    "comments_by_concern": {},
 }
 
 
@@ -25,16 +26,8 @@ def _load(path, default):
     return default
 
 
-def get_sentiment_distribution() -> dict:
-    return _load(CONCERN_STATS_PATH, _EMPTY).get("sentiment_distribution", {"positive": 0, "negative": 0})
-
-
 def get_stats() -> dict:
-    stats = _load(CONCERN_STATS_PATH, _EMPTY)
-    stats["sentiment_distribution"] = stats.get("sentiment_distribution", {"positive": 0, "negative": 0})
-    stats["ranked_concerns"] = stats.get("ranked_concerns", [])
-    stats["representative_reviews"] = stats.get("representative_reviews", [])
-    stats["proof_by_concern"] = stats.get("proof_by_concern", {})
+    stats = {**_EMPTY, **_load(CONCERN_STATS_PATH, {})}
     if not stats.get("representative_reviews"):
         stats["representative_reviews"] = get_representative_reviews(3)
     return stats

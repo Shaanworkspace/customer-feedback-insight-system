@@ -76,7 +76,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
     { name: 'Positive', value: pos },
     { name: 'Negative', value: neg },
   ]
-  const concernData = concerns.map((c) => ({ name: c.concern, count: c.count, negative: c.negative_pct }))
+  const concernData = concerns.map((c) => ({ name: c.concern, count: c.count }))
 
   const totalMentions = concerns.reduce((a, c) => a + c.count, 0)
   const concernSummary = concerns.map((c) => ({

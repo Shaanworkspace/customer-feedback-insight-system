@@ -1,45 +1,30 @@
-"""Train sentiment model on Amazon_Reviews.csv and save artifacts.
+"""Train sentiment model on data/training_reviews.csv and save artifacts.
 
-Rating -> label: 1-2 stars negative, 4-5 stars positive, 3 dropped.
-Outputs: models/sentiment_model.joblib, models/sentiment_vectorizer.joblib
+Source: our Amazon reviews merged with the amazon_polarity dataset.
+Label: positive / negative (already prepared in the CSV).
+Outputs: models/sentiment_model.joblib, models/sentiment_vectorizer.joblib, models/metrics.json
 """
 
 import json
 import sys
 
 import joblib
-import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, f1_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-RAW = "data/Amazon_Reviews.csv"
+RAW = "data/training_reviews.csv"
 MODEL_PATH = "models/sentiment_model.joblib"
 VEC_PATH = "models/sentiment_vectorizer.joblib"
 
 
-def label_from_rating(rating: str):
-    if not rating:
-        return None
-    stars = rating.split(" out of ")[0].replace("Rated ", "")
-    try:
-        n = int(stars)
-    except ValueError:
-        return None
-    if n <= 2:
-        return "negative"
-    if n >= 4:
-        return "positive"
-    return None
-
-
 def main():
-    df = pd.read_csv(RAW, usecols=["Review Text", "Rating"], engine="python")
-    df = df.dropna(subset=["Review Text"])
-    df["label"] = df["Rating"].map(label_from_rating)
-    df = df.dropna(subset=["label"])
+    df = pd.read_csv(RAW, usecols=["Review Text", "label"], engine="python")
+    df = df.dropna(subset=["Review Text", "label"])
+    df["label"] = df["label"].astype(str).str.strip().str.lower()
+    df = df[df["label"].isin(["positive", "negative"])]
 
     print(f"total rows: {len(df)}")
     print(df["label"].value_counts().to_dict())

@@ -9,10 +9,6 @@ DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data"))
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Dataset settings
-RAW_DATA_PATH = DATA_DIR / "reviews.csv"
-DATA_SEED = 42
-
 # Concern / RAG settings
 CONCERN_LEXICON_PATH = PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
 CONCERN_STATS_PATH = DATA_DIR / "concern_stats.json"

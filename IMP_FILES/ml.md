@@ -1,8 +1,8 @@
-# ML Documentation — Sentiment Model, from zero
+# ML Documentation — Sentiment Model, explained from zero
 
 This file explains the Machine Learning part **slowly, in order**, like a class. By the end you will understand what the model does, why we chose it, how it is trained, and how it runs. No prior ML knowledge is assumed.
 
-The ML file is `src/cfa/ml/serve.py`. The training code is `src/cfa/ml/train.py` (not covered in the hackathon demo but exists).
+The ML code is `src/cfa/ml/serve.py` (the predictor). The training code is `src/cfa/ml/train.py`.
 
 ---
 
@@ -18,185 +18,180 @@ A human reads it and says "negative". We want code that says the same thing, aut
 
 ---
 
-## Level 2 — The simplest possible method (the fallback)
+## Level 2 — The simplest method (used as a backup)
 
-Before any fancy model, here is the backup method that is always available. It is in `ml/serve.py`:
+Here is the backup method. It counts good words and bad words:
 
 ```python
 positive_words = ["good", "great", "excellent", "love", "best", "fast", "easy"]
 negative_words = ["bad", "terrible", "poor", "awful", "worst", "slow", "drains", "late"]
 
 text_lower = text.lower()
-score = sum(w in text_lower for w in positive_words) - sum(w in text_lower for w in negative_words)
+score = (count of positive words) - (count of negative words)
 label = "positive" if score >= 0 else "negative"
-confidence = min(1.0, 0.5 + abs(score) * 0.15)
 ```
 
 ### How it works, step by step
 
 Take the review: *"Battery drains very fast, dies in 2 hours."*
 
-1. Lowercase it: `"battery drains very fast, dies in 2 hours."`
-2. Count positive words present: `fast` is in the list → +1. Total positive = 1.
-3. Count negative words present: `drains` is in the list → -1. Total negative = 1.
-4. Score = 1 − 1 = **0**.
-5. Because score >= 0, label = **"positive"**.
+1. Lowercase it.
+2. Count positive words: `fast` is in the list → +1.
+3. Count negative words: `drains` is in the list → −1.
+4. Score = 1 − 1 = **0** → label = "positive".
 
-Wait — that is wrong! "drains very fast" is negative, but our simple word list counted `fast` as positive. This shows the **weakness** of keyword counting: words like "fast" are good in one context ("fast charging") and bad in another ("drains fast").
+Wait — that is **wrong**! "drains very fast" is negative, but our list counted `fast` as positive. This shows the weakness of keyword counting: "fast" is good in "fast charging" but bad in "drains fast".
 
-That is exactly why we prefer a trained model. But the keyword method is still useful as a **fallback** when the model file is missing.
+That is exactly why we also train a real model. The keyword method is kept as a **fallback** — it never breaks, even on tiny inputs.
 
 ---
 
 ## Level 3 — The real model: TF-IDF + Logistic Regression
 
-When the trained model files exist, the code uses them instead:
+We train a small, fast model and use it for most reviews:
 
 ```python
 def predict_sentiment(text: str) -> dict:
-    model, vectorizer = _load()
+    model, vectorizer = _load()          # load the trained files
     if model is None:
-        ... # use the keyword fallback from Level 2
+        return _keyword_fallback(text)   # backup if files missing
     proba = model.predict_proba(vectorizer.transform([text]))[0]
     label = model.classes_[proba.argmax()]
-    return {"label": label, "confidence": round(float(proba.max()), 2)}
+    return {"label": label, "confidence": float(proba.max())}
 ```
 
-Two new words appear: **vectorizer** and **model**. Let us learn them.
+Two new words: **vectorizer** and **model**. Let us learn them.
 
 ---
 
 ## Level 4 — What is TF-IDF? (turning text into numbers)
 
-A machine learning model cannot read words. It needs numbers. **TF-IDF** is a recipe that turns a sentence into a list of numbers.
+A model cannot read words. It needs numbers. **TF-IDF** is a recipe that turns a sentence into a list of numbers.
 
-TF-IDF = **T**erm **F**requency × **I**nverse **D**ocument **F**requency.
+- TF = **Term Frequency**: how often a word appears in this review.
+- IDF = **Inverse Document Frequency**: give less weight to boring words like "the", "and" that appear everywhere.
 
-In plain words:
-- For each word, count how often it appears in this review (Term Frequency).
-- But give less weight to words that appear in EVERY review (like "the", "and") because they are not useful (Inverse Document Frequency).
-- The result is a big row of numbers, one number per word in the vocabulary.
+Result: a big row of numbers, one per word in the vocabulary.
 
 ### Tiny example
 
-Vocabulary (from training): `[battery, great, terrible, fast, screen]`
+Vocabulary (learned in training): `[battery, great, terrible, fast, screen]`
 
-Review A: *"battery great"* → TF-IDF row might be `[0.7, 0.7, 0, 0, 0]`
-Review B: *"terrible screen"* → `[0, 0, 0.7, 0, 0.7]`
+- *"battery great"* → `[0.7, 0.7, 0, 0, 0]`
+- *"terrible screen"* → `[0, 0, 0.7, 0, 0.7]`
 
-Now each review is a list of numbers. The model can do math on it.
-
-> The "vectorizer" is the object that remembers the vocabulary and converts new text into this number row.
+Now each review is a list of numbers the model can do math on. The **vectorizer** is the object that remembers the vocabulary and converts new text into this number row.
 
 ---
 
-## Level 5 — What is Logistic Regression? (the actual "brain")
+## Level 5 — What is Logistic Regression? (the brain)
 
-Logistic Regression is a simple classifier. After TF-IDF gives us the number row, Logistic Regression looks at those numbers and outputs a probability:
+Logistic Regression is a simple classifier. After TF-IDF gives the number row, it outputs a probability:
 
-- "80% chance this is negative"
+- "88% chance this is negative"
 - "95% chance this is positive"
 
 We pick the higher one as the label, and that probability is the **confidence**.
 
 ### How was it trained?
 
-During training (`ml/train.py`), the system was shown many example reviews that a human had already labeled positive or negative. It learned weights like:
+During training (`ml/train.py`) the system saw many example reviews already labelled positive/negative by humans. It learned weights like:
 
-- seeing the word "terrible" should push toward **negative**
-- seeing the word "excellent" should push toward **positive**
+- seeing "terrible" pushes toward **negative**
+- seeing "excellent" pushes toward **positive**
 
-Training = finding the best weights so the model agrees with the human labels on the examples.
+Training = finding the best weights so the model agrees with the human labels.
 
-> Why this model? It is small, fast, needs no GPU, and is easy to explain ("this word pushed it negative"). For a sentiment task on thousands of reviews, it is a great, honest choice.
-
----
-
-## Level 6 — Inference (using the model at runtime)
-
-When a review comes in:
-
-```
-review text
-   │
-   ▼
-vectorizer.transform([text])   →  number row (TF-IDF)
-   │
-   ▼
-model.predict_proba(row)       →  [0.92, 0.08]   (negative, positive)
-   │
-   ▼
-label = "negative", confidence = 0.92
-```
-
-### Worked example
-
-Review: *"Camera is blurry and unfocused."*
-
-1. Vectorizer turns it into a number row using the vocabulary it learned in training. Words like "blurry", "unfocused" (if seen in training as negative) get higher values.
-2. Model outputs, say, `[0.88, 0.12]`.
-3. `argmax` picks index 0 → class `"negative"`.
-4. Confidence = `0.88`.
-5. Return `{"label": "negative", "confidence": 0.88}`.
-
-This is far better than the keyword method because the model learned context from thousands of examples, not a fixed word list.
+> Why this model? It is small, fast, needs no GPU, and is easy to explain ("this word pushed it negative"). For sentiment on thousands of reviews, it is a great, honest choice.
 
 ---
 
-## Level 7 — Where the model lives (and why it may be missing)
+## Level 6 — The hybrid: model + fallback together
+
+A trained model is smart but can be **over-confident on very short text** (e.g. "Worst ever"). So we use a hybrid:
+
+1. If the review is **long** (more than ~8 words) **and** the model is **confident** (probability ≥ 0.60) → trust the model.
+2. If the review is **short** or the model is **unsure** → use the keyword fallback (Level 2), which is tuned for phrases.
+
+This gives the best of both: the model's understanding of context for normal reviews, and the reliability of rule-counting for tiny or tricky inputs. The keyword fallback also covers the rare case where the model file is missing.
+
+---
+
+## Level 7 — Where the model lives (and why it is always there)
 
 `config.py`:
+
 ```python
 MODEL_PATH = PROJECT_ROOT / "models" / "sentiment_model.joblib"
 VECTORIZER_PATH = PROJECT_ROOT / "models" / "sentiment_vectorizer.joblib"
 ```
 
-The `models/` folder is **gitignored**. So when you clone the repo or deploy to Render, those files are NOT there. In that case `_load()` returns `None`, and `predict_sentiment` uses the **Level 2 keyword fallback**.
+The trained model files are **committed to the repository**, so both your local machine **and the deployed cloud** use the smart model. The keyword fallback only steps in for short/low-confidence reviews (the hybrid above) or if the file were ever absent.
 
-This means:
-- Locally, if you trained the model, you get the smart model.
-- On a fresh cloud deploy without the model file, you still get a working (if simpler) result via the fallback.
-
-This is why the system "just works" even without the trained model.
+This is why the system "just works" everywhere.
 
 ---
 
-## Level 8 — How it connects to the rest
+## Level 8 — Training data
+
+The model was trained on **79,498 real Amazon reviews**:
+
+- Our curated Amazon reviews (ratings 1–2 → negative, 4–5 → positive, 3 dropped).
+- Plus the public `amazon_polarity` dataset, merged in.
+
+No fake or generated text. The labels come from the star ratings people actually gave.
+
+---
+
+## Level 9 — How good is it? (real numbers)
+
+After training, we hide 15,900 reviews from the model and ask it to predict them. Result:
+
+| Metric | Score | Plain meaning |
+|--------|-------|---------------|
+| Accuracy | **88.4%** | 88 out of 100 reviews labelled correctly |
+| Precision | **86.0%** | when it says "positive", it is right 86% of the time |
+| Recall | **89.0%** | it catches 89% of all truly negative reviews |
+| F1 | **87.5%** | the balanced overall score |
+
+These numbers are saved in `models/metrics.json` and are the same ones shown to judges. They are honest: measured on data the model never saw during training.
+
+---
+
+## Level 10 — How it connects to the rest
 
 Every review in the upload pipeline calls:
 
 ```python
-result = analyze_review(text, include_similar=False)
-# inside analyze_review:
-overall = predict_sentiment(text)   # <- our ML step
+overall = predict_sentiment(text)   # <- our ML step (hybrid)
 ```
 
 So the sentiment label on each review (and therefore the positive/negative pie chart) comes from this ML function.
 
 ---
 
-## Level 9 — Interview questions (ML)
+## Level 11 — Interview questions (ML)
 
-**Q: Why TF-IDF and not word embeddings (Word2Vec/BERT)?**
-A: TF-IDF is simpler, faster, needs no GPU, and is fully explainable. For a binary sentiment task on a few thousand reviews, it performs well. Embeddings would capture meaning better but add size and complexity. Good trade-off for a hackathon.
+**Q: Why TF-IDF and not BERT?**
+A: TF-IDF is simpler, faster, needs no GPU, and is fully explainable. BERT would capture meaning better but adds size and complexity. Good trade-off for this task.
 
 **Q: Why Logistic Regression and not a neural network?**
-A: Logistic Regression is a linear model — fast to train, easy to debug, and often strong enough for sentiment with good features. A neural net would be heavier with little gain at this scale.
+A: It is fast to train, easy to debug, and strong enough for sentiment with good features. A neural net would be heavier with little gain at this scale.
 
 **Q: What is confidence?**
-A: The model's probability for the chosen class. 0.92 means "92% sure it is negative".
+A: The model's probability for the chosen class. 0.88 means "88% sure it is negative".
 
-**Q: What happens if the model file is missing?**
-A: We fall back to keyword counting. The app keeps working; only accuracy drops a bit.
+**Q: Why a hybrid instead of only the model?**
+A: The model can be confidently wrong on 2-word reviews. The fallback covers those, so the app is reliable on every input length.
 
-**Q: Is the model fair / unbiased?**
-A: It learns from the training data. If the training reviews are biased, the model is too. That is a real limitation to name.
+**Q: Is the model fair?**
+A: It learns from the training data. If that data is biased, the model is too. That is a real limitation to name.
 
 **Q: How would you improve it?**
-A: (1) Train on a larger, balanced dataset. (2) Use a transformer (DistilBERT) for better context. (3) Add confidence thresholds and abstain on low-confidence cases. (4) Track precision/recall (see KIET factor #1).
+A: (1) Bigger and more balanced data. (2) A transformer (DistilBERT) for better context. (3) Confidence thresholds that abstain on unsure cases. (4) Track precision/recall per concern, not just overall.
 
 ---
 
-## Level 10 — One paragraph to remember
+## Level 12 — One paragraph to remember
 
-> Our sentiment ML takes a review, converts it to numbers with TF-IDF, and classifies it as positive or negative with Logistic Regression, returning a confidence score. If the trained model file is absent (fresh deploy), it safely falls back to a simple keyword counter so the app never breaks.
+> Our sentiment system turns a review into numbers with TF-IDF, classifies it as positive or negative with Logistic Regression, and returns a confidence score. For long, confident reviews it trusts the model; for short or unsure ones it falls back to tuned keyword counting. The trained model is committed to the repo, so it runs the same locally and in the cloud, and it was measured at 88.4% accuracy on unseen reviews.

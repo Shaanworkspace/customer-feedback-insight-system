@@ -113,7 +113,8 @@ The `data/` folder is **gitignored** on purpose. That means the app never ships 
 │
 ├── src/cfa/                   # Python backend package
 │   ├── api/
-│   │   ├── main.py            # FastAPI endpoints
+│   │   ├── main.py            # FastAPI endpoints (+ auth wiring)
+│   │   ├── auth.py            # signup / login / JWT (in-memory users)
 │   │   ├── pipeline.py        # CSV → analyze → save
 │   │   └── schemas.py         # request models
 │   ├── analysis/
@@ -129,7 +130,7 @@ The `data/` folder is **gitignored** on purpose. That means the app never ships 
 │       └── config.py          # paths
 │
 ├── data/                      # gitignored — runtime results only
-├── models/                    # gitignored — trained model files
+├── models/                    # trained model + metrics (committed)
 ├── tests/                     # pytest suite
 ├── IMP_FILES/                 # docs + sample CSVs (this repo's notes)
 │   └── sample_csvs/           # 6 product CSVs for testing
@@ -181,10 +182,15 @@ Use one of the sample CSVs in `IMP_FILES/sample_csvs/`. For example `6_luxewatch
 
 Base URL (deployed): `https://cfa-api.onrender.com`
 
+All `/api/v1/*` endpoints except `/health` and `/api/v1/ping` require `Authorization: Bearer <token>` (obtained from signup/login).
+
 | Method | Endpoint | What it does | Request | Response (short) |
 |--------|----------|--------------|---------|------------------|
 | GET | `/health` | Health check | — | `{status, reviews_analyzed, avg_latency_ms}` |
 | GET | `/api/v1/ping` | Is backend alive | — | `{message}` |
+| POST | `/api/v1/auth/signup` | Create account, return token | `{username, password}` | `{message, token}` |
+| POST | `/api/v1/auth/login` | Log in, return token | `{username, password}` | `{token}` |
+| GET | `/api/v1/auth/me` | Current user (needs token) | — | `{username}` |
 | POST | `/api/v1/upload` | Upload CSV, analyze all rows | `file` (multipart) | full stats JSON |
 | GET | `/api/v1/stats` | Dashboard numbers | — | `{total_reviews, sentiment_distribution, ranked_concerns, ratings, countries, time_trend, …}` |
 | GET | `/api/v1/reviews` | All saved reviews | — | `[{review_id, text, entity, sentiment, rating, country, date}, …]` |
@@ -208,21 +214,21 @@ Example upload response (trimmed):
 
 ---
 
-## Mapping to the 9 KIET Factors
+## Mapping to the 9 KIET Evaluation Criteria
 
-This project was built against a 9-point evaluation checklist. Short status:
+This project targets **Use Case #7 — "Sentiment Analysis of Customer Reviews"** (Amazon Reviews Dataset) from the KIET Hackathon PDF. It is built against the 9-point evaluation checklist on page 4 of that PDF. Short status:
 
-| # | Factor | Status |
-|---|--------|--------|
-| 1 | Model evaluation metrics surfaced | ⏳ Documented approach, eval deferred |
-| 2 | Real data, no fake numbers | ✅ All numbers come from the uploaded CSV |
-| 3 | Reproducible tests | ✅ `pytest` suite in `tests/` |
-| 4 | Visual charts | ✅ Recharts dashboard |
-| 5 | Rating distribution | ✅ Parsed and charted |
-| 6 | Time trend | ✅ Year extracted, charted |
-| 7 | Country segmentation | ✅ Parsed and charted |
-| 8 | Architecture alternatives | ✅ See `IMP_FILES/` docs |
-| 9 | Roadmap / effort | ✅ See `IMP_FILES/` docs |
+| # | Criterion (from PDF, page 4) | Status |
+|---|------------------------------|--------|
+| 1 | Use Case Understanding & Relevance | ✅ Maps exactly to Use Case #7; see `IMP_FILES/user_flow.md` |
+| 2 | Solution Architecture | ✅ Layered design (see Architecture section above) |
+| 3 | Innovation & Creativity (AI/ML) | ✅ Trained ML model + keyword fallback **hybrid** + RAG proof + concern lexicon |
+| 4 | UI & UX | ✅ React dashboard, Analyzer, Landing, Upload with LOCAL/DEPLOYED switch |
+| 5 | Technical Implementation & Code Quality | ✅ Modular `api / analysis / ml / ranking / core` layers, clean code, docs |
+| 6 | Model Performance & Evaluation | ✅ 88.4% acc · 86.0% prec · 89.0% recall · 87.5% F1 (see `IMP_FILES/ml.md`) |
+| 7 | Deployment & Integration | ✅ Vercel + Render, REST API, CI/CD via GitHub Actions |
+| 8 | Presentation & Communication | ⏳ You prepare the PPT / video / demo (not code) |
+| 9 | Collaboration & Teamwork | ✅ Team task assignment documented |
 
 ---
 

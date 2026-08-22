@@ -1,57 +1,72 @@
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
 
-const LOCAL_BASE = 'http://localhost:8000'
-const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
-
 let currentBase = API_BASE
+
+const TOKEN_KEY = 'cfa_token'
 
 export function setApiBase(base) {
   currentBase = base
 }
 
-export function getApiBase() {
-  return currentBase
+export function getToken() {
+  return localStorage.getItem(TOKEN_KEY) || ''
+}
+
+export function setToken(token) {
+  if (token) localStorage.setItem(TOKEN_KEY, token)
+  else localStorage.removeItem(TOKEN_KEY)
+}
+
+function authHeader() {
+  const token = getToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+export async function signup(username, password) {
+  const res = await fetch(`${currentBase}/api/v1/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  })
+  if (!res.ok) throw new Error('Signup failed (username may be taken)')
+  return res.json()
+}
+
+export async function login(username, password) {
+  const res = await fetch(`${currentBase}/api/v1/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  })
+  if (!res.ok) throw new Error('Invalid username or password')
+  return res.json()
 }
 
 export async function getStats() {
-  const res = await fetch(`${currentBase}/api/v1/stats`)
-
-  if (!res.ok) {
-    throw new Error('Stats request failed')
-  }
-
+  const res = await fetch(`${currentBase}/api/v1/stats`, { headers: authHeader() })
+  if (!res.ok) throw new Error('Stats request failed')
   return res.json()
 }
 
 export async function getReviews() {
-  const res = await fetch(`${currentBase}/api/v1/reviews`)
+  const res = await fetch(`${currentBase}/api/v1/reviews`, { headers: authHeader() })
   if (!res.ok) throw new Error('Reviews request failed')
   return res.json()
 }
 
 export async function getConcernComments(concern) {
-  const res = await fetch(`${currentBase}/api/v1/concern-comments?concern=${encodeURIComponent(concern)}`)
+  const res = await fetch(`${currentBase}/api/v1/concern-comments?concern=${encodeURIComponent(concern)}`, { headers: authHeader() })
   if (!res.ok) throw new Error('Concern comments request failed')
-  return res.json()
-}
-
-export async function pingBackend() {
-  const res = await fetch(`${currentBase}/api/v1/ping`)
-  if (!res.ok) throw new Error('Ping failed')
   return res.json()
 }
 
 export async function analyzeReview(text) {
   const res = await fetch(`${currentBase}/api/v1/analyze`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...authHeader(), 'Content-Type': 'application/json' },
     body: JSON.stringify({ review_text: text }),
   })
-
-  if (!res.ok) {
-    throw new Error('Analysis request failed')
-  }
-
+  if (!res.ok) throw new Error('Analysis request failed')
   return res.json()
 }
 
@@ -62,6 +77,7 @@ export async function uploadReviews(file) {
 
     const res = await fetch(`${currentBase}/api/v1/upload`, {
       method: 'POST',
+      headers: authHeader(),
       body: formData,
     })
 

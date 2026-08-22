@@ -8,11 +8,12 @@ import Upload from './components/upload/Upload'
 import Dashboard from './components/Dashboard'
 import Analyzer from './components/Analyzer'
 import Explorer from './components/Explorer'
+import { getToken } from './api'
 
 const APP_VIEWS = ['dashboard', 'analyzer', 'explorer']
 
 export default function App() {
-  const [signedIn, setSignedIn] = useState(false)
+  const [signedIn, setSignedIn] = useState(() => !!getToken())
   const [analyzing, setAnalyzing] = useState(false)
   const [reload, setReload] = useState(0)
   const [view, setView] = useState(

@@ -1,148 +1,111 @@
 # User Flow — Step by Step (for presentation)
 
-This document explains **exactly what a user sees and clicks**, and **what happens in the system on each click**. Use it when you have to stand in front of a judge or a class and explain the product live.
+> Read this like a story. A "user" is any person who opens our website. We follow them screen by screen.
+> Simple words first: **frontend** = the website you see; **backend** = the hidden server that does the thinking; **CSV** = a plain table file (like Excel) of reviews; **API** = a door the website knocks on to ask the server for data.
 
-The app has four main screens: **Landing → Login → Upload → Dashboard**. There are also two side screens: **Analyzer** and **Explorer**.
+Our app has these screens: **Landing → Login → Upload → Dashboard**. Plus two extra screens: **Analyzer** (one review) and **Explorer** (all reviews).
 
-The flow is controlled by the browser's address bar. When you move between screens, the app saves `?view=dashboard` in the URL. That is why the browser's **Back** and **Forward** buttons work.
-
----
-
-## Step 1 — Landing page (first thing on screen)
-
-**What the user sees:**
-- A glassy header at the top with the project logo and the name "Customer Feedback Insight System".
-- A big hero section that says: *"Upload the reviews you already have. We find what customers hate, why they hate it, and what to fix first."*
-- A button that says **"Start free"**.
-
-**What the user does:** clicks **"Start free"**.
-
-**What happens in the background:**
-- The code calls `navigate('login')`.
-- That changes the URL to `?view=login` and shows the Login screen.
-- Nothing is sent to the backend yet. This is just moving between pages on the frontend.
-
-**What to say out loud:** *"The user lands on our home page and clicks Start free to begin."*
+The screen changes are saved in the web address (URL), e.g. `?view=dashboard`. That is why the browser **Back/Forward** buttons work — no extra code needed.
 
 ---
 
-## Step 2 — Login page
+## Step 1 — Landing page (first screen)
 
-**What the user sees:**
-- A clean card that says "Sign in".
-- (In this demo, any input works — there is no real password check. It is a hackathon demo, not a security system.)
+**What you see:** a clean header with our name "Customer Feedback Insight System", a big hero text *"Upload the reviews you already have. We find what customers hate, why they hate it, and what to fix first."*, and a **"Start free"** button.
 
-**What the user does:** types anything and clicks **"Continue"** (or presses Enter).
+**What you do:** click **Start free**.
 
-**What happens in the background:**
-- The code sets a small flag in the browser: `signedIn = true`.
-- Then it calls `navigate('upload')`, so the URL becomes `?view=upload`.
-- The Upload screen appears.
+**What happens:** the website moves to the Login screen (`?view=login`). Nothing is sent to the server yet — it is just moving pages.
 
-**What to say out loud:** *"They sign in, and we take them to the upload screen."*
+**Say out loud:** *"The user lands on our home page and clicks Start."*
+
+---
+
+## Step 2 — Login / Sign up (real account now)
+
+**What you see:** a card with **Username** and **Password** fields, and a small link to switch between **Sign in** and **Create account**.
+
+**What you do:**
+- First time → click "Create account", type a username + password, submit.
+- Next time → type them and click **Sign in**.
+
+**What happens in the background (this is real, not fake):**
+1. The website sends your username + password to the server (`POST /api/v1/auth/signup` or `/login`).
+2. The server checks the password safely (it is scrambled with a strong method, never stored as plain text).
+3. The server replies with a **token** (a temporary digital pass, like a wristband at a concert).
+4. The website saves that token in the browser and remembers you are logged in.
+5. It moves you to the Upload screen.
+
+> Why this matters: every later request carries that token, so the server knows who you are. This is real authentication.
+
+**Say out loud:** *"They create an account or sign in. We give them a token, and now they can use the app."*
 
 ---
 
 ## Step 3 — Upload page (the important one)
 
-**What the user sees:**
-- A box that says **"Upload your reviews"**.
-- A dashed area where you can drop a CSV file, or click to choose one.
-- Two big buttons at the bottom:
-  - **Upload & Continue ON LOCAL** (talks to `http://localhost:8000`)
-  - **Upload & Continue ON DEPLOYED** (talks to the live cloud backend)
-- Below that, three small cards explaining: "Drop your CSV", "AI reads everything", "See what to fix".
+**What you see:** a box **"Upload your reviews"**, a dashed area to drop a CSV file, and two buttons:
+- **Upload & Continue ON LOCAL** → talks to your laptop server (`http://localhost:8000`)
+- **Upload & Continue ON DEPLOYED** → talks to the live cloud server
 
-**What the user does:** picks a CSV file, then clicks one of the two buttons.
+**What you do:** pick a CSV, click a button.
 
-**What happens in the background (this is the key part):**
+**What happens (the key part):**
+1. The app checks the file ends in `.csv`. If not → error, stop.
+2. It sets the server address (LOCAL or DEPLOYED).
+3. It sends the file: `POST /api/v1/upload` (with your token).
+4. The server reads the whole file, studies every review, and saves the results.
+5. When done, the Dashboard opens and fills with **real numbers and real charts** — no fake data.
 
-1. The app checks the file ends with `.csv`. If not, it shows an error and stops.
-2. It remembers which button you pressed and sets the backend address:
-   - LOCAL button → backend = `http://localhost:8000`
-   - DEPLOYED button → backend = `https://cfa-api.onrender.com`
-3. It calls `onStart()`. That immediately:
-   - opens the **Dashboard** screen, and
-   - tells the Dashboard: *"still working, show the loading skeleton"* (`analyzing = true`).
-   - So the user sees the dashboard right away with grey placeholder boxes — they do not stare at a blank screen.
-4. In the background, the app sends the CSV file to the backend with a network request: `POST /api/v1/upload`.
-5. The backend reads the whole file, analyzes every row, and saves the results (explained in `internal_flow.md` and `backend.md`).
-6. When the backend finishes and replies, the app calls `onDone()`. That:
-   - turns off the loading state (`analyzing = false`), and
-   - bumps a counter (`reloadKey`) so the Dashboard fetches fresh data.
-7. The Dashboard now fills in: real numbers, real charts, real reviews.
-
-**What to say out loud:** *"They pick a CSV and hit upload. We open the dashboard instantly with a loading state, then stream the real analysis in. No fake numbers — everything comes from their file."*
+**Say out loud:** *"They pick a CSV and upload. The server analyzes every review, and the dashboard fills with real insights."*
 
 ---
 
-## Step 4 — Dashboard (where the insight appears)
+## Step 4 — Dashboard (where insight appears)
 
-**What the user sees (top to bottom):**
-1. A row of KPI cards: total reviews, positive count, negative count, top concern.
-2. A **Sentiment** chart (a pie or bar showing positive vs negative).
-3. A **Priority Concerns** list — the most important problems first, each with an "impact" score and a red/grey bar.
-4. Three charts side by side:
-   - **Rating Distribution** (how many 1-star, 2-star, … 5-star).
-   - **Reviews Over Time** (how many reviews per year).
-   - **Market by Country** (which countries the reviewers are from).
-5. A **Review Explorer** table where you can filter reviews.
-6. Every concern in the list has a **"View Comments"** button.
+**Top to bottom you see:**
+1. **KPI cards:** total reviews, positive count, negative count, top concern.
+2. **Sentiment chart:** positive vs negative (pie/bar).
+3. **Priority Concerns list:** biggest problems first, each with an "impact" score.
+4. **Three charts:** Rating Distribution, Reviews Over Time, Market by Country.
+5. **Review Explorer:** a table of all reviews.
+6. Every concern has a **"View Comments"** button.
 
-**What happens in the background:**
-- As soon as the loading finishes, the Dashboard runs two fetch calls at the same time:
-  - `GET /api/v1/stats` → gets all the numbers and charts data.
-  - `GET /api/v1/reviews` → gets the list of reviews.
-- If you click **"View Comments"** on a concern (say "battery"), it runs:
-  - `GET /api/v1/concern-comments?concern=battery`
-  - and shows a modal with the actual customer reviews that talk about battery. These are the **real proof** quotes.
+**What happens:** the Dashboard asks the server `GET /api/v1/stats` and `GET /api/v1/reviews`. Clicking **View Comments** on "battery" asks `GET /api/v1/concern-comments?concern=battery` and shows the **actual customer quotes** about battery — our RAG "real proof".
 
-**What to say out loud:** *"Here is the dashboard. Sentiment split, ranked concerns, rating, time, and country — all from the CSV. And if I click a concern, I see the real customer quotes behind it."*
+**Say out loud:** *"Here is the dashboard — sentiment, ranked concerns, ratings, time, country, all from your file. Click a concern to see the real customer quotes."*
 
 ---
 
-## Step 5 — Analyzer screen (one review at a time)
+## Step 5 — Analyzer (one review)
 
-**What the user sees:** a box where you can paste a single review and click Analyze.
+Paste one review → `POST /api/v1/analyze` → see its sentiment + concerns instantly. Great for a live demo.
 
-**What happens in the background:**
-- It sends `POST /api/v1/analyze` with `{ review_text: "..." }`.
-- The backend runs sentiment + concern detection on that one line and returns the result.
+## Step 6 — Explorer (all reviews)
 
-**Use case:** good for a live demo — paste a sentence and show the prediction instantly.
-
----
-
-## Step 6 — Explorer screen (browse all reviews)
-
-**What the user sees:** a searchable/filterable table of every saved review (text, entity, sentiment, rating, country).
-
-**What happens in the background:** it reads `GET /api/v1/reviews` and shows them in a table.
-
----
-
-## Step 7 — Browser Back / Forward works
-
-Because every screen change writes `?view=...` into the URL, the user can press the browser's **Back** button to go from Dashboard → Upload → Login, and **Forward** to come back. No extra code needed; the browser already knows the history.
+A searchable table of every saved review (`GET /api/v1/reviews`).
 
 ---
 
 ## One-line summary for slides
 
-> User clicks Start → Login → Upload CSV → Dashboard opens instantly (loading) → backend analyzes the file → real charts + real customer proof appear.
+> User clicks Start → Sign up / Sign in → Upload CSV → server analyzes → Dashboard shows real charts + real customer proof.
 
 ---
 
-## Common presenter questions (and short answers)
+## Common presenter questions (short answers)
 
 **Q: Is the data fake?**
-A: No. `data/` is gitignored. The dashboard only shows what was in the CSV you uploaded.
+A: No. The dashboard only shows what was in *your* uploaded CSV.
 
 **Q: Why two upload buttons?**
-A: One talks to your laptop (LOCAL), one talks to the live cloud (DEPLOYED). Same code, different server.
+A: One talks to your laptop, one to the live cloud. Same code, different server.
 
 **Q: What if the backend is asleep?**
 A: The Dashboard shows a friendly "Backend not reachable" message instead of crashing.
 
+**Q: Is login real?**
+A: Yes — real signup/login, password scrambled, token given, all data calls protected.
+
 **Q: How fast is upload?**
-A: A 21,000-row CSV analyzes in about 8 seconds on the cloud backend.
+A: A large CSV (tens of thousands of rows) analyzes in seconds on the cloud backend.

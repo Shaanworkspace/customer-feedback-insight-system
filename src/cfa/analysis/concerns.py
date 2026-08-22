@@ -1,7 +1,4 @@
-"""Concern analysis contracts.
-
-Mock until Ram Ashish + Sharad build the real logic.
-"""
+"""Concern analysis: detect what a review is about and how it feels."""
 
 import json
 
@@ -20,28 +17,28 @@ def _load_lexicon() -> dict:
     return _lexicon
 
 
-def detect_concerns(text: str) -> list:
+def detect_concerns(text: str, lexicon: dict = None) -> list:
+    lexicon = lexicon or _load_lexicon()
     text_lower = text.lower()
-    return [name for name, terms in _load_lexicon().items() if any(t in text_lower for t in terms)]
+    return [name for name, terms in lexicon.items() if any(t in text_lower for t in terms)]
 
 
 def analyze_review(text: str, include_similar: bool = True) -> dict:
-    concerns = detect_concerns(text)
+    lexicon = _load_lexicon()
+    concerns = detect_concerns(text, lexicon)
     overall = predict_sentiment(text)
-    concern_sentiments = []
-    for name in concerns:
-        concern_sentiments.append(
-            {
-                "name": name,
-                "sentiment": overall["label"],
-                "matched_terms": [_load_lexicon()[name][0]],
-                "confidence": overall["confidence"],
-            }
-        )
-    labels = {c["sentiment"] for c in concern_sentiments}
+    concern_sentiments = [
+        {
+            "name": name,
+            "sentiment": overall["label"],
+            "matched_terms": [lexicon[name][0]],
+            "confidence": overall["confidence"],
+        }
+        for name in concerns
+    ]
     return {
         "review_text": text,
-        "overall_sentiment": "mixed" if len(labels) > 1 else overall["label"],
+        "overall_sentiment": overall["label"],
         "overall_confidence": overall["confidence"],
         "concerns": concern_sentiments,
         "similar_reviews": find_similar(text) if include_similar else [],

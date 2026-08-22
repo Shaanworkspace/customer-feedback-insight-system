@@ -1,6 +1,6 @@
-# Backend Flow — FastAPI in detail
+# Backend — the server explained simply
 
-This document explains the backend the same way `internal_flow.md` does, but focused only on the server side. Read it if you want to understand every endpoint and the upload pipeline line by line.
+> The **backend** is the hidden server that does the thinking. It is written in Python using **FastAPI** (a tool that makes web APIs easy). This file explains every endpoint and the upload pipeline, line by line, in plain words.
 
 Backend code lives in `src/cfa/`.
 
@@ -8,9 +8,9 @@ Backend code lives in `src/cfa/`.
 
 ## 1. The server (`api/main.py`)
 
-The server is a FastAPI app. FastAPI gives us automatic API docs at `/docs`.
+FastAPI gives us automatic API docs at `/docs`.
 
-### CORS (so the Vercel frontend can call it)
+### CORS (so the website can call it)
 
 ```python
 app.add_middleware(
@@ -25,27 +25,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 ```
-
-This says: "I will accept calls from the local dev server and from any Vercel deployment of our frontend."
+This says: "I accept calls from the local app and from any Vercel deployment of our website."
 
 ---
 
-## 2. Endpoints
+## 2. Auth endpoints (real login now)
+
+All data endpoints need a **token** (a temporary digital pass). You get it by signing up or logging in.
+
+### POST `/api/v1/auth/signup`
+Body: `{username, password}` → creates the account (password scrambled safely), returns `{message, token}`.
+
+### POST `/api/v1/auth/login`
+Body: `{username, password}` → checks the password, returns `{token}`.
+
+### GET `/api/v1/auth/me`
+Needs token. Returns `{username}`. Proof the token works.
+
+How auth works inside (`api/auth.py`, no extra libraries):
+- Passwords are scrambled with `pbkdf2` (a one-way scramble) — we never store the plain password.
+- The token is a **JWT** (a signed ticket) made with `hmac` + `hashlib`. It is valid for 1 hour.
+- Users are kept **in memory** (a list in the server's memory). That means they reset if the server restarts — fine for a demo.
+
+---
+
+## 3. Data endpoints (need token)
 
 ### GET `/health`
-Returns a counter of how many reviews were analyzed and the average latency.
+A counter of how many reviews were analyzed and the average time. No token needed.
 ```json
 {"status": "ok", "reviews_analyzed": 2002, "avg_latency_ms": 0.0}
 ```
 
 ### GET `/api/v1/ping`
-Simple liveness check.
-```json
-{"message": "CFA backend is alive"}
-```
+"Is the server alive?" No token needed.
 
 ### POST `/api/v1/upload`
-The main one. Receives the CSV file and returns the full stats.
+The main one. Receives the CSV file, analyzes it, returns the full stats.
 ```python
 @app.post("/api/v1/upload")
 async def upload(file: UploadFile = File(...)):
@@ -54,53 +70,27 @@ async def upload(file: UploadFile = File(...)):
 ```
 
 ### GET `/api/v1/stats`
-Combines several readers into one response.
-```python
-@app.get("/api/v1/stats")
-def stats():
-    data = get_stats()
-    data["countries"] = get_countries()
-    data["time_trend"] = get_time_trend()
-    data["ratings"] = get_ratings()
-    return data
-```
+Combines several readers into one response (countries, time trend, ratings).
 
 ### GET `/api/v1/reviews`
-Returns the raw list of saved reviews.
+Returns the saved review list.
 
 ### POST `/api/v1/analyze`
 Analyze a single review text (used by the Analyzer screen).
-```python
-result = analyze_review(req.review_text)
-```
 
 ### GET `/api/v1/concern-comments?concern=battery`
 Returns the proof reviews for one concern (the RAG output saved at upload time).
 
 ---
 
-## 3. The upload pipeline (`api/pipeline.py`) — step by step
+## 4. The upload pipeline (`api/pipeline.py`) — step by step
 
-Let us follow one CSV row through the system.
+We follow one CSV row through the system.
 
-### Input CSV (example, Kaggle format)
+### Step 4.1 — Find columns
+The code matches column names: text → `Review Text`, rating → `Rating`, country → `Country`, date → `Date of Experience`, reviewer → `Reviewer Name`. This is why both Kaggle format and a simple `review_text,rating,date` format work.
 
-```csv
-Reviewer Name,Profile Link,Country,Review Count,Review Date,Rating,Review Title,Review Text,Date of Experience
-User3,/users/3,US,1 review,2024-03-15T10:00:00.000Z,Rated 1 out of 5 stars,Bad,Battery drains very fast,2024-03-15T10:00:00.000Z
-```
-
-### Step 3.1 — Find columns
-The code looks at the header row and matches column names:
-- text column → `Review Text`
-- rating column → `Rating`
-- country column → `Country`
-- date column → `Date of Experience`
-- reviewer column → `Reviewer Name`
-
-This is why both Kaggle format and a simple `review_text,rating,date` format work.
-
-### Step 3.2 — For each row
+### Step 4.2 — For each row
 ```python
 text = (row.get(text_col) or "").strip()
 if not text:
@@ -108,24 +98,17 @@ if not text:
 result = analyze_review(text, include_similar=False)
 sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
 ```
+`analyze_review` returns the sentiment and the list of concerns.
 
-`analyze_review` returns the sentiment and the list of concerns (e.g. `[{name: "battery", ...}]`).
+### Step 4.3 — Parse the rating
+Kaggle rating is the string `"Rated 1 out of 5 stars"`. We extract the first number → `1`. A plain `3` also gives `3`. Missing → `None`.
 
-### Step 3.3 — Parse the rating
-The Kaggle rating is the string `"Rated 1 out of 5 stars"`. We extract the first number:
-```python
-raw_rating = row.get(rating_col)          # "Rated 1 out of 5 stars"
-match = re.search(r"\d+", str(raw_rating)) # finds "1"
-rating = int(match.group())               # 1
-```
-If the rating is already a plain number like `3`, the same code gives `3`. If missing, `rating = None`.
-
-### Step 3.4 — Build one review object
+### Step 4.4 — Build one review object
 ```python
 reviews.append({
-    "review_id": "a1b2c3d4",     # random 8-char id
+    "review_id": "a1b2c3d4",
     "text": "Battery drains very fast",
-    "entity": "battery",          # first concern, or "general"
+    "entity": "battery",
     "sentiment": "negative",
     "rating": 1,
     "country": "US",
@@ -134,90 +117,60 @@ reviews.append({
 })
 ```
 
-### Step 3.5 — Count concerns
-We keep a running tally:
-```python
-concern_counts["battery"] = {"count": 1, "negative": 1, "texts": ["Battery drains very fast"]}
-```
-Every time "battery" appears, `count` goes up and `negative` goes up if the sentiment was negative.
+### Step 4.5 — Count concerns
+A running tally: every time "battery" appears, `count` goes up and `negative` goes up if the sentiment was negative.
 
-### Step 3.6 — Save reviews
-```python
-REVIEWS_PATH.write_text(json.dumps(reviews, indent=2))   # data/reviews.json
-```
-From now on, `data/reviews.json` holds every review. This is what the Dashboard reads.
+### Step 4.6 — Save reviews
+`data/reviews.json` holds every review. This is what the Dashboard reads.
 
-### Step 3.7 — Rank concerns
-```python
-ranked = rank_concerns({ "concerns": [ {name, count, negative_pct}, ... ] })
-```
-See `ranking/priority.py`: impact = normalized(count × negative_pct). Result example:
+### Step 4.7 — Rank concerns
+`rank_concerns(...)` → impact score (see `ranking/priority.py`). Example:
 ```json
 [{"concern": "battery", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1}]
 ```
 
-### Step 3.8 — Build proof + comments (RAG)
-```python
-proof_by_concern = { name: [{"text": t, "similarity": 1.0} for t in texts[:3]] }
+### Step 4.8 — Build proof (RAG)
+For each concern we call `find_similar(name)` to fetch the top-5 real reviews, stored as `comments_by_concern`. This is the "real proof" the Dashboard shows.
 
-for name in concern_counts:
-    for s in find_similar(name.replace("_", " "), top_k=5):
-        # attach the real review behind that similarity
-        comments_by_concern[name].append({reviewer, text, rating, country, date, sentiment, similarity})
-```
-This is the "real proof" the Dashboard shows.
+### Step 4.9 — Save stats
+`data/concern_stats.json` holds the summary.
 
-### Step 3.9 — Save stats
-```python
-CONCERN_STATS_PATH.write_text(json.dumps(stats, indent=2))   # data/concern_stats.json
-```
-
-### Step 3.10 — Return
-The whole `stats` dict is returned to the browser as JSON.
+### Step 4.10 — Return
+The whole stats dict goes back to the browser as JSON.
 
 ---
 
-## 4. Reading results (`analysis/stats.py`)
+## 5. Reading results (`analysis/stats.py`)
 
 The Dashboard never recomputes. It calls readers that just read the saved files:
-
-- `get_stats()` → reads `concern_stats.json`
-- `get_reviews()` → reads `reviews.json`
-- `get_countries()` → counts countries, returns top 10
-- `get_time_trend()` → for each review, extract the 4-digit year:
-  ```python
-  match = re.search(r"\d{4}", date)   # "2024-03-15" -> "2024", "August 16, 2024" -> "2024"
-  ```
-- `get_ratings()` → counts star values, skips `None`
+- `get_stats()` → `concern_stats.json`
+- `get_reviews()` → `reviews.json`
+- `get_countries()` → top 10
+- `get_time_trend()` → 4-digit year from each date
+- `get_ratings()` → star counts
 
 Because it only reads saved data, the numbers are always the real ones from your CSV.
 
 ---
 
-## 5. Data storage and why it is gitignored
+## 6. Data storage and why `data/` is gitignored
 
 `config.py`:
 ```python
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data"))
 CONCERN_STATS_PATH = DATA_DIR / "concern_stats.json"
 REVIEWS_PATH = DATA_DIR / "reviews.json"
 MODEL_PATH = PROJECT_ROOT / "models" / "sentiment_model.joblib"
 ```
 
-`data/` and `models/` are in `.gitignore`. So:
-- The repo never contains fake/stored results.
-- A fresh deploy starts empty; the first upload creates the files.
-- The model files are also excluded, so a fresh deploy uses the **keyword fallback** (see `ml.md`) until someone trains and adds the model.
+- `data/` is gitignored → the repo never ships fake results; a fresh deploy starts empty and fills after your first upload.
+- `models/` (the trained model files) **are committed** → the cloud uses the real trained model, not just the fallback.
 
 ---
 
-## 6. Example: full upload response
+## 7. Example: full upload response
 
-Request:
-```
-POST /api/v1/upload
-file: 6_luxewatch_price.csv
-```
+Request: `POST /api/v1/upload` with `6_luxewatch_price.csv`
 
 Response (trimmed):
 ```json
@@ -225,25 +178,20 @@ Response (trimmed):
   "total_reviews": 16,
   "sentiment_distribution": {"positive": 11, "negative": 5},
   "ranked_concerns": [
-    {"concern": "price", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1},
-    {"concern": "battery", "count": 1, "negative_pct": 0.0, "impact": 0, "priority": 2}
+    {"concern": "price", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1}
   ],
   "ratings": {"1": 6, "2": 5, "4": 2, "5": 3},
-  "countries": {"US": 2, "GB": 2, "CA": 2, "IN": 2, "DE": 2, "FR": 2, "AU": 2, "JP": 2},
+  "countries": {"US": 2, "GB": 2, "CA": 2},
   "time_trend": [{"year": "2024", "count": 16}],
   "comments_by_concern": {
-    "price": [
-      {"reviewer": "User23", "text": "Price is too high for the specs", "rating": 2, "country": "US", "date": "2024-01-23T10:00:00.000Z", "sentiment": "negative", "similarity": 1.0}
-    ]
+    "price": [{"reviewer": "User23", "text": "Price is too high", "rating": 2, "country": "US", "date": "2024-01-23", "sentiment": "negative", "similarity": 1.0}]
   }
 }
 ```
 
-The Dashboard uses `ranked_concerns` for the priority list, `ratings`/`countries`/`time_trend` for the three charts, and `comments_by_concern["price"]` for the View Comments modal.
-
 ---
 
-## 7. How to run the backend locally
+## 8. How to run the backend locally
 
 ```bash
 cd src/cfa
@@ -252,5 +200,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn api.main:app --reload --port 8000
 ```
-
 Then open `http://localhost:8000/docs` to see the interactive API.
