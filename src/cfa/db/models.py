@@ -14,6 +14,8 @@ class User(Base):
     username = Column(String(64), unique=True, nullable=False, index=True)
     salt = Column(String(64), nullable=False)
     hash = Column(String(128), nullable=False)
+    first_name = Column(String(64), nullable=True)
+    email = Column(String(255), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 

@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react'
-import { getStats, getReviews, getConcernComments } from '../api'
+import {
+  getHistory,
+  getHistoryReport,
+  getConcernComments,
+  getMe,
+  getUser,
+  sendReportEmail,
+} from '../api'
+import { downloadText, sampleCsvText, reportToCsv } from '../utils'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
 const COLORS = ['#173f73', '#e05252', '#b8860b', '#25834c', '#8a5a92', '#3d7ea6', '#c9733d', '#5d6d7e']
@@ -23,21 +31,45 @@ function Skeleton({ className = '' }) {
 }
 
 export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }) {
+  const [me, setMe] = useState(null)
+  const [analyses, setAnalyses] = useState([])
+  const [listError, setListError] = useState(false)
+  const [selectedId, setSelectedId] = useState(null)
   const [stats, setStats] = useState(null)
   const [reviews, setReviews] = useState([])
-  const [error, setError] = useState(false)
+  const [viewLoading, setViewLoading] = useState(false)
+  const [viewError, setViewError] = useState(false)
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('')
   const [openConcern, setOpenConcern] = useState(null)
   const [comments, setComments] = useState([])
   const [loadingComments, setLoadingComments] = useState(false)
   const [commentError, setCommentError] = useState(false)
 
   useEffect(() => {
-    if (analyzing) return
-    setError(false)
-    Promise.all([getStats(), getReviews()])
-      .then(([s, r]) => { setStats(s); setReviews(r) })
-      .catch(() => setError(true))
-  }, [analyzing, reloadKey])
+    const u = getUser()
+    if (u) setMe(u)
+    else getMe().then(setMe).catch(() => setMe(null))
+    getHistory().then(setAnalyses).catch(() => setListError(true))
+  }, [reloadKey])
+
+  useEffect(() => {
+    if (selectedId == null) {
+      setStats(null)
+      setReviews([])
+      return
+    }
+    setViewLoading(true)
+    setViewError(false)
+    setStatus('')
+    getHistoryReport(selectedId)
+      .then((r) => {
+        setStats(r)
+        setReviews(r.reviews || [])
+      })
+      .catch(() => setViewError(true))
+      .finally(() => setViewLoading(false))
+  }, [selectedId])
 
   const openComments = (concern) => {
     setOpenConcern(concern)
@@ -50,18 +82,19 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
       .finally(() => setLoadingComments(false))
   }
 
-  if (error) {
-    return (
-      <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-8 text-center">
-        <div className="text-[14px] font-bold text-[#b42318]">Backend is not reachable.</div>
-        <p className="mt-2 text-[13px] text-[#8a5a52]">
-          The analysis server is offline or still waking up. Please try again in a moment.
-        </p>
-      </div>
-    )
+  const send = () => {
+    if (!email) {
+      setStatus('Enter an email address first.')
+      return
+    }
+    if (selectedId == null) return
+    setStatus('Sending…')
+    sendReportEmail(email, selectedId)
+      .then(() => setStatus(`Report sent to ${email}`))
+      .catch((e) => setStatus(e.message || 'Failed to send'))
   }
 
-  if (analyzing || !stats) {
+  if (analyzing) {
     return (
       <div className="w-full">
         <Skeleton className="mb-8 h-[60px]" />
@@ -69,10 +102,102 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
           {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[110px]" />)}
         </div>
         <Skeleton className="mb-5 h-[240px]" />
-        <Skeleton className="mb-5 h-[240px]" />
-        <Skeleton className="mb-5 h-[300px]" />
-        <Skeleton className="mb-5 h-[220px]" />
-        <Skeleton className="h-[260px]" />
+        <Skeleton className="h-[300px]" />
+      </div>
+    )
+  }
+
+  if (selectedId == null) {
+    return (
+      <div className="w-full">
+        <section className="mb-8 rounded-[20px] border border-[#e1e7ef] bg-gradient-to-r from-[#173f73] to-[#2b6cb0] p-8 text-white">
+          <div className="text-[11px] font-extrabold tracking-[1.5px] opacity-80">WELCOME TO YOUR WORKSPACE</div>
+          <h2 className="mt-1 text-[clamp(26px,3.5vw,36px)] font-bold">Hi {me?.first_name || 'there'} 👋</h2>
+          <p className="mt-2 max-w-[620px] text-[15px] opacity-90">
+            This is your customer feedback workspace. Open a past analysis to see its full report, or upload a new set of reviews.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="cursor-pointer rounded-[10px] bg-white px-5 py-3 font-bold text-[#173f73] shadow transition hover:-translate-y-0.5"
+              onClick={onUpload}
+            >
+              + Upload new reviews
+            </button>
+            <button
+              type="button"
+              className="cursor-pointer rounded-[10px] border border-white/50 px-5 py-3 font-bold text-white transition hover:bg-white/10"
+              onClick={() => downloadText('sample_reviews.csv', sampleCsvText())}
+            >
+              Download sample CSV
+            </button>
+          </div>
+        </section>
+
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-[20px] font-bold text-[#142b48]">Your analyses</h3>
+            <span className="text-[12px] text-[#8793a5]">{analyses.length} saved</span>
+          </div>
+
+          {listError ? (
+            <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-6 text-center text-[13px] text-[#b42318]">
+              Could not load your analyses.
+            </div>
+          ) : analyses.length === 0 ? (
+            <div className="rounded-[15px] border border-dashed border-[#cdd8e4] bg-white p-10 text-center">
+              <p className="text-[14px] font-semibold text-[#718097]">No analyses yet.</p>
+              <p className="mt-1 text-[13px] text-[#8a96a8]">Upload a CSV to get your first report.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {analyses.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => setSelectedId(a.id)}
+                  className="cursor-pointer rounded-[15px] border border-[#e1e7ef] bg-white p-5 text-left shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]"
+                >
+                  <strong className="block truncate text-[15px] text-[#142b48]">{a.filename || 'Untitled analysis'}</strong>
+                  <div className="mt-1 text-[12px] text-[#8793a5]">
+                    {a.total_reviews != null ? `${a.total_reviews} reviews · ` : ''}
+                    {a.created_at ? new Date(a.created_at).toLocaleDateString() : ''}
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {(a.top_concerns || []).map((c, i) => (
+                      <span key={i} className="rounded-md bg-[#f0f4f8] px-2 py-0.5 text-[10px] font-bold capitalize text-[#536a82]">{c}</span>
+                    ))}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    )
+  }
+
+  if (viewLoading) {
+    return (
+      <div className="w-full">
+        <Skeleton className="mb-8 h-[60px]" />
+        <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[110px]" />)}
+        </div>
+        <Skeleton className="h-[300px]" />
+      </div>
+    )
+  }
+
+  if (viewError || !stats) {
+    return (
+      <div className="w-full">
+        <button type="button" className="mb-4 text-[13px] font-semibold text-[#173f73]" onClick={() => setSelectedId(null)}>
+          ← Back to analyses
+        </button>
+        <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-8 text-center text-[13px] text-[#b42318]">
+          Could not load this analysis.
+        </div>
       </div>
     )
   }
@@ -116,23 +241,31 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
     <div className="w-full">
       <section className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
+          <button type="button" className="mb-2 text-[13px] font-semibold text-[#173f73]" onClick={() => setSelectedId(null)}>
+            ← Back to analyses
+          </button>
           <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
           <h2 className="m-0 text-[clamp(26px,3.5vw,36px)] font-bold tracking-tight text-[#142b48]">
-            Understand what your customers are saying.
+            {total.toLocaleString()} reviews analyzed
           </h2>
-          <p className="mt-2 text-[15px] text-[#718097]">
-            {total.toLocaleString()} reviews analyzed · {concerns.length} priority issues found
-          </p>
+          <p className="mt-2 text-[15px] text-[#718097]">{concerns.length} priority issues found</p>
         </div>
-        {onUpload && (
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="shrink-0 cursor-pointer rounded-[10px] bg-[#173f73] px-5 py-3 font-bold text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f]"
+            className="cursor-pointer rounded-[10px] bg-[#173f73] px-4 py-3 font-bold text-white shadow transition hover:bg-[#12345f]"
             onClick={onUpload}
           >
-            + Upload new reviews
+            + Upload new
           </button>
-        )}
+          <button
+            type="button"
+            className="cursor-pointer rounded-[10px] border border-[#173f73] bg-white px-4 py-3 font-bold text-[#173f73] transition hover:bg-[#eef4fb]"
+            onClick={() => downloadText('report.csv', reportToCsv(stats))}
+          >
+            Export CSV
+          </button>
+        </div>
       </section>
 
       <section className="mb-5 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
@@ -240,147 +373,143 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
                     {c.count.toLocaleString()} mentions · {c.share}% share · {c.positive} positive
                   </span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-[10px] bg-[#edf1f5]">
-                  <div className={`h-full rounded-[10px] ${index === 0 ? 'bg-[#c94a3d]' : 'bg-[#173f73]'}`} style={{ width: `${c.impact}%` }}></div>
+                <div className={`h-[8px] w-full overflow-hidden rounded-full bg-[#eef1f6]`}>
+                  <div className={`h-full ${index === 0 ? 'bg-[#c94a3d]' : 'bg-[#173f73]'} rounded-full`} style={{ width: `${c.share}%` }} />
                 </div>
-                <small className="mt-1 block text-[10px] text-[#8a96a8]">{c.negative_pct}% negative sentiment</small>
               </div>
-              <div className={`rounded-lg px-2 py-2 text-center text-[12px] font-extrabold ${index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'}`}>
-                impact {c.impact}
-              </div>
+              <div className="text-[11px] font-bold text-[#8a96a8]">{c.negative_pct}%</div>
               <button
-                className="rounded-lg border border-[#d4deea] px-3 py-2 text-[11px] font-bold text-[#173f73] transition hover:bg-[#edf3fa]"
+                type="button"
+                className="rounded-[9px] border border-[#173f73]/40 px-3 py-1.5 text-[11px] font-bold text-[#173f73] transition hover:bg-[#eef4fb]"
                 onClick={() => openComments(c.concern)}
               >
-                View Comments
+                View comments
               </button>
             </div>
           ))}
-          {concernSummary.length === 0 && (
-            <div className="p-6 text-center text-[13px] text-[#8a96a8]">No concerns detected yet. Upload reviews to get started.</div>
-          )}
         </div>
       </section>
 
       <section className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
           <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Rating Distribution</h3>
-          <p className="mt-1 text-[12px] text-[#8793a5]">Star ratings from the reviews</p>
-          <div className="mt-4 h-[200px]">
+          <p className="mt-1 text-[12px] text-[#8793a5]">Stars from reviews</p>
+          <div className="mt-4 h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ratingData}>
                 <XAxis dataKey="star" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="count" fill="#173f73" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="count" radius={[5, 5, 0, 0]} fill="#173f73" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Reviews Over Time</h3>
-          <p className="mt-1 text-[12px] text-[#8793a5]">Volume by year</p>
-          <div className="mt-4 h-[200px]">
+          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Trend Over Time</h3>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Reviews per month</p>
+          <div className="mt-4 h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={timeData}>
-                <XAxis dataKey="year" tick={{ fontSize: 11 }} />
+                <XAxis dataKey="month" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="count" fill="#25834c" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="reviews" radius={[5, 5, 0, 0]} fill="#2b6cb0" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Market by Country</h3>
-          <p className="mt-1 text-[12px] text-[#8793a5]">Where customers are from</p>
-          <div className="mt-4 h-[200px]">
+          <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Top Countries</h3>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Where reviewers are from</p>
+          <div className="mt-4 h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={countryData} layout="vertical">
                 <XAxis type="number" tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="country" tick={{ fontSize: 11 }} width={70} />
+                <YAxis type="category" dataKey="country" tick={{ fontSize: 10 }} width={70} />
                 <Tooltip />
-                <Bar dataKey="count" fill="#b8860b" radius={[0, 6, 6, 0]} />
+                <Bar dataKey="count" radius={[0, 5, 5, 0]} fill="#8a5a92" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </section>
 
-      <section className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+      <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
         <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Review Explorer</h3>
-        <p className="mt-1 text-[12px] text-[#8793a5]">Real customer feedback ({reviews.length} reviews)</p>
-        <div className="mt-4 max-h-[380px] overflow-auto rounded-[10px] border border-[#e4e9ef]">
-          {reviews.slice(0, 50).map((r) => (
-            <div className="grid grid-cols-[1fr_90px_90px] items-start gap-4 border-t border-[#e9edf2] px-4 py-3 text-[13px] text-[#34465d] first:border-t-0 hover:bg-[#fafbfd]" key={r.review_id}>
-              <div>
-                <span className="block">{r.text}</span>
-                {r.concerns?.length > 0 && (
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {r.concerns.map((c, i) => (
-                      <span key={i} className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${SENT_CLASS[c.sentiment] || SENT_CLASS.neutral}`}>
-                        {c.name}: {c.sentiment}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {r.attributes && Object.keys(r.attributes).length > 0 && (
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {Object.entries(r.attributes).map(([k, v]) => (
-                      <span key={k} className="rounded-md bg-[#f0f4f8] px-2 py-0.5 text-[10px] text-[#536a82]"><strong className="font-bold">{k}:</strong> {String(v)}</span>
+        <p className="mt-1 text-[12px] text-[#8793a5]">{reviews.length} analyzed reviews</p>
+        <div className="mt-5 flex flex-col gap-3">
+          {reviews.length === 0 ? (
+            <p className="text-[13px] text-[#8a96a8]">No individual reviews available.</p>
+          ) : (
+            reviews.map((r, i) => (
+              <div key={i} className="rounded-[12px] border border-[#eef1f6] bg-[#fbfcfe] p-4">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${SENT_CLASS[r.sentiment] || SENT_CLASS.neutral}`}>{r.sentiment}</span>
+                  <span className="text-[11px] text-[#8a96a8]">{r.rating ? `★ ${r.rating}` : ''}{r.country ? ` · ${r.country}` : ''}</span>
+                </div>
+                <p className="m-0 text-[13px] leading-[1.5] text-[#33425a]">{r.text}</p>
+                {r.aspects?.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {r.aspects.map((a, j) => (
+                      <span key={j} className="rounded-md bg-[#eef4fb] px-2 py-0.5 text-[10px] font-bold capitalize text-[#2b6cb0]">{a}</span>
                     ))}
                   </div>
                 )}
               </div>
-              <span className="mt-1 w-fit rounded-md bg-[#f0f4f8] px-2.5 py-1 text-[10px] font-bold capitalize text-[#536a82]">{r.entity}</span>
-              <span className={`mt-1 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${SENT_CLASS[r.sentiment] || SENT_CLASS.neutral}`}>
-                {r.sentiment}
-              </span>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
 
+      <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Email this report</h3>
+        <p className="mt-1 text-[12px] text-[#8793a5]">Send the full report to a teammate</p>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="teammate@company.com"
+            className="w-full rounded-[10px] border border-[#d7dee8] px-4 py-3 text-[14px] outline-none focus:border-[#173f73] sm:max-w-[320px]"
+          />
+          <button
+            type="button"
+            className="cursor-pointer rounded-[10px] bg-[#173f73] px-5 py-3 font-bold text-white transition hover:bg-[#12345f]"
+            onClick={send}
+          >
+            Send report
+          </button>
+        </div>
+        {status && <p className="mt-3 text-[13px] text-[#5a6472]">{status}</p>}
+      </section>
+
       {openConcern && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setOpenConcern(null)}>
-          <div className="w-full max-w-2xl rounded-[16px] bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between border-b border-[#eef2f6] px-6 py-4">
-              <div>
-                <div className="text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">TOP COMMENTS</div>
-                <h3 className="m-0 text-[18px] font-bold capitalize text-[#142b48]">{openConcern}</h3>
-              </div>
-              <button className="rounded-lg px-3 py-1.5 text-[13px] font-bold text-[#8a96a8] hover:bg-[#f3f6f9]" onClick={() => setOpenConcern(null)}>
-                Close
-              </button>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4" onClick={() => setOpenConcern(null)}>
+          <div className="max-h-[80vh] w-full overflow-y-auto rounded-t-[18px] bg-white p-6 sm:max-w-[640px] sm:rounded-[18px]" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="m-0 text-[18px] font-bold capitalize text-[#172f50]">{openConcern} comments</h3>
+              <button type="button" className="text-[13px] font-semibold text-[#173f73]" onClick={() => setOpenConcern(null)}>Close</button>
             </div>
-            <div className="max-h-[60vh] overflow-auto p-6">
-              {loadingComments && <div className="py-10 text-center text-[13px] text-[#8a96a8]">Loading comments…</div>}
-              {commentError && <div className="py-10 text-center text-[13px] text-[#b42318]">Could not load comments.</div>}
-              {!loadingComments && !commentError && comments.length === 0 && (
-                <div className="py-10 text-center text-[13px] text-[#8a96a8]">No comments found for this concern.</div>
-              )}
-              <div className="flex flex-col gap-4">
-                {comments.map((c) => (
-                  <div key={c.review_id} className="rounded-[12px] border border-[#e4e9ef] bg-[#fafbfd] p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <strong className="text-[14px] text-[#142b48]">{c.reviewer}</strong>
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${SENT_CLASS[c.sentiment] || SENT_CLASS.neutral}`}>
-                        {c.sentiment}
-                      </span>
+            {loadingComments ? (
+              <p className="text-[13px] text-[#8a96a8]">Loading…</p>
+            ) : commentError ? (
+              <p className="text-[13px] text-[#b42318]">Could not load comments.</p>
+            ) : comments.length === 0 ? (
+              <p className="text-[13px] text-[#8a96a8]">No comments found.</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {comments.map((c, i) => (
+                  <div key={i} className="rounded-[12px] border border-[#eef1f6] bg-[#fbfcfe] p-4">
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${SENT_CLASS[c.sentiment] || SENT_CLASS.neutral}`}>{c.sentiment}</span>
+                      <span className="text-[11px] text-[#8a96a8]">{c.rating ? `★ ${c.rating}` : ''}{c.country ? ` · ${c.country}` : ''}</span>
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-[#6b7a8d]">
-                      {c.rating != null && <span>★ {c.rating}/5</span>}
-                      {c.country && <span>· {c.country}</span>}
-                      {c.date && <span>· {c.date}</span>}
-                      <span>· {Math.round(c.similarity * 100)}% similar</span>
-                    </div>
-                    <p className="mt-2 text-[13px] leading-relaxed text-[#34465d]">{c.text}</p>
+                    <p className="m-0 text-[13px] leading-[1.5] text-[#33425a]">{c.text}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

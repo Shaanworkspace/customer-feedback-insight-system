@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { login, signup, setToken, setApiBase } from '../../api'
+import { login, signup, setToken, setUser, setApiBase } from '../../api'
 
 const LOCAL_BASE = 'http://localhost:8000'
 const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('login')
-  const [username, setUsername] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -27,9 +28,10 @@ export default function Login({ onLogin }) {
     setBusy(true)
     try {
       const data = mode === 'login'
-        ? await login(username.trim(), password)
-        : await signup(username.trim(), password)
+        ? await login(email.trim(), password)
+        : await signup(email.trim(), password, firstName.trim())
       setToken(data.token)
+      setUser({ first_name: data.first_name, email: data.email })
       onLogin()
     } catch (err) {
       setError(err.message)
@@ -83,14 +85,28 @@ export default function Login({ onLogin }) {
         </div>
 
         <form className="auth-form" onSubmit={submit}>
+          {mode === 'signup' && (
+            <label>
+              <span>First name</span>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="e.g. Aarav"
+                autoComplete="given-name"
+                required
+              />
+            </label>
+          )}
+
           <label>
-            <span>Username</span>
+            <span>Email</span>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="your name"
-              autoComplete="username"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              autoComplete="email"
               required
             />
           </label>

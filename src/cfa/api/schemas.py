@@ -10,6 +10,8 @@ class AnalyzeRequest(BaseModel):
 class AuthRequest(BaseModel):
     username: str
     password: str
+    first_name: str = ""
+    email: str = ""
 
 
 class EmailReportRequest(BaseModel):

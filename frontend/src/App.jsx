@@ -8,10 +8,9 @@ import Upload from './components/upload/Upload'
 import Dashboard from './components/Dashboard'
 import Analyzer from './components/Analyzer'
 import Explorer from './components/Explorer'
-import History from './components/History'
 import { getToken } from './api'
 
-const APP_VIEWS = ['dashboard', 'analyzer', 'explorer', 'history']
+const APP_VIEWS = ['dashboard', 'analyzer', 'explorer']
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(() => !!getToken())
@@ -93,7 +92,6 @@ export default function App() {
         {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} onUpload={() => navigate('upload')} />}
         {v === 'analyzer' && <Analyzer />}
         {v === 'explorer' && <Explorer />}
-        {v === 'history' && <History />}
       </main>
     </div>
   )

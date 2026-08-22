@@ -3,6 +3,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
 let currentBase = API_BASE
 
 const TOKEN_KEY = 'cfa_token'
+const USER_KEY = 'cfa_user'
 
 export function setApiBase(base) {
   currentBase = base
@@ -17,18 +18,47 @@ export function setToken(token) {
   else localStorage.removeItem(TOKEN_KEY)
 }
 
+export function setUser(user) {
+  if (user) localStorage.setItem(USER_KEY, JSON.stringify(user))
+  else localStorage.removeItem(USER_KEY)
+}
+
+export function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem(USER_KEY) || 'null')
+  } catch {
+    return null
+  }
+}
+
+export async function getMe() {
+  const res = await fetch(`${currentBase}/api/v1/auth/me`, { headers: authHeader() })
+  if (!res.ok) throw new Error('Failed to load profile')
+  const data = await res.json()
+  setUser({ first_name: data.first_name, email: data.email })
+  return data
+}
+
 function authHeader() {
   const token = getToken()
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
-export async function signup(username, password) {
+export async function signup(email, password, first_name = '') {
   const res = await fetch(`${currentBase}/api/v1/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username: email, password, first_name, email }),
   })
-  if (!res.ok) throw new Error('Signup failed (username may be taken)')
+  if (!res.ok) {
+    let detail = ''
+    try {
+      detail = (await res.json()).detail || ''
+    } catch {
+      // ignore
+    }
+    throw new Error(detail || 'Signup failed')
+  }
   return res.json()
 }
 

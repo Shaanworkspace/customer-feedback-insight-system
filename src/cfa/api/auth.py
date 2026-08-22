@@ -34,11 +34,11 @@ def verify_password(password: str, salt_hex: str, hash_hex: str) -> bool:
     return hmac.compare_digest(digest.hex(), hash_hex)
 
 
-def add_user(username: str, password: str) -> bool:
+def add_user(username: str, password: str, first_name: str = "", email: str = "") -> bool:
     if not username or not password:
         return False
     salt, digest = hash_password(password)
-    return _create_user(username, salt, digest) is not None
+    return _create_user(username, salt, digest, first_name, email) is not None
 
 
 def authenticate(username: str, password: str) -> bool:

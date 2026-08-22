@@ -55,3 +55,18 @@ def init_db() -> None:
     from cfa.db import models
 
     models.Base.metadata.create_all(engine)
+
+    # Safe, idempotent migration for columns added after first release.
+    try:
+        from sqlalchemy import inspect, text
+
+        existing = {c["name"] for c in inspect(engine).get_columns("users")}
+        with engine.begin() as conn:
+            if "first_name" not in existing:
+                conn.execute(text("ALTER TABLE users ADD COLUMN first_name VARCHAR(64)"))
+            if "email" not in existing:
+                conn.execute(text("ALTER TABLE users ADD COLUMN email VARCHAR(255)"))
+    except Exception:
+        # inspect/alter unsupported on this backend; create_all already ran.
+        pass
+

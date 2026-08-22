@@ -15,10 +15,10 @@ from cfa.db.models import Analysis, User
 HISTORY_KEEP = 3
 
 
-def create_user(username: str, salt: str, hash_hex: str) -> int | None:
+def create_user(username: str, salt: str, hash_hex: str, first_name: str | None = None, email: str | None = None) -> int | None:
     try:
         with SessionLocal() as s:
-            u = User(username=username, salt=salt, hash=hash_hex)
+            u = User(username=username, salt=salt, hash=hash_hex, first_name=first_name, email=email)
             s.add(u)
             s.commit()
             s.refresh(u)

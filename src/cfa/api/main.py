@@ -91,21 +91,38 @@ def ping():
 
 @app.post("/api/v1/auth/signup")
 def signup(req: AuthRequest):
-    if not add_user(req.username, req.password):
-        raise HTTPException(status_code=400, detail="Username taken or invalid")
-    return {"message": "Account created", "token": create_token(req.username)}
+    if not req.email or not req.password:
+        raise HTTPException(status_code=400, detail="Email and password are required")
+    if not add_user(req.email, req.password, req.first_name, req.email):
+        raise HTTPException(status_code=400, detail="Email already registered or invalid")
+    return {
+        "message": "Account created",
+        "token": create_token(req.email),
+        "first_name": req.first_name,
+        "email": req.email,
+    }
 
 
 @app.post("/api/v1/auth/login")
 def login(req: AuthRequest):
     if not authenticate(req.username, req.password):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
-    return {"token": create_token(req.username)}
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    user = get_user_by_username(req.username)
+    return {
+        "token": create_token(req.username),
+        "first_name": user.first_name or "",
+        "email": user.email or req.username,
+    }
 
 
 @app.get("/api/v1/auth/me")
 def me(user=Depends(get_current_user)):
-    return {"username": user.username, "id": user.id}
+    return {
+        "username": user.username,
+        "id": user.id,
+        "first_name": user.first_name or "",
+        "email": user.email or user.username,
+    }
 
 
 @app.post("/api/v1/analyze")
