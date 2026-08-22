@@ -10,3 +10,8 @@ class AnalyzeRequest(BaseModel):
 class AuthRequest(BaseModel):
     username: str
     password: str
+
+
+class EmailReportRequest(BaseModel):
+    email: str
+    analysis_id: int | None = None

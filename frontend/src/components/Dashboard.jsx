@@ -22,7 +22,7 @@ function Skeleton({ className = '' }) {
   return <div className={`animate-pulse rounded-[14px] bg-[#e6ecf3] ${className}`} />
 }
 
-export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
+export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }) {
   const [stats, setStats] = useState(null)
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState(false)
@@ -114,14 +114,25 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
 
   return (
     <div className="w-full">
-      <section className="mb-8">
-        <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
-        <h2 className="m-0 text-[clamp(26px,3.5vw,36px)] font-bold tracking-tight text-[#142b48]">
-          Understand what your customers are saying.
-        </h2>
-        <p className="mt-2 text-[15px] text-[#718097]">
-          {total.toLocaleString()} reviews analyzed · {concerns.length} priority issues found
-        </p>
+      <section className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+        <div>
+          <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
+          <h2 className="m-0 text-[clamp(26px,3.5vw,36px)] font-bold tracking-tight text-[#142b48]">
+            Understand what your customers are saying.
+          </h2>
+          <p className="mt-2 text-[15px] text-[#718097]">
+            {total.toLocaleString()} reviews analyzed · {concerns.length} priority issues found
+          </p>
+        </div>
+        {onUpload && (
+          <button
+            type="button"
+            className="shrink-0 cursor-pointer rounded-[10px] bg-[#173f73] px-5 py-3 font-bold text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f]"
+            onClick={onUpload}
+          >
+            + Upload new reviews
+          </button>
+        )}
       </section>
 
       <section className="mb-5 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">

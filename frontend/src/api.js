@@ -70,6 +70,37 @@ export async function analyzeReview(text) {
   return res.json()
 }
 
+export async function getHistory() {
+  const res = await fetch(`${currentBase}/api/v1/history`, { headers: authHeader() })
+  if (!res.ok) throw new Error('History request failed')
+  return res.json()
+}
+
+export async function getHistoryReport(id) {
+  const res = await fetch(`${currentBase}/api/v1/history/${id}`, { headers: authHeader() })
+  if (!res.ok) throw new Error('Report request failed')
+  return res.json()
+}
+
+export async function sendReportEmail(email, analysisId) {
+  const res = await fetch(`${currentBase}/api/v1/report/email`, {
+    method: 'POST',
+    headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, analysis_id: analysisId || null }),
+  })
+  if (!res.ok) {
+    let detail = ''
+    try {
+      const data = await res.json()
+      detail = data.detail || ''
+    } catch {
+      // ignore
+    }
+    throw new Error(detail || 'Could not send email')
+  }
+  return res.json()
+}
+
 export async function uploadReviews(file) {
   try {
     const formData = new FormData()

@@ -10,9 +10,16 @@ from cfa.analysis.rag import find_similar
 from cfa.analysis.stats import get_concern_comments, get_reviews, get_stats
 from cfa.api.auth import add_user, authenticate, create_token, decode_token
 from cfa.api.pipeline import process_csv
-from cfa.api.schemas import AnalyzeRequest, AuthRequest
+from cfa.api.schemas import AnalyzeRequest, AuthRequest, EmailReportRequest
 from cfa.db import init_db
-from cfa.db.repo import get_latest_analysis, get_user_by_username, list_history, save_analysis
+from cfa.db.repo import (
+    get_analysis_by_id,
+    get_latest_analysis,
+    get_user_by_username,
+    list_history,
+    save_analysis,
+)
+from cfa.notify.email import build_report_html, send_email
 from cfa.ranking.priority import rank_concerns
 
 init_db()
@@ -123,6 +130,33 @@ def reviews(user=Depends(get_current_user)):
 @app.get("/api/v1/history")
 def history(user=Depends(get_current_user)):
     return list_history(user.id)
+
+
+@app.get("/api/v1/history/{analysis_id}")
+def history_report(analysis_id: int, user=Depends(get_current_user)):
+    data = get_analysis_by_id(user.id, analysis_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+    return data
+
+
+@app.post("/api/v1/report/email")
+def report_email(req: EmailReportRequest, user=Depends(get_current_user)):
+    data = (
+        get_analysis_by_id(user.id, req.analysis_id)
+        if req.analysis_id
+        else get_latest_analysis(user.id)
+    )
+    if not data:
+        raise HTTPException(status_code=404, detail="No analysis found for this user")
+    html = build_report_html(data)
+    try:
+        send_email(req.email, "Your Customer Feedback Insight Report", html)
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not send email: {e}")
+    return {"sent": True, "email": req.email}
 
 
 @app.get("/api/v1/concern-comments")

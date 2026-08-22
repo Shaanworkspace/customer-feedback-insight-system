@@ -87,3 +87,13 @@ def list_history(user_id: int, limit: int = HISTORY_KEEP) -> list[dict]:
             }
         )
     return out
+
+
+def get_analysis_by_id(user_id: int, analysis_id: int) -> dict | None:
+    with SessionLocal() as s:
+        a = s.scalars(
+            select(Analysis)
+            .where(Analysis.user_id == user_id, Analysis.id == analysis_id)
+        ).first()
+        return a.data if a else None
+

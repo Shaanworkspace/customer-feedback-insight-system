@@ -8,9 +8,10 @@ import Upload from './components/upload/Upload'
 import Dashboard from './components/Dashboard'
 import Analyzer from './components/Analyzer'
 import Explorer from './components/Explorer'
+import History from './components/History'
 import { getToken } from './api'
 
-const APP_VIEWS = ['dashboard', 'analyzer', 'explorer']
+const APP_VIEWS = ['dashboard', 'analyzer', 'explorer', 'history']
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(() => !!getToken())
@@ -40,7 +41,7 @@ export default function App() {
 
   const handleLogin = () => {
     setSignedIn(true)
-    navigate('upload')
+    navigate('dashboard')
   }
 
   const handleUploadStart = () => {
@@ -89,9 +90,10 @@ export default function App() {
     <div className="page-with-chrome">
       <AppHeader tab={v} setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} />
       <main className="page-container">
-        {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} />}
+        {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} onUpload={() => navigate('upload')} />}
         {v === 'analyzer' && <Analyzer />}
         {v === 'explorer' && <Explorer />}
+        {v === 'history' && <History />}
       </main>
     </div>
   )

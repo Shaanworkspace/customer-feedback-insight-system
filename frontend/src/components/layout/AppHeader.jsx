@@ -1,7 +1,7 @@
 import logo from '../../assets/logo.svg'
 
 export default function AppHeader({ tab, setTab, onUpload }) {
-  const tabs = ['dashboard', 'analyzer', 'explorer']
+  const tabs = ['dashboard', 'analyzer', 'explorer', 'history']
 
   return (
     <header className="topbar glass">
