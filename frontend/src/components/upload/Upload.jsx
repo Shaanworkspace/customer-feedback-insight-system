@@ -67,7 +67,8 @@ export default function Upload({ onStart, onDone, onCancel }) {
   return (
     <main className="flex flex-1 flex-col">
       <section className="relative flex min-h-[68vh] items-center justify-center overflow-hidden bg-[#f4f7fb] px-6 py-20">
-        <div className="w-[min(520px,100%)] rounded-[20px] border border-white/50 bg-white/70 p-11 text-center shadow-[0_20px_50px_rgba(23,63,115,0.15)] backdrop-blur-xl">
+        <div className="hero-bg" aria-hidden="true"></div>
+        <div className="relative z-[1] w-[min(520px,100%)] rounded-[20px] border border-white/50 bg-white/70 p-11 text-center shadow-[0_20px_50px_rgba(23,63,115,0.15)] backdrop-blur-xl">
           <div className="mx-auto mb-5 flex h-[55px] w-[55px] items-center justify-center rounded-[14px] bg-[#edf3fa] text-[26px] font-extrabold text-[#173f73]">
             ↑
           </div>

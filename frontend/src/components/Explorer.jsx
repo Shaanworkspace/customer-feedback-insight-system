@@ -30,6 +30,13 @@ export default function Explorer() {
     )
   }
 
+  const SENT_CLASS = {
+    positive: 'bg-[#eaf8f0] text-[#1f7c46]',
+    negative: 'bg-[#fff0ef] text-[#b83b34]',
+    mixed: 'bg-[#fff7e6] text-[#b7791f]',
+    neutral: 'bg-[#eef1f6] text-[#5a6472]',
+  }
+
   return (
     <section className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
       <div className="mb-5 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
@@ -54,6 +61,8 @@ export default function Explorer() {
             <option value="">All sentiment</option>
             <option value="positive">Positive</option>
             <option value="negative">Negative</option>
+            <option value="mixed">Mixed</option>
+            <option value="neutral">Neutral</option>
           </select>
           <button
             className="cursor-pointer rounded-lg bg-[#edf3fa] px-4 py-2.5 font-bold text-[#173f73] transition hover:bg-[#dfeaf5]"
@@ -74,7 +83,7 @@ export default function Explorer() {
           <div className="grid grid-cols-[2fr_1fr_1fr] items-center gap-5 border-t border-[#e9edf2] px-4 py-3.5 text-[13px] text-[#34465d] hover:bg-[#fafbfd]" key={r.review_id}>
             <span>{r.text}</span>
             <span className="w-fit rounded-md bg-[#f0f4f8] px-2.5 py-1 text-[10px] font-bold capitalize text-[#536a82]">{r.entity}</span>
-            <span className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${r.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
+            <span className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${SENT_CLASS[r.sentiment] || 'bg-[#eef1f6] text-[#5a6472]'}`}>
               {r.sentiment}
             </span>
           </div>

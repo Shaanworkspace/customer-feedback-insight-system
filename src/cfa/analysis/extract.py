@@ -30,14 +30,29 @@ def _load_lexicon():
     return _lexicon
 
 
+def _clause_for(text, term):
+    parts = re.split(r"(?<=[.!?,;])\s+|\s+(?:but|and|although|however|yet|so|because)\s+", text, flags=re.I)
+    for p in parts:
+        if term in p.lower():
+            return p
+    return text
+
+
 def _lexicon_aspects(text):
+    from cfa.ml.serve import predict_sentiment
+
     lexicon = _load_lexicon()
     text_lower = text.lower()
     out = []
+    seen = set()
     for name, terms in lexicon.items():
         hit = next((t for t in terms if t in text_lower), None)
-        if hit:
-            out.append({"name": name, "sentiment": None, "matched_terms": [hit], "confidence": 0.6})
+        if not hit or name in seen:
+            continue
+        seen.add(name)
+        clause = _clause_for(text, hit)
+        sentiment = predict_sentiment(clause)["label"]
+        out.append({"name": name, "sentiment": sentiment, "matched_terms": [hit], "confidence": 0.6})
     return out
 
 

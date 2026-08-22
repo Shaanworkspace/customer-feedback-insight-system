@@ -1,0 +1,16 @@
+review_id,product,review_title,review_text,rating,date,country,manufacturer,price,verified
+r1,Phone X,Battery issue,"battery drains fast and overheats",2,2024-01-15,United States,Acme,199,true
+r2,Phone X,Great phone,"love the camera and fast performance",5,2024-02-10,United States,Acme,199,true
+r3,Laptop Pro,Screen cracked,"screen cracked after one drop, poor build",1,2024-03-01,India,Acme,899,false
+r4,Laptop Pro,Good battery,"battery lasts all day, very satisfied",5,2024-03-12,India,Acme,899,true
+r5,Buds Z,Sound issue,"sound quality is poor and disconnects",2,2024-04-05,United Kingdom,Acme,79,true
+r6,Buds Z,Comfortable,"comfortable fit and good bass",4,2024-04-20,United Kingdom,Acme,79,true
+r7,Watch 2,Strap broke,"watch strap broke within a week",1,2024-05-02,Canada,Acme,149,false
+r8,Watch 2,Nice display,"display is crisp and battery fine",4,2024-05-15,Canada,Acme,149,true
+r9,Tablet T,Slow,"tablet is slow and lags often",2,2024-06-01,Germany,Acme,299,true
+r10,Tablet T,Value for money,"good value, decent performance",4,2024-06-10,Germany,Acme,299,true
+r11,Phone X,Overheating,"phone overheats during charging",2,2024-07-01,United States,Acme,199,true
+r12,Phone X,Happy,"very happy with the purchase",5,2024-07-12,United States,Acme,199,true
+r13,Laptop Pro,Keyboard issue,"keyboard keys stuck sometimes",2,2024-08-03,France,Acme,899,true
+r14,Laptop Pro,Lightweight,"lightweight and portable, love it",5,2024-08-19,France,Acme,899,true
+r15,Buds Z,Latency,"audio latency is noticeable in games",3,2024-09-02,Japan,Acme,79,true

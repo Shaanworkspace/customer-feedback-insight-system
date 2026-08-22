@@ -45,7 +45,7 @@ def process_csv(content: bytes) -> dict:
     results = analyze_reviews([t for _, t in raw_rows])
 
     for (row, text), result in zip(raw_rows, results):
-        sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
+        sentiment = result["overall_sentiment"]
         raw_rating = row.get(rating_col) if rating_col else None
         match = re.search(r"\d+", str(raw_rating)) if raw_rating else None
         rating = int(match.group()) if match else None
@@ -62,6 +62,7 @@ def process_csv(content: bytes) -> dict:
                 "reviewer": attributes.get("reviewer name", attributes.get("reviewer", "")) if reviewer_col else "",
                 "attributes": attributes,
                 "concerns": result["concerns"],
+                "aspects": result["aspects"],
             }
         )
         for c in result["concerns"]:
@@ -72,8 +73,9 @@ def process_csv(content: bytes) -> dict:
             entry["texts"].append(text)
 
     total = len(reviews)
-    positive = sum(1 for r in reviews if r["sentiment"] == "positive")
-    negative = total - positive
+    sentiment_distribution = {"positive": 0, "negative": 0, "neutral": 0, "mixed": 0}
+    for r in reviews:
+        sentiment_distribution[r["sentiment"]] = sentiment_distribution.get(r["sentiment"], 0) + 1
 
     ranked = rank_concerns(
         {
@@ -118,7 +120,7 @@ def process_csv(content: bytes) -> dict:
 
     stats = {
         "total_reviews": total,
-        "sentiment_distribution": {"positive": positive, "negative": negative},
+        "sentiment_distribution": sentiment_distribution,
         "ranked_concerns": ranked,
         "representative_reviews": [
             {"review_id": r["review_id"], "text": r["text"], "sentiment": r["sentiment"]}

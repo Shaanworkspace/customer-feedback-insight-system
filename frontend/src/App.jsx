@@ -78,7 +78,10 @@ export default function App() {
 
   if (v === 'upload') {
     return (
-      <Upload onStart={handleUploadStart} onDone={handleUploaded} onCancel={() => navigate('dashboard')} />
+      <div className="page-with-chrome">
+        <AppHeader tab="upload" setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} />
+        <Upload onStart={handleUploadStart} onDone={handleUploaded} onCancel={() => navigate('dashboard')} />
+      </div>
     )
   }
 

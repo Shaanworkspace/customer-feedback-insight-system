@@ -10,7 +10,7 @@ from cfa.db.repo import get_latest_analysis
 
 _EMPTY = {
     "total_reviews": 0,
-    "sentiment_distribution": {"positive": 0, "negative": 0},
+    "sentiment_distribution": {"positive": 0, "negative": 0, "neutral": 0, "mixed": 0},
     "ranked_concerns": [],
     "representative_reviews": [],
     "proof_by_concern": {},

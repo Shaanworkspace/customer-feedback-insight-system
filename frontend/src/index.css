@@ -1452,7 +1452,7 @@ input {
   inset: 0;
   background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1800&q=70');
   background-size: cover;
-  background-position: center;
+  background-position: bottom;
   filter: blur(2px) saturate(120%);
 }
 
@@ -1462,9 +1462,9 @@ input {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(23, 63, 115, 0.25),
-    rgba(23, 63, 115, 0.15) 60%,
-    rgba(244, 247, 251, 0.98)
+    rgba(244, 247, 251, 0.98) 0%,
+    rgba(244, 247, 251, 0.55) 42%,
+    rgba(23, 63, 115, 0.12) 100%
   );
 }
 

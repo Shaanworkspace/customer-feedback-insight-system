@@ -3,7 +3,7 @@ export default function Features() {
     {
       icon: '01',
       title: 'Analyze sentiment',
-      desc: 'Every review tagged positive or negative automatically.',
+      desc: 'Every review tagged positive, negative, neutral, or mixed automatically.',
     },
     {
       icon: '02',

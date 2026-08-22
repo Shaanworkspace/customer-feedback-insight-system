@@ -4,6 +4,20 @@ import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
 
 const COLORS = ['#173f73', '#e05252', '#b8860b', '#25834c', '#8a5a92', '#3d7ea6', '#c9733d', '#5d6d7e']
 
+const SENT_CLASS = {
+  positive: 'bg-[#eaf8f0] text-[#1f7c46]',
+  negative: 'bg-[#fff0ef] text-[#b83b34]',
+  mixed: 'bg-[#fff7e6] text-[#b7791f]',
+  neutral: 'bg-[#eef1f6] text-[#5a6472]',
+}
+
+const SENT_COLOR = {
+  Positive: '#25834c',
+  Negative: '#c94a3d',
+  Neutral: '#8a96a8',
+  Mixed: '#b7791f',
+}
+
 function Skeleton({ className = '' }) {
   return <div className={`animate-pulse rounded-[14px] bg-[#e6ecf3] ${className}`} />
 }
@@ -64,10 +78,12 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
   }
 
   const total = stats.total_reviews || 0
-  const pos = stats.sentiment_distribution?.positive || 0
-  const neg = stats.sentiment_distribution?.negative || 0
-  const posPct = total ? Math.round((pos / total) * 100) : 0
-  const negPct = 100 - posPct
+  const sd = stats.sentiment_distribution || {}
+  const pos = sd.positive || 0
+  const neg = sd.negative || 0
+  const neu = sd.neutral || 0
+  const mix = sd.mixed || 0
+  const pct = (n) => (total ? Math.round((n / total) * 100) : 0)
   const concerns = stats.ranked_concerns || []
   const proof = stats.proof_by_concern || {}
   const topConcern = concerns[0]
@@ -75,7 +91,9 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
   const sentimentData = [
     { name: 'Positive', value: pos },
     { name: 'Negative', value: neg },
-  ]
+    { name: 'Neutral', value: neu },
+    { name: 'Mixed', value: mix },
+  ].filter((d) => d.value > 0)
   const concernData = concerns.map((c) => ({ name: c.concern, count: c.count }))
 
   const totalMentions = concerns.reduce((a, c) => a + c.count, 0)
@@ -106,26 +124,36 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
         </p>
       </section>
 
-      <section className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mb-5 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
         <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
           <div className="text-[13px] font-semibold text-[#718097]">Total Reviews</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#142b48]">{total.toLocaleString()}</strong>
           <div className="mt-2 text-[11px] font-semibold text-[#173f73]">Dataset analyzed</div>
         </div>
         <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-          <div className="text-[13px] font-semibold text-[#718097]">Positive Reviews</div>
+          <div className="text-[13px] font-semibold text-[#718097]">Positive</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#1f7c46]">{pos.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#25834c]">{posPct}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#25834c]">{pct(pos)}% of all reviews</div>
         </div>
         <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-          <div className="text-[13px] font-semibold text-[#718097]">Negative Reviews</div>
+          <div className="text-[13px] font-semibold text-[#718097]">Negative</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#c94a3d]">{neg.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#c94a3d]">{negPct}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#c94a3d]">{pct(neg)}% of all reviews</div>
+        </div>
+        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <div className="text-[13px] font-semibold text-[#718097]">Neutral</div>
+          <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#5a6472]">{neu.toLocaleString()}</strong>
+          <div className="mt-2 text-[11px] font-semibold text-[#5a6472]">{pct(neu)}% of all reviews</div>
+        </div>
+        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <div className="text-[13px] font-semibold text-[#718097]">Mixed</div>
+          <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#b7791f]">{mix.toLocaleString()}</strong>
+          <div className="mt-2 text-[11px] font-semibold text-[#b7791f]">{pct(mix)}% of all reviews</div>
         </div>
         <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
           <div className="text-[13px] font-semibold text-[#718097]">Priority Issues</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#142b48]">{concerns.length}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#b8860b]">Customer concerns detected</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#b8860b]">Concerns detected</div>
         </div>
       </section>
 
@@ -158,7 +186,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={sentimentData} dataKey="value" nameKey="name" innerRadius={60} outerRadius={90} paddingAngle={2}>
-                  {sentimentData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
+                  {sentimentData.map((d) => <Cell key={d.name} fill={SENT_COLOR[d.name]} />)}
                 </Pie>
                 <Tooltip />
                 <Legend />
@@ -281,7 +309,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
                 {r.concerns?.length > 0 && (
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {r.concerns.map((c, i) => (
-                      <span key={i} className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${c.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : c.sentiment === 'negative' ? 'bg-[#fff0ef] text-[#b83b34]' : 'bg-[#eef1f5] text-[#536a82]'}`}>
+                      <span key={i} className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${SENT_CLASS[c.sentiment] || SENT_CLASS.neutral}`}>
                         {c.name}: {c.sentiment}
                       </span>
                     ))}
@@ -296,7 +324,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
                 )}
               </div>
               <span className="mt-1 w-fit rounded-md bg-[#f0f4f8] px-2.5 py-1 text-[10px] font-bold capitalize text-[#536a82]">{r.entity}</span>
-              <span className={`mt-1 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${r.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
+              <span className={`mt-1 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${SENT_CLASS[r.sentiment] || SENT_CLASS.neutral}`}>
                 {r.sentiment}
               </span>
             </div>
@@ -327,7 +355,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
                   <div key={c.review_id} className="rounded-[12px] border border-[#e4e9ef] bg-[#fafbfd] p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <strong className="text-[14px] text-[#142b48]">{c.reviewer}</strong>
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${c.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${SENT_CLASS[c.sentiment] || SENT_CLASS.neutral}`}>
                         {c.sentiment}
                       </span>
                     </div>

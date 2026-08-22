@@ -6,12 +6,15 @@ const EXAMPLES = [
   'Camera quality is stunning with sharp, vivid photos.',
   'Delivery was very late and customer service was rude.',
   'Not worth the price at all, totally disappointed.',
+  'The design is beautiful but the battery life is terrible.',
+  'The package was delivered yesterday with no damage.',
 ]
 
 const SENT = {
   positive: { bg: '#eaf8f0', color: '#1f7c46', label: 'Positive' },
   negative: { bg: '#fff0ef', color: '#b83b34', label: 'Negative' },
   mixed: { bg: '#fff7e6', color: '#b7791f', label: 'Mixed' },
+  neutral: { bg: '#eef1f6', color: '#5a6472', label: 'Neutral' },
 }
 
 export default function Analyzer() {
