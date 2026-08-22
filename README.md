@@ -67,16 +67,17 @@ That is the whole idea. The rest of this document explains each step in plain En
                                     │  • ranking/priority.py     │
                                     │  • analysis/stats.py       │
                                     └───────────┬────────────────┘
-                                                │ writes/reads
-                                                ▼
-                                    ┌────────────────────────────┐
-                                    │  data/  (gitignored)       │
-                                    │  • reviews.json            │
-                                    │  • concern_stats.json      │
-                                    └────────────────────────────┘
+                                                 │ reads/writes
+                                                 ▼
+                                     ┌────────────────────────────┐
+                                     │  MySQL (Aiven) via db.repo │
+                                     │  • users table             │
+                                     │  • analyses table          │
+                                     │    (history kept: last 3)  │
+                                     └────────────────────────────┘
 ```
 
-The `data/` folder is **gitignored** on purpose. That means the app never ships with fake/stored results. The moment you upload a CSV, the backend writes fresh `reviews.json` and `concern_stats.json` from *your* data only.
+Results are persisted in MySQL (Aiven) per user. Each upload saves one analysis row; only the **last 3 analyses per user** are kept. With no `DATABASE_URL` set, the backend falls back to a local SQLite file (`data/app.db`), which is gitignored.
 
 ---
 
@@ -87,8 +88,11 @@ The `data/` folder is **gitignored** on purpose. That means the app never ships 
 | Frontend | React + Vite + Tailwind CSS v4 + Recharts | Fast, modern, easy charts |
 | Backend | FastAPI (Python) | Auto docs, async, simple |
 | ML | scikit-learn (TF-IDF + Logistic Regression) | Small, fast, no GPU, explainable |
+| Aspect extraction | Hugging Face Inference (free LLM) — dynamic, no fixed entity list | Open aspect-based sentiment; lexicon fallback offline |
 | Retrieval (RAG) | Word-overlap similarity over saved reviews | No vector DB, no model needed |
 | Deploy | Vercel (frontend) + Render (backend) | Free, one-click |
+
+**Env vars** (backend): `DATABASE_URL` (MySQL/Aiven; SQLite fallback if unset), `HF_TOKEN` (enables LLM aspect extraction; without it the offline lexicon is used), optional `HF_MODEL`.
 
 ---
 
@@ -114,7 +118,7 @@ The `data/` folder is **gitignored** on purpose. That means the app never ships 
 ├── src/cfa/                   # Python backend package
 │   ├── api/
 │   │   ├── main.py            # FastAPI endpoints (+ auth wiring)
-│   │   ├── auth.py            # signup / login / JWT (in-memory users)
+│   │   ├── auth.py            # signup / login / JWT (MySQL-backed users)
 │   │   ├── pipeline.py        # CSV → analyze → save
 │   │   └── schemas.py         # request models
 │   ├── analysis/
@@ -129,7 +133,7 @@ The `data/` folder is **gitignored** on purpose. That means the app never ships 
 │   └── core/
 │       └── config.py          # paths
 │
-├── data/                      # gitignored — runtime results only
+├── data/                      # gitignored — SQLite fallback (local only)
 ├── models/                    # trained model + metrics (committed)
 ├── tests/                     # pytest suite
 ├── IMP_FILES/                 # docs + sample CSVs (this repo's notes)
@@ -174,7 +178,7 @@ Use one of the sample CSVs in `IMP_FILES/sample_csvs/`. For example `6_luxewatch
 - **Backend** → Render, root = `src/cfa/`, start = `uvicorn api.main:app --host 0.0.0.0 --port 10000`.
 - CORS on the backend allows the Vercel domain and any `*.vercel.app` URL, plus localhost.
 
-> Note: because `data/` is gitignored, a fresh deploy starts empty. Upload a CSV once and the dashboard fills with your data.
+> Note: results live in MySQL per user, so they persist across deploys. On Render, set the `DATABASE_URL` env var to your Aiven MySQL URL. Locally, a SQLite fallback (`data/app.db`) is used when `DATABASE_URL` is unset.
 
 ---
 

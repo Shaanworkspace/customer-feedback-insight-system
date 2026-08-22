@@ -26,8 +26,9 @@ def _overlap(query: str, text: str) -> float:
     return round(len(q & t) / len(q), 2)
 
 
-def find_similar(text: str, top_k: int = 5) -> List[dict]:
-    reviews = _load_reviews()
+def find_similar(text: str, top_k: int = 5, reviews: list | None = None) -> List[dict]:
+    if reviews is None:
+        reviews = _load_reviews()
     if not reviews:
         return _EXAMPLE[:top_k]
     scored = [

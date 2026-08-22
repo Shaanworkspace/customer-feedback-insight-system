@@ -42,10 +42,10 @@ Body: `{username, password}` → checks the password, returns `{token}`.
 ### GET `/api/v1/auth/me`
 Needs token. Returns `{username}`. Proof the token works.
 
-How auth works inside (`api/auth.py`, no extra libraries):
+How auth works inside (`api/auth.py` + `db/repo.py`, no extra libraries):
 - Passwords are scrambled with `pbkdf2` (a one-way scramble) — we never store the plain password.
 - The token is a **JWT** (a signed ticket) made with `hmac` + `hashlib`. It is valid for 1 hour.
-- Users are kept **in memory** (a list in the server's memory). That means they reset if the server restarts — fine for a demo.
+- Users are stored in the database (`users` table) via `db.repo`. Accounts and uploaded results persist across restarts and re-deploys.
 
 ---
 
@@ -61,12 +61,14 @@ A counter of how many reviews were analyzed and the average time. No token neede
 "Is the server alive?" No token needed.
 
 ### POST `/api/v1/upload`
-The main one. Receives the CSV file, analyzes it, returns the full stats.
+The main one. Receives the CSV file, analyzes it, saves the result to the database (one row per user, last 3 kept), and returns the full stats.
 ```python
 @app.post("/api/v1/upload")
-async def upload(file: UploadFile = File(...)):
+async def upload(file: UploadFile = File(...), user=Depends(get_current_user)):
     content = await file.read()
-    return process_csv(content)
+    stats = process_csv(content)
+    save_analysis(user.id, file.filename, stats)
+    return stats
 ```
 
 ### GET `/api/v1/stats`
@@ -80,6 +82,9 @@ Analyze a single review text (used by the Analyzer screen).
 
 ### GET `/api/v1/concern-comments?concern=battery`
 Returns the proof reviews for one concern (the RAG output saved at upload time).
+
+### GET `/api/v1/history`
+Returns the user's last 3 uploaded analyses (filename, time, total reviews, top concerns). Older uploads are pruned automatically.
 
 ---
 
@@ -153,17 +158,19 @@ Because it only reads saved data, the numbers are always the real ones from your
 
 ---
 
-## 6. Data storage and why `data/` is gitignored
+## 6. Data storage
+
+Connection is `DATABASE_URL` (see `db/core.py`). With it set, results go to **Aiven MySQL** (`users` + `analyses` tables). With it unset, a local **SQLite** file (`data/app.db`) is used as a fallback.
 
 `config.py`:
 ```python
 DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data"))
-CONCERN_STATS_PATH = DATA_DIR / "concern_stats.json"
-REVIEWS_PATH = DATA_DIR / "reviews.json"
+REVIEWS_PATH = DATA_DIR / "reviews.json"   # only a fallback for RAG if no DB reviews
 MODEL_PATH = PROJECT_ROOT / "models" / "sentiment_model.joblib"
 ```
 
-- `data/` is gitignored → the repo never ships fake results; a fresh deploy starts empty and fills after your first upload.
+- Every result is stored per user in the `analyses` table; only the **last 3 analyses per user** are kept.
+- `data/` (SQLite fallback) is gitignored → the repo never ships fake results.
 - `models/` (the trained model files) **are committed** → the cloud uses the real trained model, not just the fallback.
 
 ---

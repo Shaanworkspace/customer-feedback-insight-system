@@ -275,10 +275,28 @@ export default function Dashboard({ analyzing = false, reloadKey = 0 }) {
         <p className="mt-1 text-[12px] text-[#8793a5]">Real customer feedback ({reviews.length} reviews)</p>
         <div className="mt-4 max-h-[380px] overflow-auto rounded-[10px] border border-[#e4e9ef]">
           {reviews.slice(0, 50).map((r) => (
-            <div className="grid grid-cols-[1fr_90px_90px] items-center gap-4 border-t border-[#e9edf2] px-4 py-3 text-[13px] text-[#34465d] first:border-t-0 hover:bg-[#fafbfd]" key={r.review_id}>
-              <span>{r.text}</span>
-              <span className="w-fit rounded-md bg-[#f0f4f8] px-2.5 py-1 text-[10px] font-bold capitalize text-[#536a82]">{r.entity}</span>
-              <span className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${r.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
+            <div className="grid grid-cols-[1fr_90px_90px] items-start gap-4 border-t border-[#e9edf2] px-4 py-3 text-[13px] text-[#34465d] first:border-t-0 hover:bg-[#fafbfd]" key={r.review_id}>
+              <div>
+                <span className="block">{r.text}</span>
+                {r.concerns?.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {r.concerns.map((c, i) => (
+                      <span key={i} className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${c.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : c.sentiment === 'negative' ? 'bg-[#fff0ef] text-[#b83b34]' : 'bg-[#eef1f5] text-[#536a82]'}`}>
+                        {c.name}: {c.sentiment}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {r.attributes && Object.keys(r.attributes).length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {Object.entries(r.attributes).map(([k, v]) => (
+                      <span key={k} className="rounded-md bg-[#f0f4f8] px-2 py-0.5 text-[10px] text-[#536a82]"><strong className="font-bold">{k}:</strong> {String(v)}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <span className="mt-1 w-fit rounded-md bg-[#f0f4f8] px-2.5 py-1 text-[10px] font-bold capitalize text-[#536a82]">{r.entity}</span>
+              <span className={`mt-1 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-[10px] font-extrabold capitalize ${r.sentiment === 'positive' ? 'bg-[#eaf8f0] text-[#1f7c46]' : 'bg-[#fff0ef] text-[#b83b34]'}`}>
                 {r.sentiment}
               </span>
             </div>

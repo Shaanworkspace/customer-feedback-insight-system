@@ -11,7 +11,6 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # Concern / RAG settings
 CONCERN_LEXICON_PATH = PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
-CONCERN_STATS_PATH = DATA_DIR / "concern_stats.json"
 REVIEWS_PATH = DATA_DIR / "reviews.json"
 
 # Model settings

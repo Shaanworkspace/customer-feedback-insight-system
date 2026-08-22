@@ -2,13 +2,11 @@
 
 import csv
 import io
-import json
 import re
 import uuid
 
-from cfa.analysis.concerns import analyze_review
+from cfa.analysis.concerns import analyze_reviews
 from cfa.analysis.rag import find_similar
-from cfa.core.config import CONCERN_STATS_PATH, REVIEWS_PATH
 from cfa.ranking.priority import rank_concerns
 
 
@@ -36,17 +34,22 @@ def process_csv(content: bytes) -> dict:
         (name for name in (reader.fieldnames or []) if name.strip().lower() in ("reviewer name", "reviewer", "author", "user")),
         None,
     )
+    raw_rows = []
     for row in reader:
         if not text_col:
             break
         text = (row.get(text_col) or "").strip()
-        if not text:
-            continue
-        result = analyze_review(text, include_similar=False)
+        if text:
+            raw_rows.append((row, text))
+
+    results = analyze_reviews([t for _, t in raw_rows])
+
+    for (row, text), result in zip(raw_rows, results):
         sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
         raw_rating = row.get(rating_col) if rating_col else None
         match = re.search(r"\d+", str(raw_rating)) if raw_rating else None
         rating = int(match.group()) if match else None
+        attributes = {k: (row.get(k) or "").strip() for k in (reader.fieldnames or []) if k != text_col}
         reviews.append(
             {
                 "review_id": str(uuid.uuid4())[:8],
@@ -54,9 +57,11 @@ def process_csv(content: bytes) -> dict:
                 "entity": result["concerns"][0]["name"] if result["concerns"] else "general",
                 "sentiment": sentiment,
                 "rating": rating,
-                "country": (row.get(country_col) or "").strip() if country_col else "",
-                "date": (row.get(date_col) or "").strip() if date_col else "",
-                "reviewer": (row.get(reviewer_col) or "").strip() if reviewer_col else "",
+                "country": attributes.get("country", "") if country_col else "",
+                "date": attributes.get("date", "") if date_col else "",
+                "reviewer": attributes.get("reviewer name", attributes.get("reviewer", "")) if reviewer_col else "",
+                "attributes": attributes,
+                "concerns": result["concerns"],
             }
         )
         for c in result["concerns"]:
@@ -65,8 +70,6 @@ def process_csv(content: bytes) -> dict:
             if c["sentiment"] == "negative":
                 entry["negative"] += 1
             entry["texts"].append(text)
-
-    REVIEWS_PATH.write_text(json.dumps(reviews, indent=2))
 
     total = len(reviews)
     positive = sum(1 for r in reviews if r["sentiment"] == "positive")
@@ -94,7 +97,7 @@ def process_csv(content: bytes) -> dict:
     comments_by_concern = {}
     for name in concern_counts:
         items = []
-        for s in find_similar(name.replace("_", " "), top_k=5):
+        for s in find_similar(name.replace("_", " "), top_k=5, reviews=reviews):
             r = reviews_by_id.get(s["review_id"])
             if not r:
                 continue
@@ -108,6 +111,7 @@ def process_csv(content: bytes) -> dict:
                     "date": r.get("date", ""),
                     "sentiment": r["sentiment"],
                     "similarity": s["similarity"],
+                    "attributes": r.get("attributes", {}),
                 }
             )
         comments_by_concern[name] = items
@@ -122,7 +126,7 @@ def process_csv(content: bytes) -> dict:
         ],
         "proof_by_concern": proof_by_concern,
         "comments_by_concern": comments_by_concern,
+        "reviews": reviews,
     }
 
-    CONCERN_STATS_PATH.write_text(json.dumps(stats, indent=2))
     return stats

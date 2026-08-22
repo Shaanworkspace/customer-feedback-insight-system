@@ -1,4 +1,4 @@
-"""FastAPI app: auth, analyze, upload, stats, reviews, health."""
+"""FastAPI app: auth, analyze, upload, stats, reviews, history, health."""
 
 import time
 
@@ -6,11 +6,16 @@ from fastapi import Depends, FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from cfa.analysis.concerns import analyze_review
-from cfa.analysis.stats import get_countries, get_ratings, get_reviews, get_stats, get_time_trend
+from cfa.analysis.rag import find_similar
+from cfa.analysis.stats import get_concern_comments, get_reviews, get_stats
 from cfa.api.auth import add_user, authenticate, create_token, decode_token
 from cfa.api.pipeline import process_csv
 from cfa.api.schemas import AnalyzeRequest, AuthRequest
+from cfa.db import init_db
+from cfa.db.repo import get_latest_analysis, get_user_by_username, list_history, save_analysis
 from cfa.ranking.priority import rank_concerns
+
+init_db()
 
 app = FastAPI(title="Customer Feedback Insight System")
 
@@ -35,7 +40,10 @@ def get_current_user(authorization: str = Header(None)):
     username = decode_token(authorization.split(" ", 1)[1])
     if not username:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return username
+    user = get_user_by_username(username)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return user
 
 
 @app.get("/health")
@@ -64,12 +72,12 @@ def login(req: AuthRequest):
 
 
 @app.get("/api/v1/auth/me")
-def me(user: str = Depends(get_current_user)):
-    return {"username": user}
+def me(user=Depends(get_current_user)):
+    return {"username": user.username, "id": user.id}
 
 
 @app.post("/api/v1/analyze")
-def analyze(req: AnalyzeRequest, user: str = Depends(get_current_user)):
+def analyze(req: AnalyzeRequest, user=Depends(get_current_user)):
     start = time.time()
     result = analyze_review(req.review_text)
     result["ranked_concerns"] = rank_concerns(
@@ -84,33 +92,39 @@ def analyze(req: AnalyzeRequest, user: str = Depends(get_current_user)):
             ]
         }
     )
+    analysis = get_latest_analysis(user.id)
+    reviews = (analysis or {}).get("reviews", [])
+    if reviews:
+        result["similar_reviews"] = find_similar(req.review_text, reviews=reviews, top_k=5)
     _counter["reviews_analyzed"] += 1
     _counter["total_latency_ms"] += (time.time() - start) * 1000
     return result
 
 
 @app.post("/api/v1/upload")
-async def upload(file: UploadFile = File(...), user: str = Depends(get_current_user)):
+async def upload(file: UploadFile = File(...), user=Depends(get_current_user)):
     content = await file.read()
     _counter["reviews_analyzed"] += content.decode("utf-8").count("\n")
-    return process_csv(content)
+    stats = process_csv(content)
+    save_analysis(user.id, file.filename, stats)
+    return stats
 
 
 @app.get("/api/v1/stats")
-def stats(user: str = Depends(get_current_user)):
-    data = get_stats()
-    data["countries"] = get_countries()
-    data["time_trend"] = get_time_trend()
-    data["ratings"] = get_ratings()
-    return data
+def stats(user=Depends(get_current_user)):
+    return get_stats(user.id)
 
 
 @app.get("/api/v1/reviews")
-def reviews(user: str = Depends(get_current_user)):
-    return get_reviews()
+def reviews(user=Depends(get_current_user)):
+    return get_reviews(user.id)
+
+
+@app.get("/api/v1/history")
+def history(user=Depends(get_current_user)):
+    return list_history(user.id)
 
 
 @app.get("/api/v1/concern-comments")
-def concern_comments(concern: str = "", user: str = Depends(get_current_user)):
-    data = get_stats()
-    return data.get("comments_by_concern", {}).get(concern, [])
+def concern_comments(concern: str = "", user=Depends(get_current_user)):
+    return get_concern_comments(concern, user.id)

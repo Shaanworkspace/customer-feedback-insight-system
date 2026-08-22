@@ -1,14 +1,12 @@
-"""Dashboard stats: read real concern_stats.json and reviews.json.
+"""Dashboard stats: read the user's latest analysis stored in MySQL.
 
-The backend writes concern_stats.json after every upload.
-This module only reads that saved data, so the dashboard
-never shows fake numbers.
+Each upload saves one analysis row; the dashboard always shows the
+user's most recent upload (history keeps the last 3 per user).
 """
 
-import json
 import re
 
-from cfa.core.config import CONCERN_STATS_PATH, REVIEWS_PATH
+from cfa.db.repo import get_latest_analysis
 
 _EMPTY = {
     "total_reviews": 0,
@@ -20,47 +18,17 @@ _EMPTY = {
 }
 
 
-def _load(path, default):
-    if path.exists():
-        return json.loads(path.read_text())
-    return default
-
-
-def get_stats() -> dict:
-    stats = {**_EMPTY, **_load(CONCERN_STATS_PATH, {})}
-    if not stats.get("representative_reviews"):
-        stats["representative_reviews"] = get_representative_reviews(3)
-    return stats
-
-
-def get_representative_reviews(n: int = 3) -> list:
-    reviews = _load(REVIEWS_PATH, [])
-    seen, picks = set(), []
-    for r in reversed(reviews):
-        if r["review_id"] in seen:
-            continue
-        seen.add(r["review_id"])
-        picks.append({"review_id": r["review_id"], "text": r["text"], "sentiment": r["sentiment"]})
-        if len(picks) >= n:
-            break
-    return picks
-
-
-def get_reviews() -> list:
-    return _load(REVIEWS_PATH, [])
-
-
-def get_countries() -> dict:
+def _countries(reviews):
     counts = {}
-    for r in get_reviews():
+    for r in reviews:
         country = r.get("country", "unknown")
         counts[country] = counts.get(country, 0) + 1
     return dict(sorted(counts.items(), key=lambda kv: kv[1], reverse=True)[:10])
 
 
-def get_time_trend() -> list:
+def _time_trend(reviews):
     counts = {}
-    for r in get_reviews():
+    for r in reviews:
         date = r.get("date", "")
         if not date:
             continue
@@ -72,11 +40,45 @@ def get_time_trend() -> list:
     return [{"year": y, "count": c} for y, c in sorted(counts.items())]
 
 
-def get_ratings() -> dict:
+def _ratings(reviews):
     counts = {}
-    for r in get_reviews():
+    for r in reviews:
         rating = r.get("rating")
         if rating is None:
             continue
         counts[rating] = counts.get(rating, 0) + 1
     return {str(k): v for k, v in sorted(counts.items())}
+
+
+def _representative(reviews, n=3):
+    seen, picks = set(), []
+    for r in reversed(reviews):
+        if r["review_id"] in seen:
+            continue
+        seen.add(r["review_id"])
+        picks.append({"review_id": r["review_id"], "text": r["text"], "sentiment": r["sentiment"]})
+        if len(picks) >= n:
+            break
+    return picks
+
+
+def get_stats(user_id):
+    data = get_latest_analysis(user_id) or {}
+    reviews = data.get("reviews", [])
+    stats = {**_EMPTY, **data}
+    stats["countries"] = _countries(reviews)
+    stats["time_trend"] = _time_trend(reviews)
+    stats["ratings"] = _ratings(reviews)
+    if not stats.get("representative_reviews"):
+        stats["representative_reviews"] = _representative(reviews, 3)
+    return stats
+
+
+def get_reviews(user_id):
+    data = get_latest_analysis(user_id) or {}
+    return data.get("reviews", [])
+
+
+def get_concern_comments(concern, user_id):
+    data = get_latest_analysis(user_id) or {}
+    return data.get("comments_by_concern", {}).get(concern, [])

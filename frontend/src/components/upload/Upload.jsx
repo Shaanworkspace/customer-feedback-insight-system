@@ -17,9 +17,9 @@ export default function Upload({ onStart, onDone, onCancel }) {
   ]
 
   const formats = [
-    { k: 'review_text', d: 'the customer review' },
-    { k: 'rating', d: '1 to 5 stars' },
-    { k: 'date', d: 'review date (optional)' },
+    { k: 'review_text', d: 'the customer review — required' },
+    { k: 'rating / date / country', d: 'optional, auto-detected' },
+    { k: 'any other column', d: 'kept & shown in the dashboard' },
   ]
 
   const acceptFile = (selected) => {
@@ -74,7 +74,7 @@ export default function Upload({ onStart, onDone, onCancel }) {
           <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">DATA IMPORT</div>
           <h1 className="my-1.5 text-[28px] font-bold text-[#142b48]">Upload your reviews</h1>
           <p className="text-[13px] leading-relaxed text-[#7a889b]">
-            Drop your CSV here and get ranked, proven insights in seconds.
+            Drop your CSV here and get ranked, proven insights in seconds. Any column layout works — we auto-detect the review text and keep every other column.
           </p>
 
           <form onSubmit={(e) => e.preventDefault()}>
@@ -169,7 +169,7 @@ export default function Upload({ onStart, onDone, onCancel }) {
           <div className="mb-5 inline-block rounded-full bg-[#eaf1f8] px-3 py-1.5 text-[10px] font-extrabold tracking-[1.3px] text-[#315f89]">
             CSV FORMAT
           </div>
-          <h2 className="my-3 text-[38px] font-bold text-[#193452]">Three columns are enough</h2>
+          <h2 className="my-3 text-[38px] font-bold text-[#193452]">Any columns work</h2>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">

@@ -15,7 +15,7 @@ In this project we do the **Retrieval half only** (retrieval-only RAG):
 
 This is deliberate and honest: the proof the user sees is the *exact text a customer wrote*, not a model's paraphrase. The "augmentation" is that the dashboard answer ("fix battery first") is backed by real, clickable evidence.
 
-> File: `src/cfa/analysis/rag.py` → `find_similar(text, top_k=5)`.
+> File: `src/cfa/analysis/rag.py` → `find_similar(text, top_k=5, reviews=None)`.
 
 ---
 
@@ -30,7 +30,27 @@ Without RAG, the system would only output labels. With RAG, every concern comes 
 
 ---
 
-## 3. Local RAG architecture
+## 3. Where the data lives (storage)
+
+All results are persisted in a **relational database** through `src/cfa/db/`:
+
+- `users` table — accounts (pbkdf2-hashed passwords), created at signup.
+- `analyses` table — one row per upload, storing the full computed result as JSON (`reviews`, `ranked_concerns`, `comments_by_concern`, …).
+
+Per user, **only the last 3 analyses are kept** (`HISTORY_KEEP = 3` in `repo.save_analysis` prunes older rows). The dashboard always reads the user's **latest** analysis.
+
+Connection is `DATABASE_URL`:
+
+| Mode | `DATABASE_URL` | Backend |
+|------|----------------|---------|
+| Online (deployed) | `mysql+pymysql://…@aivencloud.com:…/cfa` (SSL) | Aiven MySQL — persistent across restarts/re-deploys |
+| Local (no env set) | unset | SQLite fallback `data/app.db` (gitignored) |
+
+The RAG **algorithm is identical** in both modes — only the database host differs.
+
+---
+
+## 4. Local RAG architecture
 
 ```
  Browser (localhost:5173)
@@ -39,25 +59,23 @@ Without RAG, the system would only output labels. With RAG, every concern comes 
  Backend (localhost:8000)
         │  GET /api/v1/concern-comments?concern=battery
         ▼
- pipeline / rag.find_similar("battery")
-        │  1. load data/reviews.json   (saved during upload)
-        │  2. score each review by word-overlap with "battery"
-        │  3. keep top 5 matches
-        ▼
- returns [{review_id, text_preview, similarity}, ...]   ← real quotes
+ stats.get_concern_comments(concern, user_id)
+        │  reads user's latest analysis from DB (SQLite fallback)
+        │  returns comments_by_concern[concern]   ← real quotes
         ▼
  Dashboard shows the proof quotes
 ```
 
 Key local facts:
-- `data/reviews.json` lives on your **local disk** (gitignored). It persists across runs on the same machine.
+- Reviews are stored per-user in the database (`analyses.data["reviews"]`), not a flat file.
+- With no `DATABASE_URL`, the SQLite fallback (`data/app.db`) is used — same schema, fully local, no network.
 - Retrieval is **instant** (thousands of reviews, pure Python set math).
-- No external service, no database, no network call for RAG itself.
-- If no reviews are saved yet, `find_similar` returns a safe `_EXAMPLE` placeholder so the UI never breaks.
+- No external service, no Vector DB, no network call for RAG itself.
+- `find_similar` still returns a safe `_EXAMPLE` placeholder if no reviews exist yet, so the UI never breaks.
 
 ---
 
-## 4. Deployed / Online RAG architecture
+## 5. Deployed / Online RAG architecture
 
 ```
  Browser (Vercel: customer-feedback-insight-system.vercel.app)
@@ -66,24 +84,24 @@ Key local facts:
  Backend (Render: cfa-api.onrender.com)   ← SAME code as local
         │  GET /api/v1/concern-comments?concern=battery
         ▼
- rag.find_similar("battery")
-        │  1. load data/reviews.json on the RENDER CONTAINER filesystem
-        │  2. word-overlap scoring (identical algorithm)
-        │  3. top 5 matches
+ stats.get_concern_comments(concern, user_id)
+        │  reads user's latest analysis from Aiven MySQL
+        │  returns comments_by_concern[concern]   ← real quotes
         ▼
- returns real quotes (same shape as local)
+ Dashboard shows the proof quotes
 ```
 
 Key online facts:
-- The **algorithm is identical** to local — same `find_similar`, same word-overlap. Only the *hosting* differs.
+- The **algorithm and data model are identical** to local — same `find_similar`, same `get_concern_comments`, same database code. Only the database *host* (`DATABASE_URL`) differs.
 - The trained model is **committed** to the repo (`models/*.joblib`), so local and online load the **exact same model**.
-- CORS on the backend allows both `localhost:5173` and `*.vercel.app`, so the Vercel frontend can call the Render backend.
+- CORS allows both `localhost:5173` and `*.vercel.app`, so the Vercel frontend can call the Render backend.
 - Auth (JWT) protects every data endpoint, including RAG endpoints.
-- **Render free tier cold-starts**: after idle, the first request (model load + reviews load) is slower. Subsequent requests are fast.
+- Results persist in Aiven MySQL → they survive Render restarts and re-deploys (no ephemeral `data/` loss).
+- **Render free tier cold-starts**: after idle, the first request (model load) is slower. Subsequent requests are fast.
 
 ---
 
-## 5. Local vs Deployed — exact differences
+## 6. Local vs Deployed — exact differences
 
 | Aspect | Local | Deployed (Online) |
 |--------|-------|-------------------|
@@ -91,19 +109,20 @@ Key online facts:
 | Frontend URL | `http://localhost:5173` | `https://…vercel.app` |
 | RAG **algorithm** | word-overlap (`find_similar`) | word-overlap (`find_similar`) — **same** |
 | Model used | committed `models/*.joblib` | committed `models/*.joblib` — **same** |
-| `reviews.json` storage | local disk (persists on that machine) | Render container filesystem (**ephemeral**) |
-| Reviews survive restart? | yes (same machine) | **no** — lost on Render restart/cold start until re-upload |
-| User accounts | in-memory, reset on restart | in-memory, reset on restart (Render restarts more often) |
+| Database | SQLite (`data/app.db`) fallback | Aiven MySQL (`cfa` DB) — persistent |
+| Reviews survive restart? | yes (local file) | yes (MySQL) |
+| User accounts | MySQL-backed (`users` table) | MySQL-backed (`users` table) — same |
+| History per user | last 3 analyses | last 3 analyses |
 | First-request latency | instant (already running) | cold-start delay on idle (free tier) |
 | Internet needed | no | yes |
 | CORS | allows localhost + vercel | allows localhost + vercel |
 | Scale / traffic | single user dev | public internet, multi-user |
 
-**Bottom line:** the RAG *logic* is 100% the same online and offline. The only real differences are **where `reviews.json` lives** (local disk vs ephemeral Render filesystem) and **runtime lifecycle** (in-memory users + cold starts reset more often online).
+**Bottom line:** the RAG *logic* and data model are 100% the same online and offline. The only real difference is the **database host** (`DATABASE_URL`): local SQLite vs Aiven MySQL. Both persist results per user with a 3-analysis history.
 
 ---
 
-## 6. RAG internals (the algorithm)
+## 7. RAG internals (the algorithm)
 
 ```python
 def _overlap(query, text):
@@ -113,8 +132,9 @@ def _overlap(query, text):
         return 0.0
     return round(len(q & t) / len(q), 2)   # query-coverage of shared words
 
-def find_similar(text, top_k=5):
-    reviews = _load_reviews()              # from data/reviews.json
+def find_similar(text, top_k=5, reviews=None):
+    if reviews is None:
+        reviews = _load_reviews()          # data/reviews.json fallback
     if not reviews:
         return _EXAMPLE[:top_k]            # safe placeholder
     scored = [(score, r) for r in reviews
@@ -131,13 +151,13 @@ def find_similar(text, top_k=5):
 - **No embeddings, no neural network, no Vector DB.** Just token sets.
 
 Where it is called:
-- During upload: `comments_by_concern` is built by calling `find_similar(concern)` per concern → saved in `concern_stats.json`.
-- On demand: `GET /api/v1/concern-comments?concern=...` returns the saved quotes.
-- Single review: `POST /api/v1/analyze` also returns `similar_reviews` via `find_similar`.
+- During upload: `comments_by_concern` is built by calling `find_similar(concern, reviews=reviews)` per concern → saved inside the analysis row.
+- On demand: `GET /api/v1/concern-comments?concern=...` returns the saved quotes (no recompute needed).
+- Single review: `POST /api/v1/analyze` returns `similar_reviews` via `find_similar(review_text, reviews=db_reviews)`.
 
 ---
 
-## 7. Why NO Vector DB / embeddings (locally or online)
+## 8. Why NO Vector DB / embeddings (locally or online)
 
 A Vector DB (FAISS, Pinecone, Chroma, Qdrant) + embeddings (sentence-transformers, OpenAI) is the "standard" RAG stack. We **intentionally skipped it**:
 
@@ -154,55 +174,50 @@ We chose word-overlap because:
 2. Concern names are short and keyword-like (`battery`, `camera`, `delivery`) → exact word match is already strong.
 3. Zero infra = easy to deploy, demo, and explain (no black box).
 
-**Trade-off:** word-overlap misses paraphrases ("the charge doesn't last" ≠ "battery"). That is a known limitation (see §9).
+**Trade-off:** word-overlap misses paraphrases ("the charge doesn't last" ≠ "battery"). That is a known limitation (see §10).
 
-**Swap path (future):** the interface `find_similar(text, top_k)` stays the same. We can later replace the body with embedding search over a Vector DB without touching the API or frontend.
-
----
-
-## 8. End-to-end RAG data flow (both modes)
-
-```
-1. Upload CSV
-     └─ pipeline analyzes each row → sentiment + concerns
-     └─ saves data/reviews.json
-     └─ rank_concerns → builds comments_by_concern via find_similar()
-     └─ saves data/concern_stats.json
-
-2. User opens Dashboard
-     └─ GET /stats, GET /reviews → charts + list
-
-3. User clicks a concern (e.g. battery)
-     └─ GET /concern-comments?concern=battery
-     └─ returns real quotes retrieved by find_similar()
-
-4. User pastes one review in Analyzer
-     └─ POST /analyze → sentiment + concerns + similar_reviews (find_similar)
-```
-
-Online vs local: the **only** difference is which machine `data/reviews.json` is read from.
+**Swap path (future):** the interface `find_similar(text, top_k, reviews=None)` stays the same. We can later replace the body with embedding search over a Vector DB without touching the API or frontend.
 
 ---
 
-## 9. Limitations & roadmap
+## 9. End-to-end RAG data flow (both modes)
+
+```
+1. Sign up  →  users row created (MySQL / SQLite)
+2. Upload CSV
+      └─ pipeline analyzes each row → sentiment + concerns
+      └─ rank_concerns → builds comments_by_concern via find_similar(reviews=...)
+      └─ save_analysis(user_id, file, stats)  ← one analyses row (last 3 kept)
+3. User opens Dashboard
+      └─ GET /stats, GET /reviews → read latest analyses row from DB
+4. User clicks a concern (e.g. battery)
+      └─ GET /concern-comments?concern=battery
+      └─ returns real quotes from the saved analysis row
+5. User pastes one review in Analyzer
+      └─ POST /analyze → sentiment + concerns + similar_reviews(find_similar over DB reviews)
+```
+
+Local vs deployed: the **only** difference is which database hosts the `analyses`/`users` rows (`DATABASE_URL`).
+
+---
+
+## 10. Limitations & roadmap
 
 **Limitations**
 - Word-overlap misses synonyms/paraphrases (semantic gap).
-- On Render, `data/` is ephemeral → after a restart the saved reviews are gone until a new upload.
-- User accounts are in-memory (temporary, by design).
 - English-only.
+- Only the last 3 analyses per user are retained (by design, for a clean history).
 
 **Roadmap**
 - **Embeddings + Vector DB** (semantic retrieval) when data grows to millions of rows or synonym matching matters.
-- **Persistent database** (Postgres / Render Disk) so uploaded reviews survive restarts online.
-- **Persistent user store** (replace in-memory users) for real multi-user use.
+- **Longer history** if needed (raise `HISTORY_KEEP` in `repo.py`).
 - **Multilingual** embeddings.
 - Keep `find_similar` signature stable so the swap is drop-in.
 
 ---
 
-## 10. How to verify
+## 11. How to verify
 
-- Local: see `user_flow.md` + run backend (`uvicorn cfa.api.main:app --port 8000`) and frontend (`npm run dev`); upload a CSV, click a concern, see real quotes.
-- Online: the deployed backend (`cfa-api.onrender.com`) runs the **same** RAG code; sign up, upload, click a concern — identical proof quotes (modulo the ephemeral `data/` reset on restart).
-- Unit-level: `find_similar` is pure and testable; add a small test in `tests/` if needed.
+- Local: see `user_flow.md` + run backend (`uvicorn cfa.api.main:app --port 8000`) and frontend (`npm run dev`); sign up, upload a CSV, click a concern, see real quotes. Set `DATABASE_URL` in `.env` to use Aiven MySQL locally too.
+- Online: the deployed backend (`cfa-api.onrender.com`, with `DATABASE_URL` set to Aiven MySQL in the Render dashboard) runs the **same** code; sign up, upload, click a concern — identical proof quotes, now persistent.
+- Unit-level: `find_similar` is pure and testable; `tests/` covers the API + DB layer.

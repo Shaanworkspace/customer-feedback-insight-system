@@ -1,4 +1,4 @@
-"""Temporary auth: in-memory users + HS256 JWT, no external dependencies."""
+"""Auth: pbkdf2 passwords + HS256 JWT. Users persisted in MySQL via db.repo."""
 
 import base64
 import hashlib
@@ -7,11 +7,11 @@ import json
 import os
 import time
 
+from cfa.db.repo import create_user as _create_user, get_user_by_username as _get_user
+
 SECRET = os.environ.get("JWT_SECRET", "dev-secret-change-me")
 ALGO = "HS256"
 EXPIRY_SECONDS = 3600
-
-USERS = {}
 
 
 def _b64url_encode(raw: bytes) -> str:
@@ -37,18 +37,15 @@ def verify_password(password: str, salt_hex: str, hash_hex: str) -> bool:
 def add_user(username: str, password: str) -> bool:
     if not username or not password:
         return False
-    if username in USERS:
-        return False
     salt, digest = hash_password(password)
-    USERS[username] = {"salt": salt, "hash": digest}
-    return True
+    return _create_user(username, salt, digest) is not None
 
 
 def authenticate(username: str, password: str) -> bool:
-    user = USERS.get(username)
+    user = _get_user(username)
     if not user:
         return False
-    return verify_password(password, user["salt"], user["hash"])
+    return verify_password(password, user.salt, user.hash)
 
 
 def create_token(username: str) -> str:
