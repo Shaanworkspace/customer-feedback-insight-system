@@ -2,14 +2,16 @@
 
 import time
 
-from fastapi import Depends, FastAPI, File, Header, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from cfa.analysis.concerns import analyze_review
 from cfa.analysis.rag import find_similar
 from cfa.analysis.stats import get_concern_comments, get_reviews, get_stats
 from cfa.api.auth import add_user, authenticate, create_token, decode_token
 from cfa.api.pipeline import process_csv
+from cfa.api.ratelimit import RateLimiter
 from cfa.api.schemas import AnalyzeRequest, AuthRequest, EmailReportRequest
 from cfa.db import init_db
 from cfa.db.repo import (
@@ -25,6 +27,29 @@ from cfa.ranking.priority import rank_concerns
 init_db()
 
 app = FastAPI(title="Customer Feedback Insight System")
+
+limiter = RateLimiter(max_requests=60, window_seconds=60)
+
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    if request.url.path in ("/health", "/api/v1/ping"):
+        return await call_next(request)
+    client = request.client.host if request.client else "unknown"
+    if not limiter.is_allowed(client):
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Too many requests. Please slow down and try again later."},
+        )
+    return await call_next(request)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error. Please try again later."},
+    )
 
 app.add_middleware(
     CORSMiddleware,
@@ -110,9 +135,19 @@ def analyze(req: AnalyzeRequest, user=Depends(get_current_user)):
 
 @app.post("/api/v1/upload")
 async def upload(file: UploadFile = File(...), user=Depends(get_current_user)):
-    content = await file.read()
-    _counter["reviews_analyzed"] += content.decode("utf-8").count("\n")
-    stats = process_csv(content)
+    try:
+        content = await file.read()
+        text = content.decode("utf-8")
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="File must be a UTF-8 CSV.")
+    _counter["reviews_analyzed"] += text.count("\n")
+    try:
+        stats = process_csv(content)
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Could not process the CSV. Make sure it has a 'review_text' column.",
+        )
     save_analysis(user.id, file.filename, stats)
     return stats
 

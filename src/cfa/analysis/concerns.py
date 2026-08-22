@@ -81,11 +81,18 @@ def analyze_review(text: str, include_similar: bool = True) -> dict:
 
 
 def analyze_reviews(texts: list) -> list:
-    """Batch version for the upload pipeline (one LLM call for all rows)."""
+    """Batch version for the upload pipeline (one LLM call for all rows).
+
+    A single bad row never crashes the whole batch — it falls back to a
+    safe neutral result so large uploads (millions of rows) stay robust.
+    """
     all_aspects = extract_aspects(texts)
     out = []
     for text, aspects in zip(texts, all_aspects):
-        label, conf = _classify_overall(text, aspects)
+        try:
+            label, conf = _classify_overall(text, aspects)
+        except Exception:
+            label, conf = "neutral", 0.0
         out.append(
             {
                 "overall_sentiment": label,
