@@ -39,6 +39,8 @@ class SentimentClassifier:
             return "negative", conf
         if any(a.get("sentiment") == "neutral" for a in aspects):
             return "neutral", conf
-        if conf < 0.6:
+        if not aspects and conf < 0.8:
+            return "neutral", conf
+        if conf < 0.7:
             return "neutral", conf
         return label, conf
