@@ -44,7 +44,12 @@ def _build_url() -> str:
 
 _URL = _build_url()
 _CONNECT_ARGS: dict = {}
-if _URL.startswith("mysql"):
+if _URL.startswith("sqlite"):
+    _db_path = _URL[len("sqlite:///"):] if _URL.startswith("sqlite:///") else _URL[len("sqlite://"):]
+    if _db_path and not os.path.isabs(_db_path):
+        _db_path = os.path.join(os.getcwd(), _db_path)
+    os.makedirs(os.path.dirname(_db_path) or ".", exist_ok=True)
+elif _URL.startswith("mysql"):
     _CONNECT_ARGS = {"ssl": {"verify_mode": False, "check_hostname": False}, "connect_timeout": 15}
 
 engine = create_engine(_URL, connect_args=_CONNECT_ARGS, pool_pre_ping=True, future=True)
