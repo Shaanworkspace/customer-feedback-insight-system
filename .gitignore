@@ -34,6 +34,10 @@ models/
 project_plan.html
 team_tasks.html
 
+# Runtime report output
+output/
+*.report.json
+
 # Logs
 *.log
 logs/

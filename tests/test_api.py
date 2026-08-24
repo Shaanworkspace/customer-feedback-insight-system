@@ -6,8 +6,8 @@ client = TestClient(app)
 
 
 def auth_headers():
-    client.post("/api/v1/auth/signup", json={"username": "tester", "password": "secret123"})
-    token = client.post("/api/v1/auth/login", json={"username": "tester", "password": "secret123"}).json()["token"]
+    client.post("/api/v1/auth/signup", json={"username": "tester@example.com", "email": "tester@example.com", "password": "secret123"})
+    token = client.post("/api/v1/auth/login", json={"username": "tester@example.com", "password": "secret123"}).json()["token"]
     return {"Authorization": f"Bearer {token}"}
 
 
@@ -22,8 +22,8 @@ def test_auth_required():
 
 
 def test_signup_login_flow():
-    client.post("/api/v1/auth/signup", json={"username": "alice", "password": "pw123"})
-    res = client.post("/api/v1/auth/login", json={"username": "alice", "password": "pw123"})
+    client.post("/api/v1/auth/signup", json={"username": "alice@example.com", "email": "alice@example.com", "password": "pw123"})
+    res = client.post("/api/v1/auth/login", json={"username": "alice@example.com", "password": "pw123"})
     assert res.status_code == 200
     assert "token" in res.json()
 

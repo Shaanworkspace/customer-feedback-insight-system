@@ -1,11 +1,4 @@
-"""Dynamic aspect extraction.
-
-Primary path: an LLM via the Hugging Face Inference API (free) when HF_TOKEN
-is set. The LLM does open aspect-based sentiment — it returns whatever aspects
-a customer mentions with their own sentiment, so there is no fixed entity list.
-
-Fallback: the keyword lexicon (offline) when no token is set or the API fails.
-"""
+"""Aspect extraction: LLM via HF when HF_TOKEN is set, else keyword lexicon."""
 
 import os
 import re

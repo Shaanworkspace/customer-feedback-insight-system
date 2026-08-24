@@ -34,7 +34,10 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
   const [me, setMe] = useState(null)
   const [analyses, setAnalyses] = useState([])
   const [listError, setListError] = useState(false)
-  const [selectedId, setSelectedId] = useState(null)
+  const [selectedId, setSelectedId] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get('analysis')
+    return p ? Number(p) : null
+  })
   const [stats, setStats] = useState(null)
   const [reviews, setReviews] = useState([])
   const [viewLoading, setViewLoading] = useState(false)
@@ -45,6 +48,21 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
   const [comments, setComments] = useState([])
   const [loadingComments, setLoadingComments] = useState(false)
   const [commentError, setCommentError] = useState(false)
+
+  const selectAnalysis = (id) => {
+    setSelectedId(id)
+    const url = new URL(window.location.href)
+    url.searchParams.set('view', 'dashboard')
+    url.searchParams.set('analysis', String(id))
+    window.history.pushState({ view: 'dashboard' }, '', url.toString())
+  }
+
+  const backToList = () => {
+    setSelectedId(null)
+    const url = new URL(window.location.href)
+    url.searchParams.delete('analysis')
+    window.history.pushState({ view: 'dashboard' }, '', url.toString())
+  }
 
   useEffect(() => {
     const u = getUser()
@@ -155,7 +173,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
                 <button
                   key={a.id}
                   type="button"
-                  onClick={() => setSelectedId(a.id)}
+                  onClick={() => selectAnalysis(a.id)}
                   className="cursor-pointer rounded-[15px] border border-[#e1e7ef] bg-white p-5 text-left shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]"
                 >
                   <strong className="block truncate text-[15px] text-[#142b48]">{a.filename || 'Untitled analysis'}</strong>
@@ -192,7 +210,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
   if (viewError || !stats) {
     return (
       <div className="w-full">
-        <button type="button" className="mb-4 text-[13px] font-semibold text-[#173f73]" onClick={() => setSelectedId(null)}>
+        <button type="button" className="mb-4 text-[13px] font-semibold text-[#173f73]" onClick={backToList}>
           ← Back to analyses
         </button>
         <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-8 text-center text-[13px] text-[#b42318]">
@@ -241,7 +259,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
     <div className="w-full">
       <section className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <button type="button" className="mb-2 text-[13px] font-semibold text-[#173f73]" onClick={() => setSelectedId(null)}>
+          <button type="button" className="mb-2 text-[13px] font-semibold text-[#173f73]" onClick={backToList}>
             ← Back to analyses
           </button>
           <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
@@ -452,7 +470,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
                 {r.aspects?.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {r.aspects.map((a, j) => (
-                      <span key={j} className="rounded-md bg-[#eef4fb] px-2 py-0.5 text-[10px] font-bold capitalize text-[#2b6cb0]">{a}</span>
+                      <span key={j} className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${SENT_CLASS[a.sentiment] || SENT_CLASS.neutral}`}>{a.aspect}</span>
                     ))}
                   </div>
                 )}

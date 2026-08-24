@@ -1,103 +1,67 @@
-"""Upload pipeline: CSV -> analyze -> aggregate -> save stats."""
+"""Upload pipeline: CSV -> preprocess -> analyze -> aggregate -> save stats."""
 
-import csv
-import io
 import re
 import uuid
 
+from cfa.analysis.aggregation import ConcernAggregator
 from cfa.analysis.concerns import analyze_reviews
+from cfa.analysis.preprocessing import preprocess_csv
 from cfa.analysis.rag import find_similar
+from cfa.analysis.stats import _countries, _ratings
 from cfa.ranking.priority import rank_concerns
 
 
+def _month_trend(reviews):
+    counts = {}
+    for r in reviews:
+        date = r.get("date", "")
+        if not date:
+            continue
+        m = re.search(r"\d{4}-\d{2}", date)
+        if not m:
+            continue
+        counts[m.group()] = counts.get(m.group(), 0) + 1
+    return [{"month": k, "count": v} for k, v in sorted(counts.items())]
+
+
 def process_csv(content: bytes) -> dict:
+    rows, _columns = preprocess_csv(content)
+    results = analyze_reviews([r["text"] for r in rows])
+
     reviews = []
-    concern_counts = {}
-    reader = csv.DictReader(io.StringIO(content.decode("utf-8"), newline=""))
-    text_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("review_text", "review text", "reviewtext", "text", "review")),
-        None,
-    )
-    rating_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("rating", "stars", "review rating")),
-        None,
-    )
-    country_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() == "country"),
-        None,
-    )
-    date_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("date", "review date", "date of experience")),
-        None,
-    )
-    reviewer_col = next(
-        (name for name in (reader.fieldnames or []) if name.strip().lower() in ("reviewer name", "reviewer", "author", "user")),
-        None,
-    )
-    raw_rows = []
-    for row in reader:
-        if not text_col:
-            break
-        text = (row.get(text_col) or "").strip()
-        if text:
-            raw_rows.append((row, text))
-
-    results = analyze_reviews([t for _, t in raw_rows])
-
-    for (row, text), result in zip(raw_rows, results):
+    agg = ConcernAggregator()
+    for r, result in zip(rows, results):
         sentiment = result["overall_sentiment"]
-        raw_rating = row.get(rating_col) if rating_col else None
-        match = re.search(r"\d+", str(raw_rating)) if raw_rating else None
-        rating = int(match.group()) if match else None
-        attributes = {k: (row.get(k) or "").strip() for k in (reader.fieldnames or []) if k != text_col}
+        attributes = r["attributes"]
         reviews.append(
             {
                 "review_id": str(uuid.uuid4())[:8],
-                "text": text,
+                "text": r["text"],
                 "entity": result["concerns"][0]["name"] if result["concerns"] else "general",
                 "sentiment": sentiment,
-                "rating": rating,
-                "country": attributes.get("country", "") if country_col else "",
-                "date": attributes.get("date", "") if date_col else "",
-                "reviewer": attributes.get("reviewer name", attributes.get("reviewer", "")) if reviewer_col else "",
+                "rating": r["rating"],
+                "country": r["country"],
+                "date": r["date"],
+                "reviewer": r["reviewer"],
                 "attributes": attributes,
                 "concerns": result["concerns"],
                 "aspects": result["aspects"],
             }
         )
         for c in result["concerns"]:
-            entry = concern_counts.setdefault(c["name"], {"count": 0, "negative": 0, "texts": []})
-            entry["count"] += 1
-            if c["sentiment"] == "negative":
-                entry["negative"] += 1
-            entry["texts"].append(text)
+            agg.add(c["name"], c["sentiment"], r["text"])
 
     total = len(reviews)
     sentiment_distribution = {"positive": 0, "negative": 0, "neutral": 0, "mixed": 0}
     for r in reviews:
         sentiment_distribution[r["sentiment"]] = sentiment_distribution.get(r["sentiment"], 0) + 1
 
-    ranked = rank_concerns(
-        {
-            "concerns": [
-                {
-                    "name": name,
-                    "count": entry["count"],
-                    "negative_pct": round(entry["negative"] / entry["count"] * 100, 1),
-                }
-                for name, entry in concern_counts.items()
-            ]
-        }
-    )
-
-    proof_by_concern = {
-        name: [{"text": t, "similarity": 1.0} for t in entry["texts"][:3]]
-        for name, entry in concern_counts.items()
-    }
+    ranked = rank_concerns({"concerns": agg.stats()})
+    proof_by_concern = agg.proof()
 
     reviews_by_id = {r["review_id"]: r for r in reviews}
     comments_by_concern = {}
-    for name in concern_counts:
+    for name in agg.counts:
         items = []
         for s in find_similar(name.replace("_", " "), top_k=5, reviews=reviews):
             r = reviews_by_id.get(s["review_id"])
@@ -118,7 +82,7 @@ def process_csv(content: bytes) -> dict:
             )
         comments_by_concern[name] = items
 
-    stats = {
+    return {
         "total_reviews": total,
         "sentiment_distribution": sentiment_distribution,
         "ranked_concerns": ranked,
@@ -128,7 +92,8 @@ def process_csv(content: bytes) -> dict:
         ],
         "proof_by_concern": proof_by_concern,
         "comments_by_concern": comments_by_concern,
+        "ratings": _ratings(reviews),
+        "countries": _countries(reviews),
+        "time_trend": _month_trend(reviews),
         "reviews": reviews,
     }
-
-    return stats

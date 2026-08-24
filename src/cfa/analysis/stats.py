@@ -1,8 +1,4 @@
-"""Dashboard stats: read the user's latest analysis stored in MySQL.
-
-Each upload saves one analysis row; the dashboard always shows the
-user's most recent upload (history keeps the last 3 per user).
-"""
+"""Read the user's latest stored analysis for the dashboard."""
 
 import re
 
