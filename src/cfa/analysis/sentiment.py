@@ -1,3 +1,5 @@
+"""Deterministic aggregation — no second ML classifier."""
+
 import re
 
 from cfa.ml.serve import (
@@ -45,7 +47,6 @@ class SentimentClassifier:
         return pos, neg
 
     def classify(self, text, aspects):
-
         # ----------------------------------------------------
         # Aspect-level sentiment using MAMS ABSA model
         # ----------------------------------------------------
@@ -53,7 +54,6 @@ class SentimentClassifier:
         updated_aspects = []
 
         for aspect in aspects:
-
             aspect_name = aspect.get("name")
 
             if not aspect_name:
@@ -100,13 +100,10 @@ class SentimentClassifier:
         # ----------------------------------------------------
 
         overall_result = predict_sentiment(text)
-
         label = overall_result["label"]
         conf = overall_result["confidence"]
 
-        # If different aspects have different sentiments,
-        # classify the complete review as mixed.
-
+        # Different aspect sentiments -> mixed review
         if pos > 0 and neg > 0:
             return "mixed", conf
 
@@ -134,7 +131,8 @@ class SentimentClassifier:
         if cp_neg:
             return "negative", conf
 
-        if not aspects and conf < 0.8:
+        # No aspects found: fall back to neutral
+        if not aspects:
             return "neutral", conf
 
         if conf < 0.7:

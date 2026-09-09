@@ -13,9 +13,11 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 CONCERN_LEXICON_PATH = PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
 REVIEWS_PATH = DATA_DIR / "reviews.json"
 
-# Model settings
+# Model settings — legacy TF-IDF (kept for backward compat)
 MODEL_PATH = PROJECT_ROOT / "models" / "sentiment_model.joblib"
 VECTORIZER_PATH = PROJECT_ROOT / "models" / "sentiment_vectorizer.joblib"
+# Perfect model — BERT token classification (mirrors Final_Perfect_Model.ipynb)
+BERT_ASTE_DIR = PROJECT_ROOT / "bert_aste_final"
 
 # Email (SMTP) settings — free SMTP works (e.g. Gmail app password)
 SMTP_HOST = os.environ.get("SMTP_HOST", "")

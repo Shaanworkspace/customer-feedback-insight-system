@@ -1,26 +1,43 @@
-"""Aspect extraction: LLM via HF when HF_TOKEN is set, else keyword lexicon."""
+"""Aspect extraction: Perfect model (BERT) first, then LLM if HF_TOKEN set.
+
+No hard-coded aspect list. The model learns patterns, not a fixed list.
+This mirrors Final_Perfect_Model.ipynb — small helpers, no big function.
+"""
 
 import os
 import re
 
 import requests
 
-from cfa.core.config import CONCERN_LEXICON_PATH
-
 _HF_URL = "https://api-inference.huggingface.co/models/{model}"
 _MODEL = os.environ.get("HF_MODEL", "mistralai/Mistral-7B-Instruct-v0.1")
 _TIMEOUT = 25
 
-_lexicon = None
 
+def _bert_aspects(text):
+    # Try the perfect BERT model first
+    try:
+        from cfa.ml.bert_aste import predict_review, is_trained
 
-def _load_lexicon():
-    global _lexicon
-    if _lexicon is None:
-        import json
-        with open(CONCERN_LEXICON_PATH) as f:
-            _lexicon = json.load(f)
-    return _lexicon
+        if not is_trained():
+            return None
+        result = predict_review(text)
+        triplets = result.get("aspects", [])
+        if not triplets:
+            return None
+        out = []
+        for t in triplets:
+            out.append(
+                {
+                    "name": t["aspect"].lower().strip(),
+                    "sentiment": t["sentiment"].lower(),
+                    "matched_terms": [t["aspect"]],
+                    "confidence": 0.85,
+                }
+            )
+        return out
+    except Exception:
+        return None
 
 
 def _clause_for(text, term):
@@ -29,24 +46,6 @@ def _clause_for(text, term):
         if term in p.lower():
             return p
     return text
-
-
-def _lexicon_aspects(text):
-    from cfa.ml.serve import predict_sentiment
-
-    lexicon = _load_lexicon()
-    text_lower = text.lower()
-    out = []
-    seen = set()
-    for name, terms in lexicon.items():
-        hit = next((t for t in terms if t in text_lower), None)
-        if not hit or name in seen:
-            continue
-        seen.add(name)
-        clause = _clause_for(text, hit)
-        sentiment = predict_sentiment(clause)["label"]
-        out.append({"name": name, "sentiment": sentiment, "matched_terms": [hit], "confidence": 0.6})
-    return out
 
 
 def _parse_batch(raw, n):
@@ -106,9 +105,26 @@ def _llm_batch(texts):
         return None
 
 
+def _fallback_empty(text):
+    # No hard-coded word list. Return empty so the caller can handle it.
+    # This keeps the flow honest: if BERT not trained and no LLM, we do not guess.
+    return []
+
+
 def extract_aspects(texts):
-    """Return a list (aligned to `texts`) of aspect dicts."""
-    llm = _llm_batch(texts)
-    if llm is not None:
-        return llm
-    return [_lexicon_aspects(t) for t in texts]
+    """Return a list (aligned to `texts`) of aspect dicts.
+
+    Order: 1) BERT perfect model (no hard-code), 2) LLM if HF_TOKEN set, 3) empty.
+    """
+    out = []
+    for t in texts:
+        bert = _bert_aspects(t)
+        if bert is not None:
+            out.append(bert)
+            continue
+        llm = _llm_batch([t])
+        if llm is not None and llm[0]:
+            out.append(llm[0])
+            continue
+        out.append(_fallback_empty(t))
+    return out

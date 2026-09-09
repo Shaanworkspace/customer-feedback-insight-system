@@ -20,6 +20,10 @@ dependencies = [
     "sqlalchemy>=2.0",
     "pymysql>=1.1",
     "requests>=2.31",
+    "transformers>=4.40",
+    "torch>=2.0",
+    "datasets>=2.19",
+    "accelerate>=0.26.0",
 ]
 
 [project.optional-dependencies]
