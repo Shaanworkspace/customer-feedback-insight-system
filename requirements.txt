@@ -9,3 +9,7 @@ python-multipart>=0.0.9
 pytest>=8.0
 requests>=2.31
 nltk>=3.8
+transformers>=4.40
+torch>=2.0
+datasets>=2.19
+accelerate>=0.26.0

@@ -22,6 +22,7 @@ models/
 !models/sentiment_model.joblib
 !models/sentiment_vectorizer.joblib
 !models/metrics.json
+bert_aste_final/
 
 # Environment and secrets
 .env

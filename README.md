@@ -6,7 +6,8 @@
 [![Live API](https://img.shields.io/badge/Live-API-green?style=flat&logo=render)](https://cfa-api.onrender.com/health)
 [![Built with React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://react.dev)
 [![Built with FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)
-[![ML](https://img.shields.io/badge/ML-TF--IDF%20%2B%20LogReg-orange)](https://scikit-learn.org)
+[![ML](https://img.shields.io/badge/ML-BERT%20ASTE%20%2B%20No%20Hardcode-green)](https://huggingface.co/transformers)
+[![Notebook](https://img.shields.io/badge/Notebook-Final_Perfect_Model.ipynb-blue)](notebooks/Final_Perfect_Model.ipynb)
 
 ---
 
@@ -25,8 +26,8 @@ It is built for the Cognizant hackathon. The whole point is: **no fake numbers**
 ## Key Features
 
 - **CSV upload** that understands both the real Kaggle Amazon format and a simple `review_text,rating,date` format.
-- **Sentiment analysis** on every review (positive / negative) using an ML model, with a safe keyword fallback.
-- **Concern detection** that tags each review with what it is about (battery, camera, delivery, screen, price, customer service, and more).
+- **Sentiment analysis** on every review (Positive / Negative / Neutral / Mixed) using the perfect BERT token model from `notebooks/Final_Perfect_Model.ipynb` (no hard-coded word list).
+- **Concern detection** that finds aspects by itself (no fixed list) — the model learns patterns like `X is excellent`, so any product (chair, phone) works.
 - **Priority ranking** that scores each concern by *how often it appears* × *how negative it is*, so the worst problems rise to the top.
 - **Dashboard with charts**: sentiment split, priority concerns, rating distribution, reviews over time, and market-by-country.
 - **Real proof per concern**: open a concern and see the actual customer reviews that mention it (this is the RAG part).
