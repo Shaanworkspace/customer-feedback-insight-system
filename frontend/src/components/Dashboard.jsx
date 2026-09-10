@@ -486,69 +486,132 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
     .sort((a, b) => b.count - a.count)
     .slice(0, 8)
 
+  // Get filename for big heading
+  const currentAnalysisFileName = analyses.find((a) => a.id === selectedId)?.filename || ''
+  const displayFileName = currentAnalysisFileName.replace(/\.csv$/i, '').replace(/[_-]/g, ' ')
+  const bigHeadingFileName = displayFileName ? `${displayFileName} analysis` : `${total.toLocaleString()} reviews analysis`
+
+  function handleReAnalyze() {
+    if (selectedId == null) return
+    setViewLoading(true)
+    getHistoryReport(selectedId)
+      .then((r) => {
+        setStats(r)
+        setReviews(r.reviews || [])
+        setViewLoading(false)
+      })
+      .catch(() => setViewLoading(false))
+  }
+
   return (
     <div className="w-full">
-      <section className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <button type="button" className="mb-2 text-[13px] font-semibold text-[#173f73]" onClick={backToList}>
-            ← Back to analyses
-          </button>
-          <div className="mb-2 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
-          <h2 className="m-0 text-[clamp(26px,3.5vw,36px)] font-bold tracking-tight text-[#142b48]">
-            {total.toLocaleString()} reviews analyzed
+      <section className="mb-8">
+        <button type="button" className="mb-3 text-[13px] font-semibold text-[#173f73] hover:underline" onClick={backToList}>
+          ← Back to analyses
+        </button>
+        <div className="rounded-[16px] border border-[#e1e7ef] bg-gradient-to-br from-[#f8fafd] via-white to-[#eef4fb] p-6 shadow-[0_8px_25px_rgba(23,63,115,0.06)] md:p-8">
+          <div className="mb-1 text-[11px] font-extrabold tracking-[1.5px] text-[#47739e]">CUSTOMER INTELLIGENCE</div>
+          <h2 className="m-0 text-[clamp(28px,4vw,38px)] font-extrabold leading-tight tracking-tight text-[#142b48]">
+            {bigHeadingFileName}
           </h2>
-          <p className="mt-2 text-[15px] text-[#718097]">{concerns.length} priority issues found</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#173f73] px-5 py-3 text-[13px] font-extrabold tracking-wide text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f] hover:shadow-[0_10px_24px_rgba(23,63,115,0.25)]"
-            onClick={onUpload}
-          >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[12px]">＋</span>
-            Upload new
-          </button>
-          <button
-            type="button"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#173f73] bg-white px-5 py-3 text-[13px] font-extrabold tracking-wide text-[#173f73] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#eef4fb] hover:shadow"
-            onClick={() => downloadText('report.csv', reportToCsv(stats))}
-          >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#edf3fa] text-[12px]">⤓</span>
-            Export CSV
-          </button>
+          <p className="mt-2 text-[14px] text-[#5a6d80]">
+            <span className="font-bold text-[#142b48]">{total.toLocaleString()} reviews</span> analyzed · <span className="font-semibold">{concerns.length} priority issues</span> · {currentAnalysisFileName || 'current analysis'}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#173f73] px-5 py-3 text-[13px] font-extrabold tracking-wide text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f] hover:shadow-[0_10px_24px_rgba(23,63,115,0.25)]"
+              onClick={handleReAnalyze}
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[12px]">↻</span>
+              Re-analyze
+            </button>
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-white px-5 py-3 text-[13px] font-extrabold tracking-wide text-[#173f73] shadow-sm ring-1 ring-[#173f73]/20 transition hover:-translate-y-0.5 hover:bg-[#eef4fb] hover:shadow"
+              onClick={onUpload}
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#edf3fa] text-[12px]">＋</span>
+              Upload new
+            </button>
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#173f73] bg-white px-5 py-3 text-[13px] font-extrabold tracking-wide text-[#173f73] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#eef4fb] hover:shadow"
+              onClick={() => downloadText('report.csv', reportToCsv(stats))}
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#edf3fa] text-[12px]">⤓</span>
+              Export CSV
+            </button>
+          </div>
         </div>
       </section>
 
       <section className="mb-5 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('all')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('all') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Total Reviews</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#142b48]">{total.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#173f73]">Dataset analyzed</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#173f73]">Click to see all →</div>
         </div>
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('positive')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('positive') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Positive</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#1f7c46]">{pos.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#25834c]">{pct(pos)}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#25834c]">{pct(pos)}% — click to filter →</div>
         </div>
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('negative')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('negative') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Negative</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#c94a3d]">{neg.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#c94a3d]">{pct(neg)}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#c94a3d]">{pct(neg)}% — click to filter →</div>
         </div>
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('neutral')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('neutral') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Neutral</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#5a6472]">{neu.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#5a6472]">{pct(neu)}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#5a6472]">{pct(neu)}% — click to filter →</div>
         </div>
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('mixed')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('mixed') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Mixed</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#b7791f]">{mix.toLocaleString()}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#b7791f]">{pct(mix)}% of all reviews</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#b7791f]">{pct(mix)}% — click to filter →</div>
         </div>
-        <div className="rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => openTabBoard('top')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openTabBoard('top') }}
+          className="cursor-pointer rounded-[14px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(25,46,72,0.08)] hover:border-[#b9c8d8]"
+        >
           <div className="text-[13px] font-semibold text-[#718097]">Priority Issues</div>
           <strong className="mt-3 block text-[29px] font-bold tracking-tight text-[#142b48]">{concerns.length}</strong>
-          <div className="mt-2 text-[11px] font-semibold text-[#b8860b]">Concerns detected</div>
+          <div className="mt-2 text-[11px] font-semibold text-[#b8860b]">Click to see top →</div>
         </div>
       </section>
 
@@ -705,16 +768,28 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
         </div>
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
           <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Trend Over Time</h3>
-          <p className="mt-1 text-[12px] text-[#8793a5]">Reviews per month</p>
+          <p className="mt-1 text-[12px] text-[#8793a5]">Reviews per month {timeData.length === 0 ? '— no date in this CSV' : ''}</p>
           <div className="mt-4 h-[180px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={timeData}>
-                <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="reviews" radius={[5, 5, 0, 0]} fill="#2b6cb0" />
-              </BarChart>
-            </ResponsiveContainer>
+            {timeData.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center rounded-lg bg-[#f8fafc] p-4 text-center">
+                <p className="text-[13px] font-semibold text-[#5a6d80]">No dates in this CSV</p>
+                <p className="mt-1 text-[11px] text-[#8a96a8]">Add a <code className="rounded bg-white px-1 py-0.5">date</code> column (e.g., 2024-01-08) to see the trend. Showing overall sentiment instead:</p>
+                <div className="mt-3 flex gap-2">
+                  <span className="rounded-full bg-[#eaf8f0] px-2.5 py-1 text-[11px] font-bold text-[#1f7c46]">Positive {pos}</span>
+                  <span className="rounded-full bg-[#fff0ef] px-2.5 py-1 text-[11px] font-bold text-[#c94a3d]">Negative {neg}</span>
+                  <span className="rounded-full bg-[#fff7e6] px-2.5 py-1 text-[11px] font-bold text-[#b7791f]">Mixed {mix}</span>
+                </div>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={timeData}>
+                  <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+                  <Tooltip />
+                  <Bar dataKey="reviews" radius={[5, 5, 0, 0]} fill="#2b6cb0" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
         <div className="rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
