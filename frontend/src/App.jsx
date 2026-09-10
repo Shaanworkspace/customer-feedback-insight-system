@@ -8,9 +8,10 @@ import Upload from './components/upload/Upload'
 import Dashboard from './components/Dashboard'
 import Analyzer from './components/Analyzer'
 import Explorer from './components/Explorer'
-import { getToken } from './api'
+import Profile from './components/Profile'
+import { getToken, getUser } from './api'
 
-const APP_VIEWS = ['dashboard', 'analyzer', 'explorer']
+const APP_VIEWS = ['dashboard', 'analyzer', 'explorer', 'profile']
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(() => !!getToken())
@@ -43,6 +44,13 @@ export default function App() {
     navigate('dashboard')
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('cfa_token')
+    localStorage.removeItem('cfa_user')
+    setSignedIn(false)
+    navigate('landing')
+  }
+
   const handleUploadStart = () => {
     setAnalyzing(true)
     navigate('dashboard')
@@ -54,13 +62,15 @@ export default function App() {
   }
 
   let v = view
+  // Session: if already signed in, login page should not show — go to dashboard
+  if (signedIn && v === 'login') v = 'dashboard'
   if (!signedIn && (v === 'upload' || APP_VIEWS.includes(v))) v = 'login'
 
   if (v === 'landing') {
     return (
       <div className="site-page">
-        <SiteHeader />
-        <Landing onStart={() => navigate('login')} />
+        <SiteHeader signedIn={signedIn} />
+        <Landing onStart={() => navigate(signedIn ? 'dashboard' : 'login')} />
         <SiteFooter />
       </div>
     )
@@ -69,7 +79,7 @@ export default function App() {
   if (v === 'login') {
     return (
       <div className="site-page">
-        <SiteHeader />
+        <SiteHeader signedIn={signedIn} />
         <Login onLogin={handleLogin} />
         <SiteFooter />
       </div>
@@ -79,15 +89,26 @@ export default function App() {
   if (v === 'upload') {
     return (
       <div className="page-with-chrome">
-        <AppHeader tab="upload" setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} />
+        <AppHeader tab="upload" setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} signedIn={signedIn} onLogout={handleLogout} onProfile={() => navigate('profile')} />
         <Upload onStart={handleUploadStart} onDone={handleUploaded} onCancel={() => navigate('dashboard')} />
+      </div>
+    )
+  }
+
+  if (v === 'profile') {
+    return (
+      <div className="page-with-chrome">
+        <AppHeader tab="profile" setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} signedIn={signedIn} onLogout={handleLogout} onProfile={() => navigate('profile')} />
+        <main className="page-container">
+          <Profile onBack={() => navigate('dashboard')} />
+        </main>
       </div>
     )
   }
 
   return (
     <div className="page-with-chrome">
-      <AppHeader tab={v} setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} />
+      <AppHeader tab={v} setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} signedIn={signedIn} onLogout={handleLogout} onProfile={() => navigate('profile')} />
       <main className="page-container">
         {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} onUpload={() => navigate('upload')} onReload={() => setReload((r) => r + 1)} />}
         {v === 'analyzer' && <Analyzer />}

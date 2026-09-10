@@ -56,6 +56,8 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   const [activeTab, setActiveTab] = useState('all')
   const [isBoardOpen, setIsBoardOpen] = useState(false)
   const [boardReviews, setBoardReviews] = useState([])
+  const [dashboardDeleteConfirmId, setDashboardDeleteConfirmId] = useState(null)
+  const [isDashboardDeleting, setIsDashboardDeleting] = useState(false)
 
   // Drag and drop on dashboard
   const dashboardFileInputRef = useRef(null)
@@ -288,25 +290,54 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
                   <button
                     type="button"
                     aria-label="Delete analysis"
-                    onClick={async (e) => {
+                    onClick={(e) => {
                       e.stopPropagation()
-                      if (!confirm(`Delete "${a.filename || 'this analysis'}"?`)) return
-                      try {
-                        const { deleteHistory } = await import('../api')
-                        await deleteHistory(a.id)
-                        setAnalyses((prev) => prev.filter((item) => item.id !== a.id))
-                        if (selectedId === a.id) {
-                          setSelectedId(null)
-                          setStats(null)
-                        }
-                      } catch (err) {
-                        alert(err.message || 'Could not delete')
-                      }
+                      setDashboardDeleteConfirmId(a.id)
                     }}
                     className="absolute right-2 top-2 hidden h-7 w-7 items-center justify-center rounded-full bg-white p-0 text-[14px] font-bold text-[#8a96a8] shadow transition hover:bg-[#fff0ef] hover:text-[#b42318] group-hover:flex"
                   >
                     ×
                   </button>
+                  {dashboardDeleteConfirmId === a.id && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[15px] bg-white/95 p-4 backdrop-blur-sm">
+                      <p className="text-center text-[12px] font-semibold text-[#142b48]">Delete “{a.filename || 'this analysis'}”?</p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setDashboardDeleteConfirmId(null)}
+                          className="rounded-full border border-[#cdd8e4] bg-white px-4 py-1.5 text-[11px] font-bold text-[#5a6d80] hover:bg-[#f0f4f8]"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isDashboardDeleting}
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            setIsDashboardDeleting(true)
+                            try {
+                              const { deleteHistory } = await import('../api')
+                              await deleteHistory(a.id)
+                              setAnalyses((prev) => prev.filter((item) => item.id !== a.id))
+                              if (selectedId === a.id) {
+                                setSelectedId(null)
+                                setStats(null)
+                              }
+                              setDashboardDeleteConfirmId(null)
+                            } catch (err) {
+                              alert(err.message || 'Could not delete')
+                            } finally {
+                              setIsDashboardDeleting(false)
+                            }
+                          }}
+                          className="inline-flex items-center gap-1 rounded-full bg-[#c94a3d] px-4 py-1.5 text-[11px] font-bold text-white hover:bg-[#b42318] disabled:opacity-60"
+                        >
+                          {isDashboardDeleting && <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />}
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
