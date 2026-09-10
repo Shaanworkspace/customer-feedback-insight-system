@@ -122,12 +122,21 @@ def _dynamic_fallback_batch(texts):
 
         # Collect word counts across all reviews (standard stopwords only, no hard-coded product list)
         wordCounts = Counter()
+        firstWordCounts = Counter()
         reviewWords = []
         for text in texts:
             words = re.findall(r"[a-z]{3,}", text.lower())
             filtered = [w for w in words if w not in standardStopwords]
             reviewWords.append(filtered)
             wordCounts.update(filtered)
+            # Track first word for product name detection
+            firstWords = re.findall(r"[a-zA-Z]{3,}", text.strip())
+            if firstWords:
+                firstWordCounts[firstWords[0].lower()] += 1
+
+        # Find product-like words that appear as first word in many reviews (e.g., "Chair" in chair reviews)
+        # If a word is first in >30% of reviews, it's likely the product name, not the specific concern
+        productLikeWords = {word for word, count in firstWordCounts.items() if count > len(texts) * 0.3}
 
         # Dynamic threshold: small dataset (<=20) -> 2, larger -> 3 — adapts without hard-coding product
         # 12 reviews -> 2, 36 reviews -> 3, 55 reviews -> 3 — keeps interview demo clean (5-8 concerns)
@@ -139,6 +148,9 @@ def _dynamic_fallback_batch(texts):
         frequentCandidates = {word for word, count in wordCounts.items() if count >= dynamicMinCount}
         frequentAspects = set()
         for word in frequentCandidates:
+            # Skip product name like "chair" that appears at start of many reviews
+            if word in productLikeWords:
+                continue
             # Skip very short words
             if len(word) < 4:
                 continue
