@@ -28,6 +28,6 @@ testing_csvs
 notebooks
 *.pdf
 *.html
-# KEEP bert_aste_final in image (426M) — do not ignore
-!bert_aste_final
-!bert_aste_final/**
+# Model is external — never in build context (426M on EC2 host /opt/customer-sentiment-analysis/model)
+bert_aste_final/
+bert_aste_final/**

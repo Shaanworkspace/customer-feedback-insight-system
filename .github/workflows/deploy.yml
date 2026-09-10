@@ -41,18 +41,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check BERT model (gitignored, expected missing on runner)
+      - name: Check BERT model not in context (must be mounted on EC2)
         run: |
-          if [ -f "bert_aste_final/config.json" ]; then
-            echo "BERT model found: $(du -sh bert_aste_final | cut -f1)"
-            ls -lh bert_aste_final/
+          if [ -d "bert_aste_final" ]; then
+            echo "::warning::bert_aste_final exists locally but is gitignored and MUST NOT be in Docker context — .dockerignore should exclude it. Build will proceed without model (correct)."
+            ls -lh bert_aste_final/ 2>&1 | head -n 10 || true
           else
-            echo "::warning::bert_aste_final not in git (gitignored 426M) — building without trained model. Container will run with Neutral fallback until model is provided via S3/LFS. This keeps GitHub repo small."
-            mkdir -p bert_aste_final
-            echo '{"model_type":"bert","note":"placeholder — real model.safetensors 415M not in git, see DEPLOY_AWS.md"}' > bert_aste_final/config.json
-            echo '{}' > bert_aste_final/tokenizer.json || true
-            echo '{}' > bert_aste_final/tokenizer_config.json || true
+            echo "No local bert_aste_final — correct, model is external on EC2 host /opt/customer-sentiment-analysis/model and mounted at /app/bert_aste_final"
           fi
+          echo "Context check: .dockerignore correctly excludes bert_aste_final (see .dockerignore)"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -102,6 +99,10 @@ jobs:
             --comment "Deploy $GITHUB_SHA" \
             --parameters commands="[
               \"set -e\",
+              \"echo '[deploy] Checking EC2 model exists (must be at /opt/customer-sentiment-analysis/model)...'\",
+              \"ls -lh /opt/customer-sentiment-analysis/model/ || (echo 'ERROR: Model missing on EC2 at /opt/customer-sentiment-analysis/model — expected S3 s3://customer-sentiment-analysis-model-ap-south-1/bert_aste_final/ synced to host' && exit 1)\",
+              \"test -f /opt/customer-sentiment-analysis/model/config.json || (echo 'ERROR: config.json missing on EC2' && exit 1)\",
+              \"test -f /opt/customer-sentiment-analysis/model/model.safetensors || (echo 'ERROR: model.safetensors (~416MB) missing on EC2' && exit 1)\",
               \"echo '[deploy] ECR login...'\",
               \"aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com\",
               \"echo '[deploy] Pulling $IMAGE...'\",
@@ -109,16 +110,21 @@ jobs:
               \"echo '[deploy] Stopping old container...'\",
               \"docker stop $CONTAINER_NAME 2>/dev/null || true\",
               \"docker rm $CONTAINER_NAME 2>/dev/null || true\",
-              \"echo '[deploy] Starting new container on 8000...'\",
+              \"echo '[deploy] Starting new container on 8000 with model mount...'\",
               \"docker run -d --restart unless-stopped --name $CONTAINER_NAME -p 8000:8000 \
+                -v /opt/customer-sentiment-analysis/model:/app/bert_aste_final:ro \
                 -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
                 -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
                 -e HF_TOKEN='${{ secrets.HF_TOKEN }}' \
                 $IMAGE\",
               \"sleep 15\",
-              \"curl -fs http://localhost:8000/health || (docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
+              \"echo '[deploy] Verifying mount inside container...'\",
+              \"docker exec $CONTAINER_NAME test -f /app/bert_aste_final/config.json || (echo 'ERROR: mount failed — /app/bert_aste_final/config.json not in container' && docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
+              \"curl -fs http://localhost:8000/health || (echo '[deploy] health failed'; docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
+              \"echo '[deploy] BERT model check: should not be Neutral fallback'\",
+              \"curl -fs http://localhost:8000/api/v1/ping || true\",
               \"docker image prune -f || true\",
-              \"echo '[deploy] Done — http://65.0.124.255:8000/health'\"
+              \"echo '[deploy] Done — http://65.0.124.255:8000/health with real BERT'\"
             ]" \
             --query "Command.CommandId" --output text)
 

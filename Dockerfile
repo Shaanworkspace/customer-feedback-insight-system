@@ -1,6 +1,6 @@
-# Backend + BERT (426M) — CPU-only for t3.micro x86_64
-# Build: docker build -t customer-sentiment-analysis:latest .
-# Run:   docker run -p 8000:8000 --env-file .env customer-sentiment-analysis:latest
+# Backend — CPU-only for t3.small x86_64, model mounted from EC2 host (not in image)
+# Build: docker build -t customer-sentiment-analysis:latest .  (no model in context)
+# Run:   docker run -p 8000:8000 --env-file .env -v /opt/customer-sentiment-analysis/model:/app/bert_aste_final:ro customer-sentiment-analysis:latest
 
 FROM python:3.11-slim
 
@@ -27,9 +27,8 @@ RUN pip install --no-cache-dir --upgrade pip \
  && pip install --no-cache-dir -r /tmp/req_no_torch.txt \
  && rm /tmp/req_no_torch.txt
 
-# Copy app source and trained BERT model (426M)
+# Copy app source only — model is NOT in image (mounted from EC2 host /opt/customer-sentiment-analysis/model)
 COPY src ./src
-COPY bert_aste_final ./bert_aste_final
 
 # Non-secret example env (actual .env never copied)
 COPY .env.example .env.example
