@@ -20,9 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt ./
 
 # Install CPU-only PyTorch first (avoid CUDA bloat: 3GB+ nvidia/*)
-# Then install remaining requirements WITHOUT reinstalling torch
-RUN pip install --no-cache-dir --upgrade pip \
- && pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch \
+# Then install remaining requirements WITHOUT reinstalling torch (single torch install)
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch \
  && grep -v "^torch" requirements.txt > /tmp/req_no_torch.txt \
  && pip install --no-cache-dir -r /tmp/req_no_torch.txt \
  && rm /tmp/req_no_torch.txt
