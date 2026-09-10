@@ -346,103 +346,200 @@ tokenizer.save_pretrained("./bert_aste_final")
 
 ---
 
-## 8. What Do We Do vs What Does The Model Do? (How To Present That Model Is Not Doing Everything Alone)
+## 8. What Do We Do vs What Does The Model Do? (Sequential Steps, Aim Oriented — Must Say We Did 40%)
 
-**Never say "Model does everything." Show your 40% work.**
+**Never say "Model does everything." Our aim is not `one label per review` — our aim is `every aspect + feeling per aspect + overall Mixed + ranked what to fix first with proof`. Model only does token math; we do aim logic before and after. Say this sequence in interview.**
 
-### 8.1 You Did (40% — Glue Logic)
+### 8.1 What WE Did — Step By Step, In Order (40% — Aim Oriented Glue)
 
-- **Data Choice:** You chose **DMASTE over Amazon** (Amazon no labels), filtered `-1` (11,945 rows), did **review-level split** (leakage 0) — model did not choose data.
-- **Label Making:** You wrote `find_span(text, phrase)` (find `Battery` at `0-7`) and `label_one_token(start, end, asp_start, asp_end, ...)` to make 5 labels per token, padded to 128 — model did not make labels.
-- **Tokenization:** You called `tokenizer(text, return_offsets_mapping=True, truncation=True, max_length=128)` and kept `offset_mapping` to map token `Battery` → letters `0-7` — model did not tokenize.
-- **Head & Training Setup:** You added 5-label head (`num_labels=5`), set `TrainingArguments` (`lr=2e-5`, `eval_strategy="epoch"`), wrote `check_overfit()` (`gap >0.10 → overfit`), **fixed bug** `evaluation_strategy → eval_strategy` for `transformers 4.57.6` — model did not set args.
-- **Decode & Logic:** You wrote `decode_predictions()` (merge `wob` + `##bly` → `wobbly`), `build_triplets()` (first opinion for all — now known limitation), `get_overall()` (`Pos+Neg→Mixed`), `predict_review()` (fast path `if not is_trained(): return Neutral` — no hard-coded guess) — model did not write this.
-- **Deployment:** You made `Dockerfile` `python:3.11-slim` `PYTHONPATH=/app/src` (no `pip install -e .`), CPU (Central Processing Unit)-only `whl/cpu` to avoid 3GB CUDA, `deploy.yml` `linux/amd64` `cache gha`, mount `-v /opt/.../model:/app/bert_aste_final:ro`, `curl -f http://localhost:8000/health` — model did not deploy itself.
+**Step 1 — Aim Decide (Before Code):**
+We read Use Case #7 and broke aim into 4: `1 aspect word`, `2 feeling per aspect`, `3 overall Mixed`, `4 ranked + proof`. We decided `not hard-coded list ["battery"]` but `pattern X is wobbly → X is ASPECT` so any product works. Model did not decide aim.
 
-### 8.2 Model Did (60% — The Heavy Math)
+**Step 2 — Data Choose And Clean (We):**
+- Chose **DMASTE 7,524** over Amazon 21k because Amazon has **no aspect label** — would need 16k manual labels (1 week, error). Model did not choose.
+- Flattened `7,524 reviews → 28,233 rows` (1 review with 3 triples → 3 rows).
+- Dropped `aspect == -1` → 11,945 rows. `It is good.` has `opinion=good` but `aspect=-1` (no word) → cannot teach `ASPECT` span. If kept, model learns `good → ASPECT` wrong. Remain **16,288 explicit**.
+- Review-level split: `unique text 6,500 → train 4,055 / val 1,014 / test 1,268` via `split_by_review()` → `check_leakage() == 0`. Model did not split. Row-level would cheat: same `Battery is great` in train and test → fake `F1 0.99`.
+- `find_text_column()` to accept any `review_text` name (`Review Text`, `comment`, `feedback`) substring; `preprocessing.py` lower + strip + keep `rating/date/country` in `attributes` for dashboard.
 
-- **Pre-trained Knowledge:** BERT (Bidirectional Encoder Representations from Transformers) knew `battery` is noun, `wobbly` is adjective from Wikipedia.
-- **Fine-tuned Update:** Model did `logits = BERT(input_ids)` → `loss = CrossEntropy(logits, labels)` → `loss.backward()` → `AdamW` update (you called `trainer.train()`, model did math).
-- **Inference Math:** Model did `out.logits.argmax(-1)` per token to choose `ASPECT` vs `O`.
+**Step 3 — Labels Make (We):**
+Wrote `find_span(text, aspect)` → `Battery 0-7`, `label_one_token(start, end, asp_start, asp_end, opi_start, opi_end, sentiment)` → `O / ASPECT / OPINION_POS / OPINION_NEG / OPINION_NEU` per token, padded to 128. Without this, BERT has no answer to learn. Model did not make labels.
 
-### 8.3 Presentation Line (Say This)
+**Step 4 — Tokenize Setup (We):**
+Called `tokenizer(text, return_offsets_mapping=True, truncation=True, max_length=128)` and kept `offset_mapping` so token `Battery` knows letters `0-7`. `max_length 128` not 512 because review avg 15 words → 4× faster on `t3.small`. Model did not tokenize.
 
-> "BERT (Bidirectional Encoder Representations from Transformers) knows English, **we taught it where is aspect** on 16,288 rows, and **we wrote the glue** (tokenize, label, decode, rank, save, deploy) — model is 60% of pipeline, our logic is 40%. Without our glue, model is just numbers."
+**Step 5 — Head And Training Setup (We):**
+- Added 5-label head: `AutoModelForTokenClassification.from_pretrained("bert-base-uncased", num_labels=5)` → `Linear 768→5` random + `Dropout 0.1` + `CrossEntropyLoss`. Model did not add head.
+- Set `TrainingArguments` (`lr=2e-5` tiny so Wikipedia English not erased, `batch 16`, `epochs 2`, `eval_strategy="epoch"`). Fixed `evaluation_strategy → eval_strategy` bug for `transformers 4.57.6`. Wrote `check_overfit()` (gap `train_f1 - val_f1 >0.10 → overfit`).
+- Set `compute_metrics` (`accuracy`, `precision_recall_fscore_support`) weighted.
+
+**Step 6 — Decode And Aim Logic (We):**
+- `decode_predictions()` → merge `wob` + `##bly` → `wobbly`, group `ASPECT` spans.
+- `build_triplets()` → pair `aspect` with `opinion` (now limitation: takes first opinion for all — will fix to nearest).
+- `get_overall()` → `if pos>0 and neg>0: Mixed` (overall aim).
+- `rank_concerns()` → `impact = count × negative%` + `proof 5 quotes` (what to fix first aim).
+- `predict_review()` fast path `if not is_trained(): return []` → `Neutral` (no hard-coded guess `if battery in text`).
+
+**Step 7 — Save And Deploy (We):**
+`trainer.save_model("./bert_aste_final")` → `config.json`, `tokenizer.json`, `model.safetensors 415M` → `S3` private → EC2 `/opt/.../model` mount `-v ...:ro`. `Dockerfile` `python:3.11-slim` `PYTHONPATH=/app/src` CPU-only `whl/cpu` (no 3GB CUDA), `deploy.yml` `linux/amd64` `cache gha` + `curl -f http://localhost:8000/health` (not `65.0.124.255` hardcode). Model did not deploy.
+
+### 8.2 What MODEL Did — Step By Step, In Order (60% — Heavy Math)
+
+**Step 1 — Pre-trained Knowledge (Before We):**
+BERT already knew from Wikipedia `battery` is noun, `wobbly` is adjective, `is` is verb, `great` near `battery` means positive — via **bidirectional attention** (every token looks left+right). We did not teach this.
+
+**Step 2 — Fine-tune Math (During `trainer.train()` 15 min T4):**
+For each `batch 16` × `687 steps` × `2 epochs`:
+- `logits = BERT(input_ids)` shape `16×128×5` (5 scores per token)
+- `loss = CrossEntropyLoss(logits, labels)` → number `0.8` how wrong
+- `loss.backward()` → gradients for 110M numbers
+- `AdamW` updates 110M numbers by `lr 2e-5` tiny step (so English not forgotten)
+
+**Step 3 — Inference Math (During `predict_review()`):**
+`out = model(**enc)` → `out.logits.argmax(-1)` per token → chooses `ASPECT` vs `O` vs `OPINION_*` → e.g. `Battery→ASPECT (score 4.2)`, `great→OPINION_POS (3.8)`.
+
+**Without us, model is just numbers.** With us, numbers become `armrest→Negative, Mixed, battery #1`.
+
+### 8.3 Presentation Line (Say This 20 sec)
+
+> "We decided aim `aspect + per-aspect + Mixed + ranked`, chose DMASTE, cleaned 11,945 `-1`, made 5 labels per token, tokenized 128, added head, trained 2 epochs, then decoded to triplets and ranked. BERT knows English, we taught it `where is aspect` on 16,288 rows — model is 60% math, we are 40% aim glue. Without our glue, model cannot even know column name `Review Text`."
 
 ---
 
 ## 9. Where Is Our Project Lagging Now? How Will We Fix It? What Is The Approach?
 
-### 9.1 Lag 1: Neutral Too Much (21/36 = 58% on `final.csv`)
+> **Real answer you say: "We know 4 laggings, we have fix for each, timeline 3 months." Don't hide laggings — evaluator gives marks for honesty + plan.**
+
+### 9.1 Lag 1: Data Is Biased → Neutral Too Much (21/36 = 58% on `final.csv`)
+
+**Why lagging? Root is BIASED DATA, not just logic.**
+- **Bias numbers:** Train `16,288` = `POS (Positive) 12,944 (79%)` / `NEG (Negative) 2,736 (17%)` / `NEU (Neutral) 608 (4%)`. Model sees `POS (Positive)` 20× more than `NEU (Neutral)` → learns `guess POS (Positive)` is safe (79% correct by guessing). `NEU (Neutral)` rarely seen → `OPINION_NEU` confused with `O` → not predicted → falls to `Neutral` overall.
+- **Second bias:** `O` is 90% tokens (`is`, `the`, `was`) → accuracy `0.96` even if `ASPECT` `0.0` → hides lag.
+- **What happens:** `Fabric is excellent` → model finds `excellent → OPINION_POS` but misses `Fabric → ASPECT` (because `Fabric` less frequent than `battery`) → `aspects=[]` → `build_triplets([]) → []` → `get_overall([]) → Neutral` — even though feeling is Positive. On `final.csv` this happens 21/36 → 58% Neutral, user says "why everything Neutral?".
+
+**Why data cleaning needed to improve score:**
+- We dropped `-1` (11,945) — correct, but we **did not clean duplicates, typos, and imbalance**. `battery` appears 2,000 times, `armrest` 30 times → model biased to `battery`.
+- No `lowercase + strip` for `aspect`/`opinion` strings before `find_span` — `Battery` vs `battery` two entries.
+- No **augmentation** for `NEU (Neutral)`/`NEG (Negative)` minority.
+
+**Fix Approach (Three Levels, Sequential):**
+
+- **Data Level (Next 2 weeks, +1,400 rows):**
+  1. `NEU (Neutral) 608 → 2,000`: Duplicate `NEU (Neutral)` 2× + take `rating 3` Amazon reviews, paraphrase to `okay`, `average`, `fine`, `so-so`, `decent` via template.
+  2. `NEG (Negative) 2,736 → 4,000`: Duplicate + paraphrase `wobbly`, `drains fast` variations.
+  3. **Clean:** `lower`, `strip`, `deduplicate text`, `remove short <5 chars`, balance `POS (Positive)` downsample `12,944 → 8,000` so `POS (Positive) 53%` not 79%.
+  After: `~14k balanced` → expected `NEU (Neutral) F1 (F1 Score) 0.57 → 0.70`, `Neutral % 58% → 25%`.
+
+- **Model Level (Next 1 week, epochs):**
+  Train **3-4 epochs** (now 2) `lr 1e-5` for `NEU (Neutral)` better learning. We tested 2 → `F1 (F1 Score) 0.68`; expect 3 → `0.72` but gap may go `0.05 → 0.10` → add `early_stop` + `weight_decay 0.01`.
+
+- **Logic Level (Next 3 days, no training):**
+  If `aspects=[]` but `opinions` has `excellent`, make `generic` aspect `general` → `general Positive` not `Neutral`. Currently `[] → Neutral` fallback loses signal; new fallback gives `Positive`. Also add `threshold 0.6` for `ASPECT` (if `ASPECT` score <0.6, don't drop to `O` fast).
+
+### 9.2 Lag 2: `build_triplets` Uses First Opinion For All — Wrong Pairing (Logic Lag)
 
 **Why lagging?**
-`decode_predictions` **misses `ASPECT`** for some words. Example: `Fabric is excellent` → `Fabric` not labeled `ASPECT` → `aspects=[]` → `build_triplets([])` → `[]` → `get_overall([])` → `Neutral` — even though `excellent` is `OPINION_POS` found, but no aspect to attach.
+Code `for asp in aspects: sent = opinions[0]` — **always first opinion**.
+Example: `"Battery is great but delivery was terrible"` → `aspects [battery, delivery]`, `opinions [("great", POS (Positive)), ("terrible", NEG (Negative))]`. Current: both `battery` and `delivery` get `great POS (Positive)` → `battery Positive (correct)`, `delivery Positive (wrong, should be Negative)`.
 
-**Fix Approach (Three Levels):**
-- **Data Level:** Add more `NEU (Neutral)`/`NEG (Negative)` samples. Currently `NEU (Neutral) 608` only 4% — duplicate `NEU (Neutral)` rows 2×, or add `rating 3` Amazon reviews paraphrased as `okay`, `average`, `fine`.
-- **Model Level:** Train **3-4 epochs** (now 2), lower `learning_rate` to `1e-5` for `NEU (Neutral)` to learn better, or try `DistilBERT` 3 epochs (we already tested, `F1 (F1 Score) 0.66`).
-- **Logic Level:** If `aspects=[]` but `opinions` has `excellent`, create `generic` aspect `general` or fallback to `SentimentClassifier` (not hard-coded list). Currently we return `[]` → `Neutral`; fallback would give `Positive` instead.
+**Why this is our glue lag, not model lag?**
+Model **did predict** both opinions correctly, but **we paired wrong** in `ranking/priority.py:28`. So even if model `F1 (F1 Score)` improves, pairing stays wrong → evaluator will catch `why both Positive?`.
 
-### 9.2 Lag 2: `build_triplets` Uses First Opinion For All Aspects
+**Fix Approach (Nearest Opinion):**
+For each `aspect` span `0-7` (from `offset_mapping`), find `opinion` span closest: `argmin abs(asp_start - opi_start)`. So `battery 0-7` closest `great 11-16` → Positive, `delivery 21-29` closest `terrible 34-42` → Negative. If transformer attention available, use `attention weight` max. Implement in `src/cfa/ml/bert_aste.py:decode_predictions()` + test on `office_chair 52` (`armrest wobbly` near).
 
-**Why lagging?**
-Code: `for asp in aspects: sent = opinions[0]` — first opinion. Example: `battery Positive, delivery Negative` with `opinions = [("great", POS (Positive)), ("terrible", NEG (Negative))]` → both `battery` and `delivery` get `POS (Positive)` (first) → wrong.
+### 9.3 Lag 3: `OPINION_NEU F1 (F1 Score) 0.57` Lowest — Data + Model Lag
 
-**Fix Approach:** Change to **nearest opinion** by distance in `offset_mapping`: For each `aspect` span `0-7`, find `opinion` span closest (minimum `abs(asp_start - opi_start)`). Or use **attention weight** to pair.
+**Why lagging? Directly tied to Lag 1 bias.**
+- Only `608 NEU (Neutral)` (4%) → model sees `NEU (Neutral)` once per 26 `POS (Positive)` → `OPINION_NEU` weight stays random low → confused with `O` (`okay` often `O` not `OPINION_NEU`).
+- `Loss` is average over tokens → `NEU (Neutral)` contributes 4% to loss → optimizer ignores it.
 
-### 9.3 Lag 3: `OPINION_NEU F1 (F1 Score) 0.57` Lowest
+**Fix Approach:**
+Same as 9.1 data augment + **class weight** in `CrossEntropyLoss weight=[O 0.5, ASPECT 2.0, OPINION_NEU 3.0]` so `NEU (Neutral)` loss 3× bigger → model focuses. Need loop change: `Trainer` override `compute_loss` with `weights`.
 
-**Why lagging?** Only 608 `NEU (Neutral)` rows (4%) → model sees `NEU (Neutral)` rarely → `OPINION_NEU` confused with `O`.
+### 9.4 Lag 4: `t3.micro` Out Of Memory (OOM (Out of Memory)), `t3.small` Slow — Infra Lag
 
-**Fix Approach:** Augment `NEU (Neutral)`: Take `POS (Positive)`/`NEG (Negative)` sentences and paraphrase to `NEU (Neutral)` via `okay`, `average`, `fine`, `so-so`.
+**Why `t3.micro` fails? Detail numbers (Previous vs Now):**
+- **Previous idea (asked in docs): `t3.micro` 1 vCPU (Virtual Central Processing Unit), 1GB RAM (Random Access Memory), free tier cheap — we tried locally: `model.safetensors 415M` + `torch CPU (Central Processing Unit) 800M` + `Python + FastAPI 100M` = **1.3G**. Habit writes to RAM. `t3.micro` has **1GB** → **OOM (Out of Memory) Kill** → Docker `exit 137` → restart loop → `health` never `ok`. Logs `Killed`.
+- **Now fix we did: `t3.small` 2GB** (`cfa 1.3G` fits + 0.7G free). In `Dockerfile` we also changed `torch` install to `whl/cpu` + `grep -v torch` to avoid **3GB CUDA** (`nvidia_cudnn 553M` etc.) — without this even `t3.small` would OOM. `deploy.yml:18` now `t3.small` + `HEALTHCHECK` + `restart unless-stopped`.
 
-### 9.4 Lag 4: `t3.micro` Out Of Memory, `t3.small` Slow
+**Why still lagging? `t3.small` slow for 55 reviews.**
+- **Inference:** `~150ms per review` (`tokenize 10ms + BERT 120ms + decode 20ms`) → `55 reviews → 8 seconds` (user waits after upload). For `108 headset` → 16 sec.
+- **Cold start:** First `POST /upload` after sleep → 15 sec wake (EC2 from idle).
 
-**Why lagging?** `model.safetensors` 415M + `torch` CPU (Central Processing Unit) 800M = 1.2G RAM (Random Access Memory) → `t3.micro` 1GB **OOM (Out of Memory)** (container killed, restart loop). `t3.small` 2GB works but inference ~150ms per review, 55 reviews → 8 sec.
+**Fix Approach (Next 1 month, two paths):**
+- **Path A (keep `t3.small`, optimize):** Add `batch 16` inference (not one-by-one), quantize `int8` (`model.safetensors` 415M → 200M) → `80ms` per review → 55 in 4 sec. Add `HTTP ALB (Application Load Balancer) + ACM (AWS Certificate Manager) HTTPS` (now `http`).
+- **Path B (cheaper `t3.micro` if budget):** Switch to `distilbert-base-uncased` 66M → `250M` file + `torch 500M` + `python 100M` = **0.85G fits 1GB** — we already tested `distilbert` backup `F1 (F1 Score) 0.66` (2 points lower than `bert-base 0.68` but 2× faster). Change `Dockerfile:24` `from_pretrained("distilbert-base-uncased")`.
 
-**Fix Approach:** Keep `t3.small` 2GB (current `deploy.yml:18` `t3.small`), add `HEALTHCHECK` + `restart unless-stopped` (already), or use `distilbert` 250M (1GB total) for `t3.micro` if budget low.
+**One line for PPT Slide 7:** `t3.micro 1GB OOM 1.3G → t3.small 2GB fits (CPU whl/cpu, no CUDA) → 55 reviews 8 sec → next distilbert/batch/HTTPS`.
 
 ---
 
-## 10. Which Accuracy / Precision Techniques Are We Using? What Should We Optimize And Why? Why Not Optimize Others?
+## 10. Which Accuracy / Precision Technique Are We Using? What Should We Optimize And Why? Why Not Others?
 
-### 10.1 The Metrics Table (Read Row By Row)
+> **Interview Q: "Which precision/accuracy technique are you using? What should you optimize and why?" This is the answer — say `weighted F1` not `accuracy`, explain FP vs FN trade-off, and say what next we will do to increase it.**
 
-**Accuracy:** `(TP (True Positive)+TN (True Negative)) / All` — Fraction correct. **We log it but NOT main.** Why not optimize? **POS (Positive) 79%** → guess `POS (Positive)` always = 79% accuracy but useless (learns nothing). Example: 16,288 rows, 12,944 POS (Positive) → always predict POS (Positive) → 79% accuracy, but `ASPECT` F1 (F1 Score) 0.0.
+### 10.1 What Techniques We USE (We Log 4, But Optimize 1 Main)
 
-**Precision:** `TP (True Positive) / (TP (True Positive)+FP (False Positive))` — When we say `battery Negative`, how often right? **We use per-label `precision` in `classification_report` (`cell 45`).** Optimize for `ASPECT` and `OPINION_NEG` because **False Positive** (`battery` where no aspect) → wrong ranking `battery` top 6 false.
+**We log 4 numbers every epoch (`cell 45` + `cell 48`), but we DECIDE based on 1 main:**
 
-**Example:** Model says `battery` 10 times, 7 truly battery, 3 false → Precision `7/10 = 0.70`. Optimize to 0.80 → ranking true.
+**1. Accuracy — `(TP (True Positive)+TN (True Negative)) / All` — Fraction correct**
+- **Example:** 16,288 rows, model says `POS (Positive)` always → `12,944/16,288 = 0.79` accuracy → looks good, but **ASPECT F1 (F1 Score) = 0.0** (no aspect found). Another: Token level `O` is 90% tokens → guess `O` always → accuracy `0.96` even if `ASPECT` never predicted.
+- **We log it, but DO NOT OPTIMIZE accuracy.** Why not? Because our data is **HIGHLY BIASED** `POS (Positive) 79%`, `O 90%` → accuracy lies. Interviewer will catch `79% accuracy = always POS (Positive)` trick. So we say `accuracy 0.96` is **not our decision metric**.
 
-**Recall:** `TP (True Positive) / (TP (True Positive)+FN (False Negative))` — Of all true `battery`, how many caught? **We use per-label `recall`.** Optimize for `ASPECT` because **False Negative** (miss `armrest`) → `Neutral` → lose.
+**2. Precision — `TP (True Positive) / (TP (True Positive)+FP (False Positive))` — When we say X, how often right?**
+- **Why need?** **False Positive (FP (False Positive)) — We say `battery` but no battery.** If FP high, ranking lies.
+- **Example:** Model says `battery` 10 times, truth is `battery` 7 times, 3 times `group` mislabeled as `battery` → `Precision = 7/10 = 0.70`. Optimize to `0.80` → ranking `battery 6` is true 5, not false 3.
+- **We DO watch Precision for `ASPECT` and `OPINION_NEG`**, because **FP wastes manager time** (fix `battery` when real problem is `delivery`).
 
-**Example:** True `armrest` 10 times, model catches 6 → Recall `6/10 = 0.60`. Optimize to 0.75 → fewer `Neutral`.
+**3. Recall — `TP (True Positive) / (TP (True Positive)+FN (False Negative))` — Of all true X, how many caught?**
+- **Why need?** **False Negative (FN (False Negative)) — True `armrest` but we miss → Neutral.**
+- **Example:** True `armrest` 10 times, model catches 6 → `Recall = 6/10 = 0.60`. Miss 4 → `4 Neutral` → loses 40% concerns. Optimize to `0.75` → fewer `Neutral` (58% → 25%).
+- **We DO watch Recall for `ASPECT`**, because **FN hides problems** (customer said `armrest wobbly` but we say `No aspect`).
 
-**F1 (F1 Score):** `2*P*R/(P+R)` — Balance of Precision and Recall. **Main metric: `eval_f1` weighted (`cell 45` 0.875).** Optimize this primary because imbalanced `POS (Positive) 79%` → `weighted` gives `POS (Positive)` 79% weight, `NEG (Negative)` 17%, `NEU (Neutral)` 4% — fair.
+**4. F1 — `2*Precision*Recall / (Precision+Recall)` — Balance of both (Harmonic Mean)**
+- **Why main?** `Precision 0.70 + Recall 0.60 → F1 0.64`. If you optimize only Precision to `0.90` but Recall drops to `0.30` → F1 `0.45` warns you. **F1 says `don't sacrifice one for other`.**
+- **We OPTIMIZE `F1`**, not `Precision` alone or `Recall` alone. Which `F1`? See 10.2.
 
-**ASPECT F1 (F1 Score):** F1 (F1 Score) for `ASPECT` label only. **Most important** `~0.68` → aim `>0.75`. Why optimize? Finding word `armrest` is your aim. If `ASPECT F1 (F1 Score)` low, no aspect → `Neutral` → no ranking.
+**Extra we watch:**
+- **Per-Label F1:** `ASPECT 0.76`, `OPINION_POS 0.81`, `OPINION_NEG 0.72`, `OPINION_NEU 0.57` — most important is `ASPECT`.
+- **Confusion Matrix:** `True (rows) vs Predicted (cols)` for 5 labels. Most confusion: `ASPECT → O` (miss), `OPINION_NEU → O` (neutral missed). Check `cell 45` matrix.
+- **Overfit Gap:** `train_f1 - val_f1` via `check_overfit() cell 48`. **Keep gap <0.05.** Gap `>0.10 → overfit` (memorize training `battery` but fail on new `strap`). Our gap `0.05` good.
 
-**OPINION F1 (F1 Score):** `POS (Positive) 0.81, NEG (Negative) 0.72, NEU (Neutral) 0.57`. Track. Optimize `NEG (Negative)` (complaints matter most for `what to fix first`).
+### 10.2 What SHOULD We Optimize For Score? Why Not Others? + What Is Next To Increase?
 
-**False Positive (FP (False Positive)):** Say `battery` but no battery. **Minimize FP (False Positive) for `ASPECT`** via precision — else `battery` top 6 may be false.
+**We OPTIMIZE: `Weighted F1 (F1 Score) ~0.875` AND `ASPECT F1 (F1 Score) ~0.76` — Say this in interview. Why?**
 
-**False Negative (FN (False Negative)):** Miss `armrest`. **Minimize FN (False Negative) for `ASPECT`** via recall — else many `Neutral`.
+**Why `Weighted F1` as main (not `accuracy`, not `macro F1`)?**
+- **Weighted** gives each label weight by its count: `O` 90% weight? No — we exclude `O` and weight only 4 labels: `POS (Positive) 79%` weight `0.79`, `NEG (Negative) 17%` `0.17`, `NEU (Neutral) 4%` `0.04`, `ASPECT ~10%`? Let's be precise: `weighted F1 0.875` = `POS (Positive) 0.81*0.79 + NEG (Negative) 0.72*0.17 + NEU (Neutral) 0.57*0.04 + ASPECT 0.76*?` → fair for imbalanced data. **If we used `accuracy`, POS (Positive) bias hides failure. If we used `macro F1` (average equal weight), NEU (Neutral) 4% gets equal 25% weight → over-weights rare NEU (Neutral) and misleads.**
+- **So we tell evaluator: "We chose `weighted F1` because data is 79% POS (Positive) biased — accuracy would be 79% by guessing POS (Positive), weighted tells true."**
 
-**Confusion Matrix:** Table `True (rows) vs Predicted (cols)` for 5 labels. Use to see if `ASPECT` confused with `O` (most common: `ASPECT` → `O` when model misses). Check `cell 45` matrix.
+**Why `ASPECT F1` as primary to increase?**
+- **Aim = `what to fix first` needs `ASPECT` word.** If `ASPECT F1 0.0`, no aspect → all `Neutral` → no ranking → use case fails even if overall `accuracy 0.96`. **Finding `armrest` is your product.** So we say `ASPECT F1 0.76 → aim >0.80` is our **first optimize**.
 
-**Overfit Gap:** `train_f1 - val_f1` via `check_overfit()` `cell 48`. **Optimize gap <0.05.** Why? Gap `>0.10 → overfit` (memorize training, fail on new product `strap`). Gap low → generalize.
+**Why `OPINION_NEG Precision` as second to increase?**
+- **For ranking `what to fix first`, False Positive `NEG (Negative)` is costly.** If we say `battery Negative` 10 times but 3 false (FP) → manager fixes battery but real `Negative` is `delivery` → waste. So we want `OPINION_NEG Precision 0.72 → 0.80`.
+- **For `Neutral` lag, False Negative is costly.** Miss `armrest` (FN) → `Neutral` hides complaint → customer leaves. So we want `ASPECT Recall 0.60 → 0.75`.
 
-### 10.2 What To Optimize For Score? Why Not Others?
+**Trade-off: FP vs FN — Which is more important? Why we balance via F1 (F1 Score).**
+- **FP (False Positive) — Type I:** Say problem when no problem → `battery` top 6 false → manager fixes wrong → **waste money/time**, trust down.
+- **FN (False Negative) — Type II:** Miss problem when true problem → `armrest wobbly` → `Neutral` → no fix → **customer churn**, 1-star stays.
+- **For our use case `what to fix first`, FN is more dangerous than FP** (hidden complaint worse than false alarm) → we slightly prefer **Recall** over **Precision** → but we **decide by F1** so neither 0.90/0.30. We say `F1` because it **penalizes** if you push one to 0.90 and drop other.
 
-**Optimize: `ASPECT F1 (F1 Score)` + `weighted F1 (F1 Score)`**
+**Why NOT optimize `accuracy` alone?**
+- As above, `O 90%` → `0.96` even if `ASPECT 0.0`. It would fool us that model is good.
 
-- Evaluator asks `What precision did you use?` You say `weighted F1 (F1 Score) ~0.87 (ASPECT 0.76)`, not just `accuracy 0.96` for `O` (which is 90% `O` tokens → 0.96 even if `ASPECT` 0.0).
+**Why NOT optimize `NEU (Neutral) F1 (F1 Score) 0.57` alone?**
+- Little data `608` → if you push `NEU (Neutral)` 0.57 → 0.70 by 3× weight, `POS (Positive)` drops `0.81 → 0.75` → **weighted drops** 0.875 → 0.84. You gain 0.13 on 4% data but lose 0.06 on 79% data → **net down**. Better to **augment data** first (see 9.1) then optimize.
 
-**Why not optimize `accuracy` alone?**
-Because `O` is 90% of tokens → accuracy 0.96 even if `ASPECT` F1 (F1 Score) 0.0. It hides failure.
+**What Is Next We Decided To Increase Score (Concrete Plan, Say Timeline)?**
 
-**Why not optimize `NEU (Neutral)` alone?**
-Little data (608) → optimizing it overfits `POS (Positive)` (79%). You would push `NEU (Neutral)` F1 (F1 Score) 0.57 → 0.60 but `POS (Positive)` drops 0.81 → 0.75 → weighted drops.
+- **Next 2 weeks (Data):** Balance data `NEU (Neutral) 608→2,000`, `POS (Positive) 12,944→8,000` → weighted `0.875 → 0.90`, `ASPECT 0.76 → 0.80` expected.
+- **Next 1 week (Model):** `epochs 2 → 3` + `class weight [OPINION_NEU 3.0]` + `lr 1e-5` → `OPINION_NEU 0.57 → 0.70`.
+- **Next 3 days (Logic):** Fix `build_triplets` nearest opinion → `delivery Negative` correct → effective `NEG (Negative) Precision 0.72 → 0.80` without training.
+- **Threshold Tune:** Lower `ASPECT` threshold `0.5 → 0.4` for rare words → `Recall 0.60 → 0.75`, check `Precision 0.70 → 0.65` → F1 net `0.64 → 0.69` gain.
+
+**One line for PPT Slide 6:** `We log Accuracy but optimize weighted F1 0.875 (ASPECT 0.76) because POS (Positive) 79% biases accuracy; we balance FP (false battery) vs FN (miss armrest) via F1 — next augment NEU (Neutral) 608→2k + nearest opinion → 0.90 aim.`
 
 ---
 
