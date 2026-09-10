@@ -36,7 +36,10 @@ jobs:
       - name: Install CPU-only PyTorch (avoid 550MB CUDA)
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
       - name: Install backend (without model, reuse CPU torch)
-        run: pip install -e ".[dev]"
+        run: |
+          pip install --no-deps -e ".[dev]"
+          grep -v -i "^torch" requirements.txt > /tmp/req_no_torch.txt
+          pip install -r /tmp/req_no_torch.txt
       - name: Run tests (model-dependent tests will skip if no model)
         run: pytest -q --ignore=tests/test_mams_absa.py --ignore=tests/test_mams_serve.py 2>&1 | head -n 100 || pytest -q 2>&1 | tail -n 50
 
