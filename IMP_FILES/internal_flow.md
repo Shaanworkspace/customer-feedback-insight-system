@@ -139,7 +139,7 @@ Example: battery count 11, negative 36% → 11×36 = 396 (the max) → impact **
 For each review, `predict_sentiment(text)` returns `{label, confidence}`.
 
 We use a **hybrid** (two methods working together):
-- **Trained model** (TF-IDF + Logistic Regression) for long, confident reviews.
+- **Trained model** (BERT 5 labels) for all reviews — finds `armrest`, `fabric` by pattern, no list.
 - **Keyword fallback** (count good vs bad words) for very short or unsure reviews.
 
 The trained model files are **committed to the repo**, so both your laptop and the cloud use the smart model. (Full detail in `ml.md`.)

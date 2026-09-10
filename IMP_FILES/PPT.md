@@ -84,8 +84,8 @@ Mention: CI/CD via GitHub Actions; modular layers; no black box.
 ## Slide 4 — ML Model (the core)
 
 **What to show**
-- Model: **TF-IDF + Logistic Regression** (scikit-learn).
-- Vectorizer: `TfidfVectorizer(max_features=30000, stop_words="english", ngram_range=(1,2), sublinear_tf=True, min_df=2)`.
+- Model: **BERT token classification** (`bert-base-uncased`, 5 labels: O/ASPECT/OPINION_*) — no hard-coded list.
+- Tokenizer: `AutoTokenizer.from_pretrained("bert-base-uncased")` + `offset_mapping` → 5 labels.
 - Classifier: `LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced")`.
 - **Hybrid**: trained model for long/confident reviews; keyword fallback for short/unsure ones.
 - Flow diagram: text → TF-IDF numbers → Logistic Regression → probability → label + confidence.
@@ -197,7 +197,7 @@ Tested on **15,900 unseen reviews**.
 > Answers are short and judge-ready. Use them for any slide.
 
 **Q1. Competitor kaun hai?**
-A: The other 13 KIET use cases (Root Cause Analysis, Product Comparison, Recommenders, Churn, Fraud, Teaser, Metadata, Advertising, Career, Complaint Intelligence, Network Fault, etc.). Among approaches, our "competitors" were: rule-based only (too weak) and heavy LLM/BERT (overkill). We chose TF-IDF + Logistic Regression hybrid for the best balance of accuracy, speed, explainability, and easy deployment.
+A: The other 13 KIET use cases (Root Cause Analysis, Product Comparison, Recommenders, Churn, Fraud, Teaser, Metadata, Advertising, Career, Complaint Intelligence, Network Fault, etc.). Among approaches, our "competitors" were: rule-based only (too weak) and heavy LLM/BERT (overkill). We chose BERT (perfect, no hard-code) over TF-IDF hybrid (old, one label per review) of accuracy, speed, explainability, and easy deployment.
 
 **Q2. Tumne yeh use case kyon choose kiya?**
 A: Use Case #7 (Sentiment Analysis of Customer Reviews) has the clearest business value, is fully demonstrable end-to-end, and lets us show the whole ML pipeline (data → train → predict → insight). Data is readily available (Amazon reviews).

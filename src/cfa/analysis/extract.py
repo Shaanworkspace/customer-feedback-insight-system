@@ -106,95 +106,12 @@ def _llm_batch(texts):
 
 
 def _dynamic_fallback_batch(texts):
-    """Discover aspects per CSV without any hard-coded product list.
+    """Fallback when BERT not yet trained and no LLM.
 
-    Research: Use standard English stopwords + dynamic frequency + simple noun-like filter.
-    Works for any dataset (chair, phone, watch) without changing code.
+    We keep it empty — no TF-IDF, no word list. This keeps your main BERT model pure.
+    Once you run trainer.train() in the notebook, this fallback will never be used.
     """
-    try:
-        from cfa.ml.serve import predict_sentiment
-        from collections import Counter
-        from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-        import re
-
-        # Standard stopwords — not hard-coded by us, from sklearn (research-backed)
-        standardStopwords = set(ENGLISH_STOP_WORDS)
-
-        # Collect word counts across all reviews (standard stopwords only, no hard-coded product list)
-        wordCounts = Counter()
-        firstWordCounts = Counter()
-        reviewWords = []
-        for text in texts:
-            words = re.findall(r"[a-z]{3,}", text.lower())
-            filtered = [w for w in words if w not in standardStopwords]
-            reviewWords.append(filtered)
-            wordCounts.update(filtered)
-            # Track first word for product name detection
-            firstWords = re.findall(r"[a-zA-Z]{3,}", text.strip())
-            if firstWords:
-                firstWordCounts[firstWords[0].lower()] += 1
-
-        # Find product-like words that appear as first word in many reviews (e.g., "Chair" in chair reviews)
-        # If a word is first in >30% of reviews, it's likely the product name, not the specific concern
-        productLikeWords = {word for word, count in firstWordCounts.items() if count > len(texts) * 0.30}
-        # Also filter generic product terms that are too broad (e.g., chair as whole product vs fabric as specific)
-        genericProductWords = {"chair", "phone", "watch", "speaker", "bluetooth", "office", "smartwatch", "product", "item", "device", "gadget"}
-        productLikeWords.update({w for w in genericProductWords if w in wordCounts})
-
-        # Dynamic threshold: small dataset (<=20) -> 2, larger -> 3 — adapts without hard-coding product
-        # 12 reviews -> 2, 36 reviews -> 3, 55 reviews -> 3 — keeps interview demo clean (5-8 concerns)
-        dynamicMinCount = 3 if len(texts) > 20 else 2
-
-        # Filter to keep only noun-like aspects (not pure opinion words)
-        # Use the trained sentiment model on the word itself: opinion words like "poor" are strongly negative alone,
-        # while aspect words like "battery" are neutral alone. This is data-driven, not hard-coded.
-        frequentCandidates = {word for word, count in wordCounts.items() if count >= dynamicMinCount}
-        frequentAspects = set()
-        for word in frequentCandidates:
-            # Skip product name like "chair" that appears at start of many reviews
-            if word in productLikeWords:
-                continue
-            # Skip very short words
-            if len(word) < 4:
-                continue
-            # Skip adverbs ending with ly (quickly, poorly) — not aspects
-            if word.endswith("ly"):
-                continue
-            try:
-                wordFeeling = predict_sentiment(word)
-                # If the word alone is strongly opinionated, it's likely an opinion word, not an aspect
-                if wordFeeling["label"] in ("positive", "negative") and wordFeeling["confidence"] >= 0.65:
-                    continue
-            except Exception:
-                pass
-            frequentAspects.add(word)
-
-        batchResults = []
-        for text, words in zip(texts, reviewWords):
-            foundAspects = []
-            seenInReview = set()
-            for word in words:
-                if word not in frequentAspects or word in seenInReview:
-                    continue
-                # Must appear as a whole word in this review
-                if not re.search(r"\b" + re.escape(word) + r"\b", text.lower()):
-                    continue
-                seenInReview.add(word)
-                clauseText = _clause_for(text, word)
-                try:
-                    sentimentLabel = predict_sentiment(clauseText)["label"]
-                except Exception:
-                    sentimentLabel = "neutral"
-                foundAspects.append({
-                    "name": word,
-                    "sentiment": sentimentLabel,
-                    "matched_terms": [word],
-                    "confidence": 0.65,
-                })
-            batchResults.append(foundAspects)
-        return batchResults
-    except Exception:
-        return [[] for _ in texts]
+    return [[] for _ in texts]
 
 
 def extract_aspects(texts):

@@ -106,7 +106,7 @@ Training happens separately:
 |-------|------------|-----|
 | Frontend | React + Vite + Tailwind v4 + Recharts | Fast, modern, easy charts |
 | Backend | FastAPI (Python) | Auto docs, fast, simple |
-| ML | **BERT token classification** (`bert-base-uncased`, 5 labels) + `transformers`, `torch`, `datasets` | No fixed list, finds any aspect; runs on T4 GPU, 15-20 min |
+| ML | **BERT token classification** (main, no hard-code) | Legacy TF-IDF 1.35 MB kept only for reference, not used in main flow | (`bert-base-uncased`, 5 labels) + `transformers`, `torch`, `datasets` | No fixed list, finds any aspect; runs on T4 GPU, 15-20 min |
 | Fallback | Hugging Face Inference (`HF_TOKEN` optional) | If BERT not yet trained, LLM can help; otherwise empty (no hard-coded guess) |
 | DB | MySQL (Aiven) or SQLite fallback (`data/app.db`) | Last 3 analyses per user |
 | Deploy | Vercel (frontend) + Render (backend) | Free, one-click |
