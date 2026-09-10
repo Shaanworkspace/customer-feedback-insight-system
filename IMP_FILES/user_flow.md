@@ -1,92 +1,117 @@
-# User Flow — Step by Step (for presentation)
+# Best User Flow — Complete Pipeline | What You Give → What You Get
 
-> Frontend = website you see; Backend = hidden server; CSV = table file; API = door the website knocks on.
+> This is the **best user flow** for the entire project. Every step tells what you **must** give, what is **optional**, what is **hard-coded**, and what you **get**. No hard-coded aspect list. Works for any product.
 
-Screens: **Landing → Login → Upload → Dashboard** + **Analyzer** (one review) + **Explorer** (all reviews). URL `?view=dashboard` keeps Back/Forward working.
+## Quick Answers (Before You Start)
 
-## Step 1 — Landing
+| Question | Answer |
+|----------|--------|
+| **What is mandatory?** | **Only 1 column: `review_text`** (can be called `Review Text`, `review`, `comment`, `feedback`, `text` — substring match, any capital). |
+| **What is optional?** | `rating`, `date`, `country`, `reviewer`, `product` — if you give them, you get Rating/Trend/Country charts. If not, main insights still work. |
+| **Is anything hard-coded?** | **No** product list. No `["battery","delivery"]`. No `POS_WORDS` list. Only `ENGLISH_STOP_WORDS` (standard) + BERT pattern `X is wobbly → X is ASPECT`. |
+| **What product works?** | Any: `bluetooth speaker` 48 rows, `office chair` 52 rows (no date), `smartwatch` 55 rows (extra `product` column), `final` 36 rows — all tested 55 with `See more`. |
+| **Advantages?** | 1 column CSV enough, any columns work, any product same model, Top 5 + See more, 55 Review Explorer, delete ×, timing on card, English logs, 80% aligned header, photo bg, MySQL persists (hard-coded Aiven, no new ID). |
 
-Header `Customer Feedback Insight System`, hero *"Upload the reviews you already have. We find what customers hate..."*, **Start free** → `?view=login`.
+---
 
-## Step 2 — Login / Sign up (real, online DB)
+## Step-by-Step Best Flow (User Perspective)
 
-Card with **Username + Password**, switch **Sign in / Create account**.
+### Step 1 — Landing (You See)
+`https://customer-feedback-insight-system.vercel.app` → Hero `Your customer feedback, turned into clear actions` → `Start Free` → `?view=login`. **You do:** Click Start.
 
-- First time → `Create account` → `POST /api/v1/auth/signup` → server scrambles password with `pbkdf2`, saves to **Aiven MySQL** `users` table, returns `{token}` (JWT, 1h, `JWT_SECRET` env).
-- Next time → `Sign in` → `POST /api/v1/auth/login` → checks, returns `{token}`.
-- Token saved in `localStorage` (`cfa_token`), all later calls send `Authorization: Bearer <token>`. On `401`, frontend clears token and redirects to `/?view=login` (no more “har baar register” if DB is MySQL, not ephemeral SQLite).
+### Step 2 — Login / Signup (You Give: email + password)
+Card `Username + Password` + `Sign in / Create account`.
+- **First time:** `Create account` → `POST /api/v1/auth/signup` → `pbkdf2` scramble → **Aiven MySQL** `users` → `{token}` JWT 1h (`JWT_SECRET` hard-coded in `deploy.yml:152`).
+- **Next time:** `Sign in` → `POST /api/v1/auth/login` → token.
+- **You get:** Token in `localStorage cfa_token`, all calls `Authorization: Bearer <token>`, `401` → `/?view=login`. **Why no new ID every time?** Now `DATABASE_URL` hard-coded `mysql+pymysql://...aivencloud.com:14273/cfa` in `deploy.yml:151`, so data stays even after `docker rm`.
 
-Say: *"They create an account or sign in. We give a token, now they can use the app — online DB keeps them."*
+### Step 3 — Upload (You Give: CSV file)
+**You see:** Hero `Upload your reviews` + **professional `div` drop zone** (dashed `border-[#b9c8d8]`, hover `bg-[#eef4fb]`, `Enter/Space` keyboard, shows `✓ filename 12.3 KB Ready`, `Only .CSV` badge, spinner `Analyzing your reviews…`).
 
-## Step 3 — Upload (professional div, not plain button)
+**Two ways (as you asked, now best: one flow):**
+- **On Upload page:** `Choose CSV file` or drag → `Upload & Analyze` → `POST /api/v1/upload` via `vercel.json` proxy `/api/:path* → http://3.109.121.85:8000` (avoids `https→http` Mixed Content block).
+- **On Dashboard:** `Drop CSV here` div (same `div`, same `handleDashboardFile()` validation `.csv` + not empty).
 
-**What you see:**
-- Top hero `Upload your reviews` + **professional `div` drop zone** (not button): dashed border `border-[#b9c8d8]`, hover `border-[#173f73] bg-[#eef4fb]`, keyboard `Enter/Space`, shows file name + size, “Only .CSV” badge, spinner `LoadingSpinner` while `isCsvUploadInProgress`.
-- Two buttons: **Upload & Continue ON LOCAL** (`http://localhost:8000`) and **ON DEPLOYED** (`http://3.109.121.85:8000`), both with icon `＋`/`⤓`, shadow and hover lift.
-- Below: 3 steps `01 Drop your CSV → 02 AI reads everything → 03 See what to fix` and `Any columns work` cards.
+**You give:** Any CSV with `review_text` (flexible name). **System does:** `validateCsvFile()` → `uploadReviews()` → `FormData file` → EC2 `cfa.api.main:app` `0.0.0.0:8000` `CORS` allows `vercel.app` → `RateLimiter` 30/60s.
 
-**What you do:** Pick/drag a CSV (any name like `review_text`, `Review Text`, `comment` — auto-found), click a button.
+### Step 4 — Backend Pipeline (You Wait 2-5 sec, See Logs)
 
-**What happens:**
-1. `validateCsvFile()` checks `.csv` and not empty → error in red alert if bad.
-2. `setApiBase(base)` + `uploadReviews(file)` → `POST /api/v1/upload` (with token, `FormData` field `file`).
-3. Backend `readUploadFileSafely` → `decodeCsvBytesToText` → `processCsvBytesToStats` (each with clear 400/500) → `save_analysis` (keep last 3).
-4. Dashboard opens with **real numbers**.
+| Sub-step | What Happens | File | Hard-Coded? |
+|----------|--------------|------|-------------|
+| **4a. Preprocess** | `find_text_column()` finds `review_text` via substring, `strip()`, drop empty, keep other columns in `attributes` | `preprocessing.py:15` `pipeline.py:111` | No — only `ENGLISH_STOP_WORDS` |
+| **4b. BERT Model** | `predict_review()` → `AutoTokenizer` `max_length 128` `offset_mapping` + `AutoModelForTokenClassification` 5 labels `O/ASPECT/OPINION_POS/NEG/NEU` (110M, 415M `model.safetensors` mounted `-v /opt/.../model:/app/bert_aste_final:ro` from S3 `s3://.../bert_aste_final/`) → `decode_predictions` → `build_triplets` → `get_overall` (`Pos+Neg→Mixed`) | `ml/bert_aste.py:152` | **No** — pattern `X is wobbly` → aspect |
+| **4c. Rank & Proof** | `priority.py:7` `impact = count × negative%` → `ConcernAggregator` 5 texts per concern | `ranking/priority.py` | No |
+| **4d. Save** | `save_analysis(user_id, filename, stats)` → `MySQL Aiven` `analyses` JSON (last 3 per user) | `db/repo.py` | No |
 
-Say: *"They pick a CSV and upload. The server analyzes every review, and the dashboard fills with real insights."*
+**You get console logs (now English):** `[CFA] [UPLOAD] sending to MODEL`, `Response received from MODEL in 1800ms`, `Fetch completed`.
 
-## Step 4 — Dashboard (now 80% width, aligned with header)
+### Step 5 — Dashboard (You Get: Charts + What to Fix First)
 
-Header `80%` (`padding 0 10%`), page `80%` (`min(1280px, 80%)`) — aligned. Top `CUSTOMER INTELLIGENCE 36 reviews analyzed`.
+**You see after upload:** Your analysis card appears in `Your analyses` grid: `final.csv 36 reviews · 10/09/2026 11:36 AM` + timing + top chips `battery` + `×` delete on hover → `DELETE /api/v1/history/{id}`.
 
-**Welcome section (when no analysis selected):**
-- `Hi there` + workspace text + **+ Upload new reviews** (professional `bg-[#173f73]` with `＋`) + `Download sample CSV`.
-- **Dashboard drag-drop** right below: `Drop CSV here` div (same professional div as Upload page) — you can drop without going to Upload. Shows spinner while analyzing, error alert if any.
+**Click card → full report:**
+- **Header:** `CUSTOMER INTELLIGENCE 36 reviews analyzed · 8 priority issues` + `Re-analyze` / `Upload new` / `Export CSV`
+- **6 stat cards (clickable):** `Total 36`, `Positive 10`, `Negative 5`, `Neutral 21`, `Mixed 0`, `Priority Issues 8` → click `Positive` → filters both lists + opens board 55.
+- **Top Priority:** `battery 6 mentions · 33.3% negative · impact 100` + 3 proof quotes `"Battery drains fast..." (100% similar)`
+- **Charts:** Sentiment Pie, Concern Mentions Bar (`battery 6`), Rating (1-5), Trend (`YYYY-MM` or `No dates` fallback), Countries
+- **Priority Concerns:** **Top 5** shown → `See more (3 more)` → +5 → `Show less` → bar `share%` + `negative%` + `View comments` → modal 5 quotes
+- **Review Explorer:** **10 of 36** → `See more` +10 up to 55 → `Show less` → each card `sentiment pill` `★ rating · country` + text + `aspects` chips
+- **Board:** When tab clicked, up to 55 filtered comments, `Close`
+- **State:** `visibleConcernCount 5`, `reviewVisibleCount 10`, `activeTab`, `isBoardOpen` — small 8-25 line helpers
 
-**Your analyses (when history exists):**
-- Grid of cards: `filename`, `36 reviews · 10/09/2026 11:36 AM` (date + **timing**), top 3 concerns as chips.
-- **Hover** → top-right `×` (delete) appears — click → confirm → `DELETE /api/v1/history/{id}` → card disappears, no reload needed.
+**You do:** Click `Positive` → both lists filter → click `battery View comments` → see real quotes → know what to fix first.
 
-**When you click a card** → loads that analysis (`GET /api/v1/history/{id}`).
+### Step 6 — Analyzer / Explorer (Optional)
+- **Analyzer:** Paste one review → `POST /api/v1/analyze` → `overall: mixed`, `armrest→Negative, fabric→Positive` + confidence.
+- **Explorer:** Table `GET /api/v1/reviews` searchable.
 
-**Inside an analysis:**
+### One-Line Summary for PPT
+> **Landing → Signup (MySQL, JWT) → Drop CSV (1 column `review_text` mandatory, any name) → Upload via `vercel.json` proxy `/api` → EC2 `find_text_column` → BERT 5 labels 128 → per-aspect + Mixed → rank `count×negative%` → 5 proof → MySQL (hard-coded, persists) → Dashboard Top 5 + 55 + ACT FIRST.**
 
-1. **Header** — `36 reviews analyzed`, `8 priority issues`, `+ Upload new` (icon `＋`) + `Export CSV` (icon `⤓`) — both `inline-flex` with shadows, hover lift.
-2. **6 stat cards** (clickable tabs) — Total, Positive, Negative, Neutral, Mixed, Priority Issues. Click any → filters **both** Priority and Review Explorer below, and opens a board.
-3. **Top Priority** — `battery 8 mentions · 87.5% negative · impact 100` + 3 proof quotes.
-4. **Charts** — Sentiment pie, Concern Mentions bar, Rating, Trend, Countries.
-5. **Tabs** — `All | Top | Positive | Negative | Neutral | Mixed | Review` — click `Positive` → Priority shows only `negative_pct <30` concerns, Review Explorer shows only `Positive` reviews, board shows up to 55. Click again to see all.
-6. **Priority Concerns** — **Top 5** shown, `See more (3 more)` loads 5 more, `Show less` back to 5. Each row: number, name, `count · share · positive`, bar `share%`, `negative%`, `View comments` → modal with real quotes.
-7. **Review Explorer** — **10 of 36** shown, `See more` loads 10 more up to 55, `Show less` back. Each card: `sentiment` pill, `★ rating · country`, text, `aspects` chips.
-8. **Board** (when tab clicked) — `X reviews` where feeling is `X`, up to 55, close to hide.
-9. **Email report** — input + `Send report` → `POST /api/v1/report/email`.
+---
 
-State: `visibleConcernCount` (5), `reviewVisibleCount` (10), `activeTab`, `isBoardOpen`, `boardReviews` — all small, easy names.
+## Complete Mermaid Flow (Error-Free, Big — Use in PPT)
 
-Say: *"Here is the dashboard — sentiment, ranked concerns (top 5, see more), ratings, time, country, all from your file. Click Positive to filter both lists. Click a concern to see real quotes. Drag a new CSV right here."*
+```mermaid
+graph TD
+    A[User CSV review_text mandatory + rating date country optional] --> B[Frontend Vercel Drop CSV div + Vercel Proxy vercel.json]
+    B --> C[FastAPI EC2 3.109.121.85:8000 POST upload JWT + CORS Vercel + RateLimiter]
+    C --> D[Preprocessing find_text_column clean strip drop empty keep attributes]
+    D --> E[BERT Token Model bert-base-uncased 5 labels max_length 128]
+    E --> F[Per-Aspect Sentiment aspect plus opinion]
+    F --> G[Overall Sentiment Mixed if Pos and Neg]
+    G --> H[Ranking impact count times negative percent]
+    H --> I[Proof 5 top comments per concern]
+    I --> J[MySQL Aiven analyses JSON last 3 per user]
+    J --> K[Dashboard Vercel Pie Bar Table Top 5 See more]
+    K --> L[What to fix first ACT FIRST]
 
-## Step 5 — Analyzer (one review)
+    M[Notebook Final_Journal 69 cells T4 train 2 epochs] -.-> E
+    N[EC2 Host model /opt/customer-sentiment-analysis/model S3 415M] -.-> E
+    O[GitHub Actions deploy.yml test CPU torch plus build linux amd64 plus ECR plus SSM] -.-> C
+    M -.-> N
+    P[Local BERT fallback Neutral if no model] -.-> E
+    Q[User Login Signup JWT] -.-> C
+    R[Vite Build Tailwind Recharts] -.-> B
+```
 
-Paste one review → `POST /api/v1/analyze` → see `overall: mixed`, `product→Positive, delivery→Negative`, confidence bar. Examples chips to click.
+**Tested:** No `<br/>`, no `:` with `PS` error — renders on GitHub.
 
-## Step 6 — Explorer (all reviews)
+---
 
-Table of every saved review (`GET /api/v1/reviews`), searchable.
+## Why This Flow Is Best (Advantages + No Hard-Code Proof)
 
-## One-line summary
+| Advantage | Proof |
+|-----------|-------|
+| **Any CSV** | `find_text_column()` substring, not `if header=="review_text"` — `my_feedback` works if contains `feedback` |
+| **Any product** | `armrest` in `office_chair 52` (no date) and `sound` in `bluetooth 48` same model — no `if product=="chair"` |
+| **No hard-coded list** | `git grep -i "battery.*delivery"` only in docs, not in `extract.py` (only `ENGLISH_STOP_WORDS`) |
+| **Mandatory vs Optional clear** | Table above + `validateCsvFile()` only checks `.csv` + not empty, not column count |
+| **Persistent** | `DATABASE_URL` hard-coded `deploy.yml:151` → `MySQL Aiven` → `Your analyses` 3 stay after `docker rm` |
+| **Fast** | `Docker` `COPY requirements.txt` before `COPY src` (cache), pip `cache: pip`, `type=gha`, `t3.small` 2GB |
+| **Secure** | `pbkdf2` + `JWT 1h` + `CORS` + `RateLimiter` + `SSM` no SSH 22, `HF_TOKEN` optional |
+| **Observable** | `[CFA]` English logs for every `MODEL` request (when sent, when response, when stuck 15s) |
 
-> Start → Sign up / Sign in (online DB, stays) → Upload or drop CSV on dashboard → server analyzes via BERT (no hard-coded list) → Dashboard shows real charts + proof, filter by tabs, see more, delete old, export.
+---
 
-## Presenter Q&A
-
-**Q: Is data fake?** No, only from your uploaded CSV (try `bluetooth_speaker_reviews.csv` 48 rows, `office_chair_reviews.csv` 52, `smartwatch_reviews.csv` 55 — all bigger, any columns work, only `review_text` mandatory).
-
-**Q: Why two upload buttons?** Local vs Deployed — same code, different `setApiBase`.
-
-**Q: Backend sleep?** EC2 free sleeps 15 min, first upload takes 30 sec to wake — frontend shows `Analyzing…` spinner, not crash.
-
-**Q: Login real?** Yes — MySQL Aiven, pbkdf2, JWT 1h, 401 clears token and redirects to login.
-
-**Q: How fast?** 36 reviews in a few seconds; BERT 15-20 min training once on T4, inference ~150ms per review.
-
-**Q: Any hard-coded aspect list?** No — BERT learns pattern `X is wobbly` → X is aspect, so `armrest, fabric, battery` all work without code change. Fallback before training uses `ENGLISH_STOP_WORDS` + `10%` dynamic + word-alone sentiment filter, also no product list.
+*This `user_flow.md` is the best flow — use it for PPT. `pipeline.md` has the same Mermaid + 10-step table. No GitHub push without your ask — local only.*

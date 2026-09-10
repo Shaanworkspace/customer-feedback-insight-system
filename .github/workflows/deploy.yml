@@ -149,8 +149,8 @@ jobs:
               \"docker run -d --restart unless-stopped --name $CONTAINER_NAME -p 8000:8000 \
                 -v /opt/customer-sentiment-analysis/model:/app/bert_aste_final:ro \
                 -e DATABASE_URL='mysql+pymysql://avnadmin:AVNS_bftr8UKWppww-0ANAOZ@mysql-197d3cc9-shaanyworkspace.c.aivencloud.com:14273/cfa' \
-                -e JWT_SECRET='local-dev-secret-please-change-in-production-1234567890' \
-                -e HF_TOKEN='' \
+                -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+                -e HF_TOKEN='${{ secrets.HF_TOKEN }}' \
                 $IMAGE\",
               \"sleep 15\",
               \"echo '[deploy] Verifying mount inside container...'\",

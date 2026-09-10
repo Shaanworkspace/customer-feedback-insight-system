@@ -1,96 +1,174 @@
-# Backend — the server explained simply
+# Backend.md — Complete FastAPI Backend Knowledge | Sequential Long Form | 8th Grade English | Best Examples | No Push
 
-> The **backend** is the hidden server that does the thinking. It is Python + **FastAPI**. This file matches the latest code (BERT perfect model, no hard-code).
+> **How to read:** Start at Heading 1, go down to 12. Every heading has `Why`, `Why Not Others`, `Example`, `What We Did vs What FastAPI Did`. Same pattern as `model.md` + `frontend.md`.
 
-Code lives in `src/cfa/`.
+---
 
-## 1. The server (`api/main.py`)
+## 1. What Is Our Backend? (One Line)
 
-- `FastAPI(title="Customer Feedback Insight System")`
-- `CORSMiddleware` allows `localhost:5173`, `localhost:4173`, `https://customer-feedback-insight-system.vercel.app` and `*.vercel.app`, `allow_credentials=True`.
-- Rate limit: 60 req/min per IP (except `/health`, `/api/v1/ping`).
-- `init_db()` creates `users` + `analyses` tables (MySQL via `DATABASE_URL`, else SQLite `data/app.db`).
+Our backend is **`FastAPI (FastAPI - Python Web Framework) + Uvicorn (Uvicorn - ASGI Server) + Python (Python - Programming Language) 3.11 + SQLAlchemy (SQLAlchemy - ORM) + MySQL (My Structured Query Language) (Aiven) / SQLite (SQLite - File DB) + JWT (JSON Web Token) + BERT (Bidirectional Encoder Representations from Transformers)`** — runs on `EC2 (Elastic Compute Cloud) t3.small` `0.0.0.0:8000`, entry `cfa.api.main:app` (`src/cfa/api/main.py:14`).
 
-## 2. Auth (real login, no fake)
+- **Job:** Take `CSV` or `one review` + `JWT` token → run BERT → return `ranked_concerns` + `proof quotes` → save to `MySQL`.
+- **Host:** `http://3.109.121.85:8000` (EC2), `http://localhost:8000` local, `https://cfa-api.onrender.com` old EC2 (now deleted).
 
-- `POST /api/v1/auth/signup` → `add_user` (pbkdf2 scramble), returns `{token}`.
-- `POST /api/v1/auth/login` → `authenticate` (verify pbkdf2), returns `{token}`.
-- `GET /api/v1/auth/me` → needs `Bearer token`, returns `{username}`.
-- Token is **JWT** (`hmac`+`hashlib`, `exp` 1h, `SECRET=JWT_SECRET` env, default `dev-secret...` for local).
-- `db/repo.py`: `users` table, `create_user`/`get_user_by_username` with `IntegrityError` handling.
+---
 
-## 3. Data endpoints (need token)
+## 2. Why FastAPI? Why Not Flask, Django, Express?
 
-- `GET /health` → `{status, reviews_analyzed, avg_latency_ms}` — no token.
-- `GET /api/v1/ping` → `alive`.
-- `POST /api/v1/upload` → main. Reads bytes, `process_csv`, `save_analysis` (keep last 3 per user), returns full stats.
-- `GET /api/v1/stats` → `get_stats(user.id)` (latest analysis).
-- `GET /api/v1/reviews` → `get_reviews`.
-- `POST /api/v1/analyze` → one review via `analyze_review` + `rank_concerns`.
-- `GET /api/v1/concern-comments?concern=battery` → RAG proof.
-- `GET /api/v1/history` → last 3 (`id, filename, created_at, total_reviews, top_concerns`).
-- `GET /api/v1/history/{id}` → full data for one analysis.
-- `DELETE /api/v1/history/{id}` → `delete_analysis` (new: delete button on dashboard).
+### Why FastAPI?
 
-All except `health/ping` use `Depends(get_current_user)` which checks `Authorization: Bearer <token>` and returns `401 Invalid or expired token` if bad. Frontend `api.js` clears token and redirects to `/?view=login` on `401`.
+- **Auto docs:** `http://localhost:8000/docs` Swagger UI auto from `Pydantic (Pydantic - Data Validation)` `AnalyzeRequest` — no manual `swagger.json`.
+- **Speed:** `FastAPI` + `Uvicorn` `ASGI (Asynchronous Server Gateway Interface)` handles `async` `upload_csv_file` (file read non-blocking) — `Flask` `WSGI` blocks.
+- **Simple:** `APIRouter` `post("/api/v1/upload")` 5 lines, `Depends(get_current_user)` for `JWT` in 1 line.
 
-## 4. The upload pipeline (`api/pipeline.py`) — step by step, small helpers
+### Why Not Flask?
 
-We follow one CSV row through the system. Helpers are 8–25 lines each, easy names.
+Flask needs `flask-jwt-extended` + manual `request.get_json()` + no auto `docs`. FastAPI does `pydantic` validation auto `if not review_text: raise 400`.
 
-- **Find columns** — `preprocessing.py:find_text_column()` checks candidates `review_text, review, comment, text...` case-insensitive, so any CSV layout works (minimal: just `review_text`).
-- **For each row** — `preprocess_csv(content)` → `cleanedRows` (`text, rating, country, date, reviewer, attributes`), skips empty.
-- **Analyze** — `analyze_reviews([row["text"] for row in cleanedRows])`:
-  - `analysis/extract.py`: `_bert_aspects()` first (if `bert_aste_final/` exists, no list), else `_llm_batch()` if `HF_TOKEN`, else `_dynamic_fallback_batch()` (per-CSV frequent nouns via `ENGLISH_STOP_WORDS` + `dynamicMinCount = 3 if >20 else 2` + word-alone sentiment filter — no product hard-code).
-  - `analysis/sentiment.py`: `SentimentClassifier.classify()` counts `pos/neg` from `aspects` → `Mixed` if both, else `Positive/Negative/Neutral` (no word list, no second classifier).
-- **Build reviews** — `buildReviewsForStorage()` makes `review_id` (uuid), `entity`, `sentiment`, `rating` (first number via regex), `country`, `date`, `concerns`, `aspects`, and `concernAggregator.add(name, sentiment, text)`.
-- **Counts** — `buildSentimentDistribution()` → `positive/negative/neutral/mixed`, `rank_concerns({"concerns": agg.stats()})` → `impact = count × negative_pct`, `proof` + `comments_by_concern` via `find_similar` (word overlap, no vector DB).
-- **Charts** — `_ratings`, `_countries`, `extractMonthTrend` (regex `YYYY-MM`).
-- **Save** — `save_analysis(user_id, filename, stats)` + `ReportStore.save_json` → `analyses` table (keep 3). On `data/app.db` fallback, file is created via `DATA_DIR.mkdir`.
+### Why Not Django?
 
-**Error handling is split, not one big try:** `readUploadFileSafely`, `decodeCsvBytesToText`, `processCsvBytesToStats` each raise `HTTPException(400/500)` with a clear message, shown in the frontend red alert.
+Django is **full** (`Admin`, `ORM`, `Templates`) — overkill for 5 endpoints (`/health`, `/ping`, `/auth/*`, `/upload`, `/analyze`). FastAPI is **micro** — 82 lines `main.py`.
 
-## 5. Reading results (`analysis/stats.py`, `db/repo.py`)
+### Why Not Express (Node)?
 
-Dashboard never recomputes. It reads the latest saved `data`:
-- `get_stats()` → `total_reviews, sentiment_distribution, ranked_concerns, ratings, countries, time_trend, proof, comments, reviews`
-- `get_reviews()` → list of review objects
-- `get_concern_comments()` → top similar reviews for one concern
+Our ML is `Python` `torch` + `transformers` — `Express` is `Node.js` (JavaScript), would need `child_process` to call Python BERT → slow. FastAPI is Python, so `from cfa.ml.bert_aste import predict_review` direct import, no bridge.
 
-## 6. Data storage
+**Example where FastAPI wins:**
+```python
+# FastAPI: 3 lines
+@router.post("/api/v1/analyze")
+def analyze_single_review(request: AnalyzeRequest, currentUser=Depends(get_current_user)):
+    return analyze_review(request.review_text)
 
-- `DATABASE_URL=mysql+pymysql://...@aivencloud.com:14273/cfa` (from `.env` or EC2 env `sync: false`) → **Aiven MySQL** (`users`, `analyses` JSON). Without it, `sqlite:///data/app.db`.
-- `JWT_SECRET` env → stable token (default `dev-secret...` for local).
-- `config.py`: `BERT_ASTE_DIR = PROJECT_ROOT / "bert_aste_final"` (400MB, gitignored until trained), `MODEL_PATH` legacy TF-IDF kept.
-- `data/` is gitignored → repo never ships fake results.
-
-## 7. Example upload response
-
-`POST /api/v1/upload` with `bluetooth_speaker_reviews.csv` (48 rows, 4 cols):
-
-```json
-{
-  "total_reviews": 48,
-  "sentiment_distribution": {"positive": 7, "negative": 27, "neutral": 1, "mixed": 13},
-  "ranked_concerns": [{"concern": "battery", "count": 9, "negative_pct": 77.8, "impact": 100, "priority": 1}],
-  "ratings": {"1": 12, "2": 8, "5": 20},
-  "countries": {"India": 15, "USA": 18},
-  "time_trend": [{"month": "2024-01", "count": 10}],
-  "reviews": [{"review_id": "a1b2c3d4", "text": "Battery drains...", "sentiment": "negative", "concerns": [{"name": "battery", "sentiment": "negative"}]}]
-}
+# Flask: 10 lines manual
+@app.route("/api/v1/analyze", methods=["POST"])
+def analyze():
+    token = request.headers.get("Authorization")  # manual
+    data = request.get_json()
+    if not data.get("review_text"): return {"detail":"..."}, 400
 ```
 
-## 8. How to run locally (online DB)
+---
 
-```bash
-# .env must have DATABASE_URL (Aiven) and JWT_SECRET
-cat .env  # DATABASE_URL=mysql+pymysql://...
-cd src/cfa
-python -m venv .venv; source .venv/bin/activate
-pip install -r requirements.txt  # includes transformers, torch, datasets
-PYTHONPATH=src uvicorn cfa.api.main:app --host 0.0.0.0 --port 8000  # uses MySQL, not SQLite
-# Frontend in another terminal
-cd frontend; npm install; npm run dev  # http://localhost:5173
+## 3. Why Uvicorn? Why Not Gunicorn Alone?
+
+`Uvicorn` is `ASGI` server for `async` `FastAPI`. `Gunicorn` is `WSGI` (sync). We run `uvicorn cfa.api.main:app --host 0.0.0.0 --port 8000` (see `Dockerfile:40`). For `t3.small` 2GB, `Uvicorn` single worker is enough (10-day demo). Production would use `Gunicorn` + `Uvicorn workers` (`gunicorn -k uvicorn.workers`).
+
+---
+
+## 4. Why MySQL (Aiven) + SQLite Fallback? Why Not Only SQLite or Only MySQL?
+
+### Why Both?
+
+- **MySQL (Aiven) `mysql+pymysql://...aivencloud.com:14273/cfa`:** **Persistent** — `EC2` `docker rm` does not delete `users`/`analyses` (external). Hard-coded in `deploy.yml:151` so every deploy keeps `Your analyses` 3.
+- **SQLite `sqlite:///data/app.db`:** **Fallback** when `DATABASE_URL` not set (local `pytest`, `CI` without secret). `src/cfa/db/core.py:16` `DEFAULT_SQLITE` + `os.makedirs("data")`.
+
+### Why Not Only SQLite?
+
+`SQLite` file `data/app.db` lives **inside container** `/app/data/app.db` — `docker rm` deletes it (ephemeral) → every deploy `reviews_analyzed 0` + need new ID (you saw). MySQL is **outside** container, survives.
+
+### Why Not Only MySQL?
+
+Local `pytest` + `CI` without `DATABASE_URL` would fail `pymysql` connect. Fallback `SQLite` lets `pytest -q` run without `Aiven` (see `tests/conftest.py` `DATABASE_URL=sqlite:///data/test.db`).
+
+**Example:**
+- Local `DATABASE_URL` set → `engine` `mysql` with `ssl verify False` → `users` table persists.
+- CI `DATABASE_URL=""` → `engine` `sqlite` → `data/test.db` created for test, deleted after.
+
+---
+
+## 5. Why JWT (JSON Web Token) + `pbkdf2`? Why Not Sessions or Plain Password?
+
+### Why JWT?
+
+- **Stateless:** `create_token(username)` → `header.payload.signature` (`HS256` `hmac` + `SECRET` `JWT_SECRET` env) — no server session table. `decode_token()` checks `hmac` + `exp` 1h.
+- **Why not Sessions?** Sessions need `Redis`/`DB` table for `session_id` → extra infra for 10-day demo. `JWT` is 1 string in `localStorage cfa_token`.
+
+### Why `pbkdf2` Not Plain?
+
+`hash_password()` `salt 16 bytes` + `pbkdf2_hmac sha256 100k` → `salt.hex` + `digest.hex` stored. `verify_password()` uses `hmac.compare_digest`. Plain `password` in DB → if DB leaked, all passwords leak. `pbkdf2` is one-way.
+
+**Example:**
+```python
+# signup: add_user("a@a.com","secret123") → salt `a1b2...`, hash `c3d4...` → save
+# login: authenticate("a@a.com","secret123") → pbkdf2 with saved salt → compare → True → create_token("a@a.com") → `eyJhbGci...`
 ```
 
-Check `http://localhost:8000/health` and `http://localhost:8000/docs`.
+---
+
+## 6. What Are The Main Backend Files? What Does Each Do? (Sequence)
+
+### 6.1 `src/cfa/api/main.py` (82 lines) — App Entry `cfa.api.main:app`
+
+**Why this file?** `FastAPI` app, `CORSMiddleware` (`Vercel` `https://customer-feedback-insight-system.vercel.app` + `*.vercel.app`), `RateLimiter` `30 req/IP/60s` + `200 global`, `is_health_check` skip for `/health`, `unhandled_exception_handler` `500`.
+
+**What we did:** `app = FastAPI(title="...")`, `app.add_middleware(CORSMiddleware, allow_origins=[...])`, `app.include_router(auth)`, `analyze`, `data`.
+
+### 6.2 `src/cfa/api/routers/auth.py` + `api/auth.py` — Signup/Login
+
+`AuthRequest` `username, password, first_name, email` → `add_user()` → `create_token()` → `{"token": "eyJ..."}`. `login` → `authenticate()` → `token`.
+
+### 6.3 `src/cfa/api/routers/analyze.py` (105 lines) — Two Endpoints
+
+- `POST /api/v1/analyze` → `AnalyzeRequest` `review_text` → `analyze_review(text)` → `ranked_concerns` → `similar_reviews = []` → `metrics`.
+- `POST /api/v1/upload` → `UploadFile file` → `readUploadFileSafely` → `decodeCsvBytesToText` → `processCsvBytesToStats` → `save_analysis(user_id, filename, stats)` → return `dashboardStats`.
+
+**What we did:** Split `read/decode/process/save` into 4 `try` each with `400`/`500` + clear message (not one big `try`).
+
+### 6.4 `src/cfa/api/pipeline.py` (153 lines) — CSV → Dashboard
+
+`process_csv(bytes)` → `preprocess_csv` (find column) → `analyze_reviews(texts)` → `buildReviewsForStorage` + `ConcernAggregator` → `rank_concerns` → `proof_by_concern` 3 + `comments_by_concern` 5 → `ratings` `countries` `time_trend` → return.
+
+### 6.5 `src/cfa/analysis/*` — Core Logic
+
+- `preprocessing.py:15` `find_text_column()` substring (`review_text` in `Review Text`) — **no hard-code**.
+- `extract.py:14` `_bert_aspects()` → `cfa.ml.bert_aste.predict_review` first, then LLM, then `[]` — **no lexicon**.
+- `sentiment.py:12` `get_overall()` `Pos+Neg→Mixed` counting — **no second classifier**.
+- `concerns.py:12` `analyze_review()` glue.
+- `ranking/priority.py:7` `rank_concerns` `impact = count × negative%`.
+
+### 6.6 `src/cfa/db/*` — DB
+
+`core.py:16` `DEFAULT_SQLITE` + `ssl` for `mysql`, `SessionLocal`, `init_db()` creates `users` + `analyses` + `ALTER TABLE` for `first_name/email`.
+
+---
+
+## 7. Why Not Use `Flask-SQLAlchemy`, Raw SQL, or Other ORMs?
+
+| Option | Why Not |
+|--------|---------|
+| `Flask-SQLAlchemy` | Tied to `Flask`, we use `FastAPI` → `SQLAlchemy` standalone is correct. |
+| Raw `pymysql` `cursor.execute("SELECT...")` | Need manual `commit`, `close`, SQL injection risk `f"SELECT {user_input}"`. `SQLAlchemy` `scoped_session` + `Base.metadata.create_all` auto handles. |
+| `Pydantic` vs no validation | Without `Pydantic` `AnalyzeRequest`, `request.review_text` could be `None` → `500`. With `Pydantic` → auto `400` if missing. |
+
+---
+
+## 8. Where Is Backend Lagging Now? How To Fix?
+
+| Lag | Why | Fix Approach |
+|-----|-----|--------------|
+| **`Neutral 21/36` too much** | `bert_aste` misses `ASPECT` → `[]` → `Neutral` (see `model.md:9.1`) | See `model.md` — retrain 3 epochs, `class_weight`, `nearest opinion` fix |
+| **`DATABASE_URL` hard-coded in `deploy.yml:151`** | Public in git history (you asked hardcode) → security risk | After demo, `git history` clean + `Aiven` rotate password + move back to `secrets.DATABASE_URL` |
+| **`t3.small` 2GB slow for 55 rows** | `BERT` `150ms × 55 = 8 sec` + `health` 15 sec `sleep` | Keep `t3.small` or use `distilbert` 250M (1GB) for `t3.micro` |
+| **No `HTTPS` on EC2** | `http://3.109.121.85:8000` → `Vercel https → http` needs `vercel.json` proxy (we did) | Future: `ALB + ACM` + `Route53` `https://api.yourdomain.com` → remove proxy |
+
+---
+
+## 9. Future Scopes For Backend
+
+- **Split `Dashboard.jsx` 900 lines** → `PriorityConcerns.jsx`, `ReviewExplorer.jsx` + `lazy` load `Recharts` (664K → 300K).
+- **Add `Redis` for `RateLimiter`** (now in-memory `RateLimiter` resets on restart) + `JWT` refresh token.
+- **Add `HTTPS` `ALB` + `CloudFront` + `WAF` for `EC2`.
+- **Add `Alembic` for DB migrations** (now `inspect` + `ALTER TABLE` manual).
+
+---
+
+## 10. How To Present Backend In Interview (What FastAPI Is Not Doing)
+
+> "FastAPI does **not** find aspects — it **calls** `predict_review()` and **saves** to `MySQL`. **We did:** `FastAPI` routing + `CORS` + `RateLimiter` + `JWT` + `pipeline` + `Docker` `PYTHONPATH=/app/src` `ECR` `SSM` mount. **FastAPI did:** `auto docs` + `pydantic` validation + `Depends(get_current_user)`."
+
+**One-line for PPT:** `FastAPI 0.110 + Uvicorn 0.0.0.0:8000 + SQLAlchemy + MySQL Aiven (hard-coded persist) + JWT pbkdf2 + BERT mount`.
+
+---
+
+*This `backend.md` is long form, headings not tables, short first then full (FastAPI (FastAPI...), JWT (JSON...), MySQL (My Structured...), EC2 (Elastic...), etc.), sequential, with best examples, no push.*
