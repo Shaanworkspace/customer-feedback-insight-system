@@ -1,0 +1,37 @@
+review_id,review_text,rating,date,country,product
+f01,"Battery drains in 2 hours and dies quickly, very disappointed.",1,2024-01-05,India,Phone X
+f02,"Battery drains fast even on standby, overheats while charging.",1,2024-01-08,USA,Phone X
+f03,"Battery life is poor, needs charging twice a day.",2,2024-01-12,Germany,Phone X
+f04,Battery swells and drops quickly after update.,1,2024-01-15,UK,Phone X
+f05,"Battery lasts all day and charges fast, love it.",5,2024-01-18,India,Phone X
+f06,"Amazing battery, holds charge well for 2 days.",5,2024-01-20,USA,Phone X
+f07,"Camera is stunning with sharp and vivid photos, beautiful shots.",5,2024-02-01,India,Phone X
+f08,"Camera quality is excellent, very sharp in daylight.",5,2024-02-03,Japan,Phone X
+f09,"Photos are blurry and grainy, camera is poor in low light.",2,2024-02-05,USA,Phone X
+f10,Lens is cracked and pictures are dim.,1,2024-02-08,Germany,Phone X
+f11,Delivery was late by 10 days and packaging was damaged.,1,2024-02-12,UK,Phone X
+f12,Shipping was very slow and arrived late.,2,2024-02-14,USA,Phone X
+f13,"Delivery was fast and on time, very happy with shipping.",5,2024-02-16,India,Phone X
+f14,"Screen is bright, crisp and vivid, love the display.",5,2024-03-01,India,Phone X
+f15,"Screen flickers and is dim, poor brightness.",2,2024-03-03,USA,Phone X
+f16,"Display cracked after one drop, build quality is flimsy.",1,2024-03-05,Germany,Phone X
+f17,Sound is loud and clear with great bass.,5,2024-03-08,Japan,Phone X
+f18,Speaker volume is low and audio is poor and grainy.,2,2024-03-10,USA,Phone X
+f19,"Phone is fast and smooth, performance is excellent.",5,2024-03-12,India,Phone X
+f20,"Phone is slow, lags and hangs a lot.",2,2024-03-14,UK,Phone X
+f21,"Great value for money, worth the price.",5,2024-03-16,India,Phone X
+f22,"Overpriced and not worth it, too expensive.",2,2024-03-18,USA,Phone X
+f23,"Customer service was rude and unhelpful, support is terrible.",1,2024-03-20,USA,Phone X
+f24,Support team was helpful and fixed my issue quickly.,5,2024-03-22,India,Phone X
+f25,The chair armrest is wobbly but fabric is comfortable.,3,2024-04-01,India,Chair A
+f26,"Chair build is sturdy and durable, easy to assemble.",5,2024-04-03,Germany,Chair A
+f27,Chair packaging was flimsy and delivery was late.,2,2024-04-05,USA,Chair A
+f28,The product is excellent but delivery was terrible.,3,2024-04-10,USA,Phone X
+f29,Battery drains fast but camera is amazing.,3,2024-04-11,India,Phone X
+f30,"Screen is blurry and sound is poor, but price is good.",3,2024-04-12,UK,Phone X
+f31,Beautiful design but battery life is terrible and overheats.,2,2024-04-13,USA,Phone X
+f32,"Easy to use and setup was smooth, performance is fast.",5,2024-04-14,India,Phone X
+f33,"Average product, does the job, nothing special.",3,2024-04-15,Canada,Phone X
+f34,"Worst purchase, everything is faulty and broken, regret it.",1,2024-04-16,USA,Phone X
+f35,"Outstanding product, superb quality, highly recommend to everyone.",5,2024-04-18,India,Phone X
+f36,Delivery was on time and packaging was neat and safe.,5,2024-04-20,Germany,Phone X

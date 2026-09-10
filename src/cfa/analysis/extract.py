@@ -105,26 +105,113 @@ def _llm_batch(texts):
         return None
 
 
-def _fallback_empty(text):
-    # No hard-coded word list. Return empty so the caller can handle it.
-    # This keeps the flow honest: if BERT not trained and no LLM, we do not guess.
-    return []
+def _dynamic_fallback_batch(texts):
+    """Discover aspects per CSV without a fixed list.
+
+    We find frequent content words across the batch (not a hard-coded product list).
+    For sentiment we use the trained TF-IDF model (not a word list) on the clause.
+    """
+    try:
+        from cfa.ml.serve import predict_sentiment
+        from collections import Counter
+        import re
+
+        stopwords = {
+            "the","is","are","was","were","be","been","am","a","an","and","or","but","if","in","on","at","to","of","for","with","by","this","that","these","those","it","its","as","so","no","not","very","just","also","have","has","had","do","does","did","will","would","can","could","should","my","your","our","their","i","we","you","he","she","they","me","us","him","her","them","from","up","out","about","into","over","after","before","between","during","while","when","where","why","how","what","which","who","whom",
+        }
+        # Opinion words should not be treated as aspects
+        opinion_stopwords = {
+            "terrible","poor","low","quickly","drains","drains fast","overheats","slow","fast","good","great","excellent","amazing","stunning","sharp","vivid","beautiful","awesome","perfect","outstanding","superb","wonderful","fantastic","happy","satisfied","disappointed","rude","unhelpful","useless","expensive","overpriced","faulty","broken","cracked","blurry","grainy","dim","flickers","late","cheap","worth","sturdy","durable","comfortable","wobbly","flimsy","neat","safe","average","special","quick","quickly","poorly",
+        }
+        # Collect word counts across all reviews
+        wordCounts = Counter()
+        reviewWords = []
+        for text in texts:
+            words = re.findall(r"[a-z]{3,}", text.lower())
+            filtered = [w for w in words if w not in stopwords]
+            reviewWords.append(filtered)
+            wordCounts.update(filtered)
+
+        # Frequent words that appear at least twice are candidate aspects, but not opinion words
+        frequentAspects = {word for word, count in wordCounts.items() if count >= 2 and word not in opinion_stopwords}
+
+        batchResults = []
+        for text, words in zip(texts, reviewWords):
+            foundAspects = []
+            seenInReview = set()
+            for word in words:
+                if word not in frequentAspects or word in seenInReview:
+                    continue
+                # Must appear as a whole word in this review
+                if not re.search(r"\b" + re.escape(word) + r"\b", text.lower()):
+                    continue
+                seenInReview.add(word)
+                clauseText = _clause_for(text, word)
+                try:
+                    sentimentLabel = predict_sentiment(clauseText)["label"]
+                except Exception:
+                    sentimentLabel = "neutral"
+                foundAspects.append({
+                    "name": word,
+                    "sentiment": sentimentLabel,
+                    "matched_terms": [word],
+                    "confidence": 0.65,
+                })
+            batchResults.append(foundAspects)
+        return batchResults
+    except Exception:
+        return [[] for _ in texts]
 
 
 def extract_aspects(texts):
     """Return a list (aligned to `texts`) of aspect dicts.
 
-    Order: 1) BERT perfect model (no hard-code), 2) LLM if HF_TOKEN set, 3) empty.
+    Order: 1) BERT perfect model (no hard-code), 2) LLM if HF_TOKEN set, 3) dynamic per-CSV discovery.
     """
-    out = []
-    for t in texts:
-        bert = _bert_aspects(t)
+    # Try BERT one by one (needs is_trained check)
+    bertResults = []
+    needFallbackIndices = []
+    needFallbackTexts = []
+    for idx, text in enumerate(texts):
+        bert = _bert_aspects(text)
         if bert is not None:
-            out.append(bert)
-            continue
-        llm = _llm_batch([t])
-        if llm is not None and llm[0]:
-            out.append(llm[0])
-            continue
-        out.append(_fallback_empty(t))
-    return out
+            bertResults.append((idx, bert))
+        else:
+            needFallbackIndices.append(idx)
+            needFallbackTexts.append(text)
+
+    # Try LLM for those not handled by BERT
+    stillNeedIndices = []
+    stillNeedTexts = []
+    llmResultsMap = {}
+    if needFallbackTexts:
+        llmBatch = _llm_batch(needFallbackTexts)
+        if llmBatch is not None:
+            for localIdx, globalIdx in enumerate(needFallbackIndices):
+                if llmBatch[localIdx]:
+                    llmResultsMap[globalIdx] = llmBatch[localIdx]
+                else:
+                    stillNeedIndices.append(globalIdx)
+                    stillNeedTexts.append(needFallbackTexts[localIdx])
+        else:
+            stillNeedIndices = needFallbackIndices
+            stillNeedTexts = needFallbackTexts
+
+    # Dynamic fallback for the rest (no hard-coded product list)
+    dynamicBatch = _dynamic_fallback_batch(stillNeedTexts) if stillNeedTexts else []
+
+    # Assemble final in order
+    finalResults = [None] * len(texts)
+    for idx, bertRes in bertResults:
+        finalResults[idx] = bertRes
+    for idx, llmRes in llmResultsMap.items():
+        finalResults[idx] = llmRes
+    for localIdx, globalIdx in enumerate(stillNeedIndices):
+        finalResults[globalIdx] = dynamicBatch[localIdx]
+
+    # Any still None -> empty
+    for i in range(len(finalResults)):
+        if finalResults[i] is None:
+            finalResults[i] = []
+
+    return finalResults

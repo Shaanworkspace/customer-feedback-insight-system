@@ -5,7 +5,7 @@ the same concern. Simple word-overlap similarity, no model needed.
 """
 
 import json
-from typing import List
+from typing import List, Optional
 
 from cfa.core.config import REVIEWS_PATH
 
@@ -26,7 +26,7 @@ def _overlap(query: str, text: str) -> float:
     return round(len(q & t) / len(q), 2)
 
 
-def find_similar(text: str, top_k: int = 5, reviews: list | None = None) -> List[dict]:
+def find_similar(text: str, top_k: int = 5, reviews: Optional[List[dict]] = None) -> List[dict]:
     if reviews is None:
         reviews = _load_reviews()
     if not reviews:

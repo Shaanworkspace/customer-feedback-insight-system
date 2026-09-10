@@ -1,0 +1,17 @@
+review_id,review_text,rating,date,country,product
+m1,The product is excellent but delivery was terrible.,3,2024-04-01,USA,Watch Z
+m2,Battery drains fast but camera is amazing.,3,2024-04-02,USA,Watch Z
+m3,"Screen is blurry and sound is poor, but price is good.",3,2024-04-03,India,Watch Z
+m4,Beautiful design but battery life is terrible and overheats.,2,2024-04-05,Germany,Watch Z
+m5,Delivery was on time but customer service was rude and unhelpful.,2,2024-04-06,UK,Watch Z
+m6,"Easy to use and setup was smooth, but performance is slow and lags.",3,2024-04-07,India,Watch Z
+m7,"Love the camera, love the screen, but price is overpriced.",4,2024-04-08,USA,Watch Z
+m8,"Build quality is sturdy and durable, but sound is grainy.",4,2024-04-09,Japan,Watch Z
+m9,"Fast shipping, great packaging, product works perfectly.",5,2024-04-10,India,Watch Z
+m10,"Worst purchase, everything is faulty and broken.",1,2024-04-11,USA,Watch Z
+m11,"Average, does the job, nothing special.",3,2024-04-12,Canada,Watch Z
+m12,Battery is good but charging is slow.,3,2024-04-13,USA,Watch Z
+m13,Speaker volume is low but display is bright and vivid.,4,2024-04-14,UK,Watch Z
+m14,"Customer support fixed my issue quickly, very satisfied.",5,2024-04-15,India,Watch Z
+m15,Price is cheap but quality is poor and flimsy.,2,2024-04-16,Germany,Watch Z
+m16,The watch strap broke within a week.,1,2024-04-17,Canada,Watch Z

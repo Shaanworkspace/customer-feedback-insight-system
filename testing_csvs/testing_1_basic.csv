@@ -1,0 +1,13 @@
+review_id,review_text,rating,date,country,product
+r1,"Battery lasts all day, very happy with it.",5,2024-01-10,India,Phone X
+r2,"Battery drains in 2 hours, terrible.",1,2024-01-12,USA,Phone X
+r3,Camera is stunning and photos are sharp.,5,2024-01-15,Germany,Phone X
+r4,Camera is blurry and grainy in low light.,2,2024-01-18,USA,Phone X
+r5,Delivery was fast and packaging was neat.,5,2024-02-01,India,Phone X
+r6,Delivery was late by a week and box was damaged.,1,2024-02-05,UK,Phone X
+r7,Price is good value for money.,4,2024-02-10,India,Phone X
+r8,Too expensive for what it offers.,2,2024-02-12,USA,Phone X
+r9,Sound quality is poor and volume is low.,2,2024-03-01,Japan,Phone X
+r10,"Sound is loud and clear, love the bass.",5,2024-03-03,Japan,Phone X
+r11,The chair fabric is comfortable.,5,2024-03-10,India,Chair A
+r12,The chair armrest is wobbly.,2,2024-03-12,India,Chair A
