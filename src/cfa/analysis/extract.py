@@ -136,7 +136,10 @@ def _dynamic_fallback_batch(texts):
 
         # Find product-like words that appear as first word in many reviews (e.g., "Chair" in chair reviews)
         # If a word is first in >30% of reviews, it's likely the product name, not the specific concern
-        productLikeWords = {word for word, count in firstWordCounts.items() if count > len(texts) * 0.3}
+        productLikeWords = {word for word, count in firstWordCounts.items() if count > len(texts) * 0.30}
+        # Also filter generic product terms that are too broad (e.g., chair as whole product vs fabric as specific)
+        genericProductWords = {"chair", "phone", "watch", "speaker", "bluetooth", "office", "smartwatch", "product", "item", "device", "gadget"}
+        productLikeWords.update({w for w in genericProductWords if w in wordCounts})
 
         # Dynamic threshold: small dataset (<=20) -> 2, larger -> 3 — adapts without hard-coding product
         # 12 reviews -> 2, 36 reviews -> 3, 55 reviews -> 3 — keeps interview demo clean (5-8 concerns)
