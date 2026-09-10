@@ -1,8 +1,5 @@
-import { useState, useEffect } from 'react'
-import { login, signup, setToken, setUser, setApiBase } from '../../api'
-
-const LOCAL_BASE = 'http://localhost:8000'
-const DEPLOYED_BASE = 'https://cfa-api.onrender.com'
+import { useState } from 'react'
+import { login, signup, setToken, setUser } from '../../api'
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('login')
@@ -11,16 +8,6 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [baseMode, setBaseMode] = useState(
-    (typeof window !== 'undefined' &&
-      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
-      ? 'local'
-      : 'deployed'
-  )
-
-  useEffect(() => {
-    setApiBase(baseMode === 'local' ? LOCAL_BASE : DEPLOYED_BASE)
-  }, [baseMode])
 
   const submit = async (e) => {
     e.preventDefault()
@@ -60,28 +47,6 @@ export default function Login({ onLogin }) {
               ? 'Sign in to analyze your customer feedback.'
               : 'Sign up to start analyzing feedback.'}
           </p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
-          {['local', 'deployed'].map((bm) => (
-            <button
-              key={bm}
-              type="button"
-              onClick={() => setBaseMode(bm)}
-              style={{
-                flex: 1,
-                padding: '9px',
-                borderRadius: '8px',
-                border: `1px solid ${baseMode === bm ? '#173f73' : '#c9d4e0'}`,
-                background: baseMode === bm ? '#173f73' : '#fff',
-                color: baseMode === bm ? '#fff' : '#173f73',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              {bm === 'local' ? 'Local' : 'Deployed'}
-            </button>
-          ))}
         </div>
 
         <form className="auth-form" onSubmit={submit}>

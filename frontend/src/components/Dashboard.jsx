@@ -7,7 +7,6 @@ import {
   getUser,
   sendReportEmail,
   uploadReviews,
-  setApiBase,
 } from '../api'
 import { downloadText, sampleCsvText, reportToCsv } from '../utils'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
