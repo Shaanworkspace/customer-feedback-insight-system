@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { getHistory, getHistoryReport, getConcernComments, getMe, getUser } from '../api'
+import { getHistory, getHistoryReport, getConcernComments, getMe, getUser, uploadReviews } from '../api'
 import { downloadText, sampleCsvText, reportToCsv } from '../utils'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
@@ -116,7 +116,6 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
     }
     setViewLoading(true)
     setViewError(false)
-    setStatus('')
     getHistoryReport(selectedId)
       .then((r) => {
         setStats(r)
