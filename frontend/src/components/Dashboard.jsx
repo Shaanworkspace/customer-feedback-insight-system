@@ -313,13 +313,14 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
           )}
         </section>
 
-        {/* How your data should look — professional table with good formatting */}
-        <section className="mb-10 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-[16px] font-extrabold text-[#142b48]">How your data should look</h3>
+        {/* How your data should look — premium table with corner symbol and bigger headings */}
+        <section className="relative mb-12 overflow-hidden rounded-[20px] border border-[#e1e7ef] bg-white p-8 shadow-[0_8px_25px_rgba(25,46,72,0.06)]">
+          <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[#173f73] text-white shadow" aria-hidden="true">▦</div>
+          <div className="mb-5 flex items-center justify-between pr-8">
+            <h3 className="text-[20px] font-extrabold tracking-tight text-[#142b48]">How your data should look</h3>
             <span className="rounded-full bg-[#eaf1f8] px-3 py-1 text-[10px] font-extrabold tracking-wide text-[#315f89]">1 column required</span>
           </div>
-          <p className="mb-4 text-[12px] leading-relaxed text-[#718198]">Column names are flexible — we find <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> even if you call it <code className="rounded bg-[#f0f4f8] px-1 py-0.5">Review Text, comment, feedback</code>. Extra columns are kept and shown. Here is a good example:</p>
+          <p className="mb-5 text-[13px] leading-relaxed text-[#5a6d80]">Column names are flexible — we find <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> even if you call it <code className="rounded bg-[#f0f4f8] px-1 py-0.5">Review Text, comment, feedback</code>. Extra columns are kept and shown. Here is a good example:</p>
           <div className="overflow-hidden rounded-xl border border-[#e1e7ef]">
             <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.6fr] gap-px bg-[#e1e7ef] text-[11px] font-extrabold uppercase tracking-wide text-[#5a6472]">
               <div className="bg-[#f8fafc] px-4 py-3">review_text <span className="ml-1 rounded bg-[#173f73] px-1.5 py-0.5 text-[9px] text-white">required</span></div>
@@ -347,53 +348,60 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
             </div>
           </div>
           <p className="mt-3 text-[10px] text-[#8a96a8]">Tip: You can also give just one column — <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> — and the main insights will still work. Extra columns just make the extra charts.</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => downloadText('sample_reviews.csv', sampleCsvText())}
+              className="inline-flex items-center gap-2 rounded-full bg-[#173f73] px-5 py-2.5 text-[12px] font-extrabold text-white shadow transition hover:bg-[#12345f]"
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[12px]">⤓</span>
+              Download sample CSV — see ideal format
+            </button>
+            <span className="self-center text-[11px] text-[#8a96a8]">3 rows: battery, camera, chair — perfect to try</span>
+          </div>
         </section>
 
-        {/* Four sections — each with its own image, like landing why-rows, bigger diffs */}
+        {/* Four sections — premium, bigger, no counting, professional */}
         <section className="mb-12">
           <div className="mb-8 text-center">
-            <h3 className="text-[22px] font-extrabold tracking-tight text-[#142b48]">How it all works — and stays safe</h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-[#718198]">Four clear sections, each with a visual, well spaced and easy to scan.</p>
+            <h3 className="text-[26px] font-extrabold tracking-tight text-[#142b48]">How it all works — and stays safe</h3>
+            <p className="mt-2 text-[13px] leading-relaxed text-[#718198]">Four clear sections, each with a large visual and well-spaced layout.</p>
           </div>
-          <div className="flex flex-col gap-8">
-            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
+          <div className="flex flex-col gap-10">
+            <div className="grid grid-cols-1 items-center gap-10 rounded-[20px] border border-[#e1e7ef] bg-white p-10 shadow-[0_8px_25px_rgba(25,46,72,0.06)] md:grid-cols-[1.2fr_1fr]">
               <div className="order-2 md:order-1">
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf1f8] text-[14px] font-extrabold text-[#173f73]">01</div>
-                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How your data is</h4>
-                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">Your CSV stays as is. We read <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> and auto-keep every other column in <code className="rounded bg-[#f0f4f8] px-1 py-0.5">attributes</code> — nothing is deleted or reshaped. What you see in the table above is exactly what we store.</p>
+                <h4 className="text-[20px] font-extrabold tracking-tight text-[#142b48]">How your data is</h4>
+                <p className="mt-3 text-[14px] leading-relaxed text-[#5a6d80]">Your CSV stays as is. We read <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> and auto-keep every other column in <code className="rounded bg-[#f0f4f8] px-1 py-0.5">attributes</code> — nothing is deleted or reshaped. What you see in the table above is exactly what we store.</p>
               </div>
               <div className="order-1 overflow-hidden rounded-xl md:order-2">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Data table" className="h-[180px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Data table" className="h-[260px] w-full object-cover" loading="lazy" />
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
+            <div className="grid grid-cols-1 items-center gap-10 rounded-[20px] border border-[#e1e7ef] bg-white p-10 shadow-[0_8px_25px_rgba(25,46,72,0.06)] md:grid-cols-[1fr_1.2fr]">
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="AI working" className="h-[220px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="AI working" className="h-[260px] w-full object-cover" loading="lazy" />
               </div>
               <div>
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf8f0] text-[14px] font-extrabold text-[#1f7c46]">02</div>
-                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we are working</h4>
-                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">We work in sequence: <strong>read → clean → BERT (5 labels) → per-aspect feeling → overall Mixed</strong>. BERT finds aspects by pattern <code className="rounded bg-[#f0f4f8] px-1 py-0.5">X is wobbly</code> → X is aspect, so any product works without a new list.</p>
+                <h4 className="text-[20px] font-extrabold tracking-tight text-[#142b48]">How we are working</h4>
+                <p className="mt-3 text-[14px] leading-relaxed text-[#5a6d80]">We work in sequence: <strong>read → clean → BERT (5 labels) → per-aspect feeling → overall Mixed</strong>. BERT finds aspects by pattern <code className="rounded bg-[#f0f4f8] px-1 py-0.5">X is wobbly</code> → X is aspect, so any product (chair, phone, watch) works without a new list.</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
+            <div className="grid grid-cols-1 items-center gap-10 rounded-[20px] border border-[#e1e7ef] bg-white p-10 shadow-[0_8px_25px_rgba(25,46,72,0.06)] md:grid-cols-[1.2fr_1fr]">
               <div>
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7e6] text-[14px] font-extrabold text-[#b7791f]">03</div>
-                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we should improve it</h4>
-                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">We rank by <code className="rounded bg-[#f0f4f8] px-1 py-0.5">count × negative%</code>. Fix the top — battery 8× 87% — and the whole feeling lifts. The dashboard shows impact 100 on top, so you know where to act first.</p>
+                <h4 className="text-[20px] font-extrabold tracking-tight text-[#142b48]">How we should improve it</h4>
+                <p className="mt-3 text-[14px] leading-relaxed text-[#5a6d80]">We rank by <code className="rounded bg-[#f0f4f8] px-1 py-0.5">count × negative%</code>. Fix the top — battery 8× 87% — and the whole feeling lifts. The dashboard shows impact 100 on top, so you know where to act first.</p>
               </div>
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Improve chart" className="h-[220px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Improve chart" className="h-[260px] w-full object-cover" loading="lazy" />
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
+            <div className="grid grid-cols-1 items-center gap-10 rounded-[20px] border border-[#e1e7ef] bg-white p-10 shadow-[0_8px_25px_rgba(25,46,72,0.06)] md:grid-cols-[1fr_1.2fr]">
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80" alt="Privacy lock" className="h-[220px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80" alt="Privacy lock" className="h-[260px] w-full object-cover" loading="lazy" />
               </div>
               <div>
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0f4f8] text-[14px] font-extrabold text-[#173f73]">04</div>
-                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we maintain privacy</h4>
-                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">Per-user, last 3 analyses only. MySQL on Aiven (online) or local SQLite. Your CSV is analyzed securely and never shared. Delete any analysis with the × on hover.</p>
+                <h4 className="text-[20px] font-extrabold tracking-tight text-[#142b48]">How we maintain privacy</h4>
+                <p className="mt-3 text-[14px] leading-relaxed text-[#5a6d80]">Per-user, last 3 analyses only. MySQL on Aiven (online) or local SQLite. Your CSV is analyzed securely and never shared. Delete any analysis with the × on hover.</p>
               </div>
             </div>
           </div>
