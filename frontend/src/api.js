@@ -271,7 +271,7 @@ function buildUploadFormData(csvFile) {
 async function sendUploadRequest(formData) {
   const fileName = formData.get('file')?.name || 'unknown.csv'
   logStep('UPLOAD', `POST /api/v1/upload → sending to ${currentApiBaseUrl}/api/v1/upload`, { file: fileName })
-  logStep('MODEL', '⏳ Request ab MODEL (BERT) pe ja rahi hai — backend me BERT predict_review chalega')
+  logStep('MODEL', '⏳ Sending request to MODEL (BERT) — backend will run BERT predict_review')
   const t0 = performance.now()
   const response = await fetch(`${currentApiBaseUrl}/api/v1/upload`, {
     method: 'POST',
@@ -279,10 +279,10 @@ async function sendUploadRequest(formData) {
     body: formData,
   })
   const dt = Math.round(performance.now() - t0)
-  if (response.ok) logSuccess('MODEL', `MODEL se response aa gaya in ${dt}ms — status ${response.status} (BERT ne kaam kiya)`)
-  else logError('MODEL', `MODEL se error aaya in ${dt}ms — status ${response.status}`, { file: fileName })
+  if (response.ok) logSuccess('MODEL', `Response received from MODEL in ${dt}ms — status ${response.status} (BERT completed)`)
+  else logError('MODEL', `Error from MODEL in ${dt}ms — status ${response.status}`, { file: fileName })
   // detect hang: if >15s, warn
-  if (dt > 15000) logError('MODEL', '⚠️ Model fang gaya lagta hai — 15s+ lag gaya, backend check karo (BERT cold start?)')
+  if (dt > 15000) logError('MODEL', '⚠️ Model appears stuck — took 15s+, check backend (BERT cold start?)')
   return response
 }
 
@@ -296,27 +296,27 @@ export async function uploadReviews(csvFile) {
 
   // Step 2: Build request
   const formData = buildUploadFormData(csvFile)
-  logStep('UPLOAD', 'FormData ready, ab backend pe bhej rahe hai…')
+  logStep('UPLOAD', 'FormData ready, sending to backend…')
 
   // Step 3: Send and handle network errors separately
   let serverResponse
   try {
     serverResponse = await sendUploadRequest(formData)
-    logStep('UPLOAD', 'Fetch pura hua — server se jawab aa gaya', { status: serverResponse.status, ok: serverResponse.ok })
+    logStep('UPLOAD', 'Fetch completed — response received from server', { status: serverResponse.status, ok: serverResponse.ok })
   } catch (networkError) {
-    logError('UPLOAD', 'Fetch fail — file backend tak gayi hi nahi (network/CORS/backend down)', networkError)
+    logError('UPLOAD', 'Fetch failed — file did not reach backend (network/CORS/backend down)', networkError)
     throw new Error('Not able to reach the backend. Please check your internet and that the server is running.')
   }
 
   // Step 4: Handle server errors separately
   if (!serverResponse.ok) {
     const errorDetail = await extractErrorDetail(serverResponse)
-    logError('UPLOAD', 'Upload server ne error diya — file gayi par MODEL fail hua', { status: serverResponse.status, detail: errorDetail })
+    logError('UPLOAD', 'Upload server returned error — file reached backend but MODEL failed', { status: serverResponse.status, detail: errorDetail })
     // Use server message if it is useful, else generic
     throw new Error(errorDetail || 'Upload failed. Please check your CSV has a review text column and try again.')
   }
 
   const json = await serverResponse.json()
-  logSuccess('UPLOAD', 'Upload + MODEL success — JSON mila, dashboard banega', { total: json.total_reviews, concerns: json.ranked_concerns?.length })
+  logSuccess('UPLOAD', 'Upload + MODEL success — JSON received, building dashboard', { total: json.total_reviews, concerns: json.ranked_concerns?.length })
   return json
 }

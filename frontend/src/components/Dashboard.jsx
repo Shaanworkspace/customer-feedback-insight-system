@@ -63,28 +63,28 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   }
 
   function handleDashboardFile(fileToHandle) {
-    console.log('[CFA] [DASHBOARD] handleDashboardFile() — file mila', fileToHandle ? { name: fileToHandle.name, size: fileToHandle.size, type: fileToHandle.type } : 'NO FILE')
+    console.log('[CFA] [DASHBOARD] handleDashboardFile() — file received', fileToHandle ? { name: fileToHandle.name, size: fileToHandle.size, type: fileToHandle.type } : 'NO FILE')
     const validationError = validateCsvFile(fileToHandle)
     if (validationError) {
-      console.error('[CFA] [DASHBOARD] ❌ validation fail — file upload ruka', validationError)
+      console.error('[CFA] [DASHBOARD] ❌ validation failed — file upload blocked', validationError)
       setDashboardUploadError(validationError)
       return
     }
-    console.log('[CFA] [DASHBOARD] ✅ validation pass — ab MODEL pe bhej rahe hai…')
+    console.log('[CFA] [DASHBOARD] ✅ validation passed — sending to MODEL…')
     setDashboardUploadError('')
     handleDashboardUpload(fileToHandle)
   }
 
   async function handleDashboardUpload(fileToUpload) {
-    console.log('[CFA] [DASHBOARD] handleDashboardUpload() start — file model pe ja rahi hai', { name: fileToUpload.name, size: fileToUpload.size })
+    console.log('[CFA] [DASHBOARD] handleDashboardUpload() start — file sending to model', { name: fileToUpload.name, size: fileToUpload.size })
     const t0 = performance.now()
     setDashboardIsUploading(true)
     setDashboardUploadError('')
     try {
-      console.log('[CFA] [DASHBOARD] ⏳ uploadReviews() call kar rahe hai — fetch start')
+      console.log('[CFA] [DASHBOARD] ⏳ Calling uploadReviews() — fetch started')
       const result = await uploadReviews(fileToUpload)
       const dt = Math.round(performance.now() - t0)
-      console.log(`[CFA] [DASHBOARD] ✅ upload + MODEL success in ${dt}ms — result mila`, { total: result.total_reviews, ranked: result.ranked_concerns?.slice(0,2) })
+      console.log(`[CFA] [DASHBOARD] ✅ upload + MODEL success in ${dt}ms — result received`, { total: result.total_reviews, ranked: result.ranked_concerns?.slice(0,2) })
       if (onReload) {
         console.log('[CFA] [DASHBOARD] onReload() trigger — history refresh')
         onReload()
@@ -94,9 +94,9 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
       }
     } catch (uploadError) {
       const dt = Math.round(performance.now() - t0)
-      console.error(`[CFA] [DASHBOARD] ❌ upload/model fail in ${dt}ms — file gayi par response nahi`, uploadError.message)
-      if (uploadError.message?.includes('reach the backend')) console.error('[CFA] [DASHBOARD] → file backend tak gayi hi nahi (network/CORS)')
-      else console.error('[CFA] [DASHBOARD] → file gayi, MODEL pe fang gayi ya error diya (BERT/model.safetensors check karo)')
+      console.error(`[CFA] [DASHBOARD] ❌ upload/model failed in ${dt}ms — file sent but no response`, uploadError.message)
+      if (uploadError.message?.includes('reach the backend')) console.error('[CFA] [DASHBOARD] → file did not reach backend (network/CORS)')
+      else console.error('[CFA] [DASHBOARD] → file reached backend but MODEL stuck or returned error (check BERT/model.safetensors)')
       setDashboardUploadError(uploadError.message || 'Upload failed. Please try again.')
     } finally {
       setDashboardIsUploading(false)
