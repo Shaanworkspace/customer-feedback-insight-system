@@ -89,7 +89,7 @@ export default function App() {
     <div className="page-with-chrome">
       <AppHeader tab={v} setTab={(t) => navigate(t)} onUpload={() => navigate('upload')} />
       <main className="page-container">
-        {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} onUpload={() => navigate('upload')} />}
+        {v === 'dashboard' && <Dashboard analyzing={analyzing} reloadKey={reload} onUpload={() => navigate('upload')} onReload={() => setReload((r) => r + 1)} />}
         {v === 'analyzer' && <Analyzer />}
         {v === 'explorer' && <Explorer />}
       </main>

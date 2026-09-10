@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   getHistory,
   getHistoryReport,
@@ -6,6 +6,8 @@ import {
   getMe,
   getUser,
   sendReportEmail,
+  uploadReviews,
+  setApiBase,
 } from '../api'
 import { downloadText, sampleCsvText, reportToCsv } from '../utils'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
@@ -30,7 +32,7 @@ function Skeleton({ className = '' }) {
   return <div className={`animate-pulse rounded-[14px] bg-[#e6ecf3] ${className}`} />
 }
 
-export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }) {
+export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, onReload }) {
   const [me, setMe] = useState(null)
   const [analyses, setAnalyses] = useState([])
   const [listError, setListError] = useState(false)
@@ -48,6 +50,43 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
   const [comments, setComments] = useState([])
   const [loadingComments, setLoadingComments] = useState(false)
   const [commentError, setCommentError] = useState(false)
+
+  // Drag and drop on dashboard
+  const dashboardFileInputRef = useRef(null)
+  const [dashboardIsDragging, setDashboardIsDragging] = useState(false)
+  const [dashboardUploadError, setDashboardUploadError] = useState('')
+  const [dashboardIsUploading, setDashboardIsUploading] = useState(false)
+
+  function validateCsvFile(fileToCheck) {
+    if (!fileToCheck) return 'Please choose a file.'
+    if (!fileToCheck.name.toLowerCase().endsWith('.csv')) return 'Please upload a CSV file.'
+    if (fileToCheck.size === 0) return 'This file is empty.'
+    return ''
+  }
+
+  function handleDashboardFile(fileToHandle) {
+    const validationError = validateCsvFile(fileToHandle)
+    if (validationError) {
+      setDashboardUploadError(validationError)
+      return
+    }
+    setDashboardUploadError('')
+    handleDashboardUpload(fileToHandle)
+  }
+
+  async function handleDashboardUpload(fileToUpload) {
+    setDashboardIsUploading(true)
+    setDashboardUploadError('')
+    try {
+      await uploadReviews(fileToUpload)
+      if (onReload) onReload()
+      else window.location.reload()
+    } catch (uploadError) {
+      setDashboardUploadError(uploadError.message || 'Upload failed. Please try again.')
+    } finally {
+      setDashboardIsUploading(false)
+    }
+  }
 
   const selectAnalysis = (id) => {
     setSelectedId(id)
@@ -132,7 +171,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
           <div className="text-[11px] font-extrabold tracking-[1.5px] opacity-80">WELCOME TO YOUR WORKSPACE</div>
           <h2 className="mt-1 text-[clamp(26px,3.5vw,36px)] font-bold">Hi {me?.first_name || 'there'} 👋</h2>
           <p className="mt-2 max-w-[620px] text-[15px] opacity-90">
-            This is your customer feedback workspace. Open a past analysis to see its full report, or upload a new set of reviews.
+            This is your customer feedback workspace. Open a past analysis to see its full report, or drop a new CSV right here.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <button
@@ -150,6 +189,53 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload }
               Download sample CSV
             </button>
           </div>
+        </section>
+
+        {/* Professional drag and drop on dashboard */}
+        <section className="mb-8">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Drop CSV here to upload on dashboard"
+            onClick={() => dashboardFileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') dashboardFileInputRef.current?.click()
+            }}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setDashboardIsDragging(true)
+            }}
+            onDragLeave={() => setDashboardIsDragging(false)}
+            onDrop={(e) => {
+              e.preventDefault()
+              setDashboardIsDragging(false)
+              const droppedFile = e.dataTransfer.files?.[0]
+              handleDashboardFile(droppedFile)
+            }}
+            className={`flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed bg-white px-6 py-8 text-center shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition
+              ${dashboardIsDragging ? 'border-solid border-[#173f73] bg-[#eef4fb]' : 'border-[#cdd8e4] hover:border-[#47739e] hover:bg-[#f5f9fd]'}
+              ${dashboardIsUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'}`}
+          >
+            <input ref={dashboardFileInputRef} type="file" accept=".csv" className="hidden" onChange={(e) => handleDashboardFile(e.target.files?.[0])} />
+            {dashboardIsUploading ? (
+              <>
+                <span className="h-6 w-6 animate-spin rounded-full border-2 border-[#173f73] border-t-transparent" aria-hidden="true" />
+                <strong className="text-[14px] text-[#173f73]">Analyzing your reviews…</strong>
+                <span className="text-[11px] text-[#8a96a8]">This takes a few seconds</span>
+              </>
+            ) : (
+              <>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3fa] text-[20px] font-extrabold text-[#173f73]">⇪</span>
+                <strong className="text-[14px] text-[#142b48]">Drop CSV here</strong>
+                <span className="text-[11px] text-[#8a96a8]">or click to choose a file — any columns work</span>
+              </>
+            )}
+          </div>
+          {dashboardUploadError && (
+            <div role="alert" className="mt-3 rounded-lg border border-[#ffd5ce] bg-[#fff0ef] px-3 py-2.5 text-[12px] font-medium text-[#b42318]">
+              {dashboardUploadError}
+            </div>
+          )}
         </section>
 
         <section>

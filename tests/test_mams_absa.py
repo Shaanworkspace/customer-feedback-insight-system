@@ -11,6 +11,11 @@ MODEL_PATH = MODEL_DIR / "model.joblib"
 VECTORIZER_PATH = MODEL_DIR / "vectorizer.joblib"
 
 
+import pytest
+
+if not MODEL_PATH.exists() or not VECTORIZER_PATH.exists():
+    pytest.skip(f"MAMS model not found at {MODEL_PATH}", allow_module_level=True)
+
 model = joblib.load(MODEL_PATH)
 vectorizer = joblib.load(VECTORIZER_PATH)
 
