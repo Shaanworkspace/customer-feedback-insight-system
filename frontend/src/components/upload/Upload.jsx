@@ -1,8 +1,5 @@
 import { useState, useRef } from 'react'
-import { uploadReviews, setApiBase } from '../../api'
-
-const LOCAL_API_URL = 'http://localhost:8000'
-const DEPLOYED_API_URL = 'https://cfa-api.onrender.com'
+import { uploadReviews } from '../../api'
 
 // Professional step cards shown below the upload box
 const uploadSteps = [
@@ -83,8 +80,8 @@ export default function Upload({ onStart, onDone, onCancel }) {
     handleFileSelection(pickedFile)
   }
 
-  // Separate upload logic so error handling is not all inside one big function
-  async function uploadToBackend(apiBaseUrl) {
+  // Single upload — ENV decides Local vs Deployed (no two buttons)
+  async function uploadToBackend() {
     if (!selectedCsvFile) {
       setCsvUploadErrorMessage('Please choose a CSV file first.')
       return
@@ -92,7 +89,6 @@ export default function Upload({ onStart, onDone, onCancel }) {
 
     setIsCsvUploadInProgress(true)
     setCsvUploadErrorMessage('')
-    setApiBase(apiBaseUrl)
 
     try {
       await uploadReviews(selectedCsvFile)
@@ -177,25 +173,15 @@ export default function Upload({ onStart, onDone, onCancel }) {
             </div>
           )}
 
-          {/* Action buttons */}
+          {/* Single action button — ENV decides where it goes */}
           <button
             type="button"
             disabled={isCsvUploadInProgress}
-            onClick={() => uploadToBackend(LOCAL_API_URL)}
+            onClick={uploadToBackend}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-[10px] border-0 bg-[#173f73] px-5 py-3.5 text-[14px] font-bold text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isCsvUploadInProgress && <LoadingSpinner />}
-            {isCsvUploadInProgress ? 'Analyzing your reviews…' : 'Upload & Continue ON LOCAL'}
-          </button>
-
-          <button
-            type="button"
-            disabled={isCsvUploadInProgress}
-            onClick={() => uploadToBackend(DEPLOYED_API_URL)}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-[10px] border border-[#173f73] bg-white px-5 py-3.5 text-[14px] font-bold text-[#173f73] transition hover:bg-[#eef4fb] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isCsvUploadInProgress && <LoadingSpinner />}
-            Upload & Continue ON DEPLOYED
+            {isCsvUploadInProgress ? 'Analyzing your reviews…' : 'Upload & Analyze'}
           </button>
 
           <button
@@ -207,7 +193,7 @@ export default function Upload({ onStart, onDone, onCancel }) {
             ← Back to dashboard
           </button>
 
-          <p className="mt-3 text-[10px] leading-relaxed text-[#8a96a8]">Your CSV never leaves your workspace differently than you choose. Local stays on your machine, deployed uses the cloud.</p>
+          <p className="mt-3 text-[10px] leading-relaxed text-[#8a96a8]">Your CSV is analyzed securely and used only to build your dashboard.</p>
         </div>
       </section>
 

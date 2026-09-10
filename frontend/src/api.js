@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://cfa-api.onrender.com'
+const DEPLOYED_API = 'https://cfa-api.onrender.com'
+const LOCAL_API = 'http://localhost:8000'
+// ENV decides: if VITE_API_BASE is set, use it; else if running on localhost use local, else deployed
+const API_BASE =
+  import.meta.env.VITE_API_BASE || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? LOCAL_API : DEPLOYED_API)
 
 let currentApiBaseUrl = API_BASE
 
