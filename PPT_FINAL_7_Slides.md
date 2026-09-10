@@ -6,81 +6,94 @@
 
 ---
 
-## MASTER PROMPT FOR AI — COPY-PASTE ENTIRE BLOCK BELOW TO GAMMA/TOME/COPILOT
+## MASTER PROMPT FOR AI — COPY-PASTE ENTIRE BLOCK BELOW TO GAMMA/TOME/COPILOT (ULTRA-DETAILED — EVERY MIND-MAP EDGE EXPLAINED)
 
 ```
-Create a 6-slide professional PowerPoint 16:9 (13.33×7.5 inches) for KIET × Cognizant Hackathon Use Case #7: Customer Feedback Insight System.
+Create a 6-slide professional PowerPoint 16:9 (13.33×7.5 inches) for KIET × Cognizant Hackathon Use Case #7: Customer Feedback Insight System — Sentiment Analysis of Customer Reviews.
 
-DESIGN SYSTEM (STRICT):
-- Background: Dark #0F1E33 with accent #173F73 and bright #1F6FEB. Cards #FFFFFF border #E2E8F0. Text dark #1E293B, muted #64748B, light #FFFFFF. Success #10B981, danger #EF4444, warning #F59E0B.
-- Fonts: Calibri (fallback Montserrat), Titles 22-28pt Bold, Body 8-9pt, Captions 6.5-7pt. Word wrap ON, auto-size OFF, no overflow, no overlap. Grid alignment, 0.4 inch margins, footer bar dark with slide number.
-- No Hinglish. All English. Larger readable text. Mind-map style arrows.
-- Each slide: top bar with slide number + title + tag, footer dark bar "KIET × Cognizant — Use Case #7 | Confidential — X/6".
-- Icons minimal, rounded rectangles radius 0.08 inch, top color bar 4pt per card.
+GOAL: 6 slides that evaluator can tick against 9 criteria (Use Case Understanding, Architecture, Innovation, UI/UX, Code Quality, Model Performance, Deployment, Presentation, Collaboration). No Hinglish. All English. Larger readable text. Every mind-map edge must be drawn exactly as described — nothing implied.
 
-CONTENT — 6 SLIDES (USE EXACT TEXT BELOW PER SLIDE):
+DESIGN SYSTEM (STRICT — DO NOT DEVIATE):
+- Canvas: 13.33 inch width × 7.5 inch height (1920×1080). Margins 0.4 inch all sides. Footer dark bar 0.32 inch at y=7.18 inch always.
+- Colors: Background dark #0F1E33, accent #173F73, bright #1F6FEB, card #FFFFFF, border #E2E8F0, text dark #1E293B, muted #64748B, light #FFFFFF, success #10B981, danger #EF4444, warning #F59E0B, orange badge #FF6B35.
+- Fonts: Calibri (fallback Montserrat). Slide title 22-28pt Bold, card title 10pt Bold, body 8-9pt Regular, caption 6.5-7pt, chip 6.5pt Bold. Word wrap ON, auto-size OFF, vertical anchor TOP, line spacing 1.05-1.1. No overflow — every textbox height must fit its text, no overlap (check x+width ≤13.33, y+height ≤7.18).
+- Shapes: Rounded rectangle radius 0.08 inch, top color bar 4pt height, border 0.75pt #E2E8F0, arrow › 12pt Bold #1F6FEB or right-arrow shape fill #E2E8F0. Pill badge 0.22 inch height radius 0.11 inch.
+- Each slide top: white card 12.53×0.58 inch at (0.4,0.30) with left number 14pt #1F6FEB + title 13-14pt #1E293B + right tag 6.5pt #64748B. Footer: dark bar 13.33×0.32 at (0,7.18) with left "KIET × Cognizant — Use Case #7 • Customer Feedback Insight System" 7pt #FFFFFF + right "X/6 Confidential" 7pt #FFFFFF. Top 3pt line #1F6FEB across width.
+- Icons minimal (● › ★ ✓). No images needed — use QR placeholder squares light #F8FAFC border #E2E8F0 labelled "QR Vercel" / "QR EC2 Health".
+
+PROMPT INSTRUCTION FOR AI: Read slides sequentially. For each slide, create every shape at exact position described, copy exact text (no rephrase), preserve line breaks, use exact colors/font sizes. Draw every arrow/connection listed under "MIND MAP EDGES" — those are the mind-map. Do not add Hinglish. Do not shrink text. Do not let text overflow outside shape.
+
+CONTENT — 6 SLIDES (USE EXACT TEXT BELOW PER SLIDE + DRAW EDGES):
 
 SLIDE 1 — COVER: Title + Team + Use Case #7 + Live Proof
-- Title lines: "Customer Feedback Insight System" + "Sentiment Analysis of Customer Reviews" + pill "KIET × COGNIZANT HACKATHON • AUGUST 2026 • USE CASE #7" + big badge "USE CASE #7" orange #FF6B35 bottom-right.
-- Left card: Team 8 members grid 2 columns. Shaan Yadav highlighted: bigger bold #1F6FEB + separate pill [LEAD] orange beside name, note "Team Lead — Model + AWS Deployment — Pipeline Owner". Others: Reekal Yadav (Model Training), Shikhar (Data Visualisation), Sharad (Data Preprocessing), Rohan Mehra (Backend Auth+Upload), Sachchidanand (Backend Pipeline+DB+Ranking), Shivang (Frontend Core UI), Ram Ashish Ram (Frontend Polish & Flow).
-- Right card: LIVE PROOF section redesigned (not plain white). Two link cards with icons: "Frontend — customer-feedback-insight-system.vercel.app" + green badge ● LIVE, "Backend — 3.109.121.85:8000/health" + "EC2 t3.small ap-south-1". Below: stats row 3 numbers "16,288 Training Rows | 415 MB BERT Model | 52-108 Reviews Tested" + GitHub line. QR placeholders 2 small squares labelled QR Vercel / QR EC2. Overall sentiment line: "One review → Every aspect → Feeling per aspect → Overall Mixed → Ranked what to fix + Proof" italic.
-- Visual: dark background with subtle glow circles, rounded cards, accent line under title.
+Text: See Slide 1 Text Copy-Paste below (same). Must show:
+- Top pill "KIET × COGNIZANT HACKATHON • AUGUST 2026 • USE CASE #7" 3.4×0.32 at (0.4,0.35) dark #1E3A5F, title "Customer Feedback" 30pt #FFFFFF at (0.4,0.95) + "Insight System" 30pt #60A5FA at (0.4,1.50) + subtitle "Sentiment Analysis of Customer Reviews" 11pt #CBD5E1 at (0.4,2.15) + underline 1.2 inch #1F6FEB at (0.4,2.52) + orange badge "USE CASE #7" 1.6×0.36 #FF6B35 at (6.2,2.05).
+- Left team card dark #142B4A 7.8×3.05 at (0.4,2.85): title "TEAM — 8 MEMBERS" #93C5FD, then Shaan Yadav 9.5pt #1F6FEB at (0.65,3.28) + pill [LEAD] orange 0.62×0.22 at (2.85,3.30) + "— Team Lead • Model + AWS Deployment" #FFFFFF, then 7 other members in 2 columns (list exactly as per slide). Bottom note italic "One review → Every aspect → Feeling per aspect → Overall Mixed → Ranked what to fix + Proof" #CBD5E1.
+- Right live card white 4.3×5.05 at (8.6,0.85) with dark header 4.3×0.58 #0F1E33: green pill ● LIVE #DCFCE7, "Vercel + EC2 t3.small" #93C5FD, "USE CASE #7 • LIVE PROOF" #FF6B35 orange, then 2 link boxes light #F8FAFC: Frontend URL + Backend 3.109.121.85:8000/health, then 2 QR squares 1.8×1.05, then stats row 16,288 / 415 MB / 108, then GitHub line, plus corner badge #7 orange 0.75×0.32 at (12.15,0.85). MIND MAP EDGES FOR SLIDE 1: None — this is cover, but visual hierarchy: Title (center) → connected to Team card (left) and Live Proof card (right) — title is hub, two cards are spokes (no arrows, just spatial grouping).
+Visual: dark background with 2 glow ovals at (9.5,-1.5) 5×5 #173F73 and (-1,5) 4×4 #1A3A6B.
 
 SLIDE 2 — PROBLEM → SOLUTION (MIND MAP, BIGGER TEXT)
-- Title bar: "02 — Problem → Solution" with tag "USE CASE UNDERSTANDING • WHY MIXED MATTERS" and bigger headings inside cards: "PROBLEM" red and "OUR SOLUTION" green each 10pt Bold visible.
-- Left card PROBLEM (mind-map branches, larger text 8-9pt):
-  Title: "Businesses Struggle to Analyze Large Volumes of Customer Feedback"
-  Branches: 1) Thousands of reviews, manual reading impossible. 2) One review contains multiple feelings — "product excellent but delivery terrible" → single label fails. 3) Key concerns unknown — which aspect (battery, armrest, delivery) how often, how negative? 4) Data is scattered — different CSV names (Review Text / comment / feedback), 1 to 5 columns. 5) Hard-coded list ["battery","delivery"] fails for new aspect armrest → Neutral → churn. Impact box red: "Impact: Mixed missed → wrong ranking → fix wrong area → customer leaves. Manager sees Positive 80% but delivery 40% Negative hidden."
-- Right card SOLUTION (mind-map sequential 5 steps bigger, connected with › arrows):
-  Title: "Our Solution — How We Broke Down Use Case #7 Sequentially"
-  Steps horizontal: 01 Every Aspect (battery, delivery, armrest) → 02 Per-Aspect Feeling (Positive/Negative/Neutral) → 03 Overall (Pos+Neg → Mixed) → 04 Ranked (impact = count × negative% — ACT FIRST) → 05 Proof (5 real quotes). Plus aim line: "Aim Oriented: aspect + per-aspect + Mixed + ranked + proof — model 60%, our glue 40%".
-  Example box blue: "Review: The product is excellent but delivery was terrible." chips: product → Positive (green), delivery → Negative (red), Overall → Mixed (orange). Note below: "Pattern: X is wobbly → X is ASPECT • Not list [battery] • No hard-coded values".
-- Visual: Split 50/50 cards, red left border, green right border, icon dots.
+Title bar "02 — Problem → Solution" at (0.4,0.30). Split cards left 6.15×5.95 at (0.4,1.05) red top bar #EF4444, right 6.15×5.95 at (6.78,1.05) green top bar #10B981. Headings PROBLEM 10pt Bold #EF4444 at (0.7,1.22) and OUR SOLUTION 10pt #10B981 at (7.08,1.22) — must be bigger visible.
+MIND MAP EDGES FOR SLIDE 2 — DRAW EXACTLY:
+- LEFT PROBLEM MIND MAP: Central node "Businesses Struggle to Analyze Large Volumes of Customer Feedback" 9pt Bold at (0.7,1.52) — this is center. From center, 4 branch lines (use dot • or line) to 4 leaf nodes:
+  Branch 1 → "One review contains multiple feelings — “product excellent but delivery terrible” → single label fails." at (0.88,2.26)
+  Branch 2 → "Key concerns are unknown — which aspect (battery, armrest, delivery) how often, how negative?" at (0.88,2.94)
+  Branch 3 → "Data is scattered — different CSV names (Review Text / comment / feedback), 1 to 5 columns." at (0.88,3.62)
+  Branch 4 → "Hard-coded list [“battery”,“delivery”] fails for new aspect armrest → returns Neutral → customer churn." at (0.88,4.30)
+  Then leaf 4 connects down to Impact box red 5.55×1.05 at (0.7,5.15): "Impact: Mixed missed → wrong ranking → fix wrong area → customer leaves. Manager sees Positive 80% but delivery 40% Negative hidden." — arrow from Branch 4 leaf to Impact box.
+- RIGHT SOLUTION MIND MAP: Central sequential chain 01→02→03→04→05 left-to-right at y=2.35 each 1.02×1.38 light #F8FAFC:
+  Node 01 "Every Aspect (battery, delivery, armrest)" at (7.18,2.35) —CONNECT via › arrow (0.1 wide) to Node 02 "Per-Aspect Feeling (Positive/Negative/Neutral)" at (8.30,2.35) —CONNECT via › to Node 03 "Overall (Pos+Neg → Mixed)" at (9.42,2.35) —CONNECT via › to Node 04 "Ranked (impact = count × negative% — ACT FIRST)" at (10.54,2.35) —CONNECT via › to Node 05 "Proof (5 real quotes)" at (11.66,2.35). This chain is the mind-map spine.
+  From Node 05, draw down arrow to Example box blue 5.55×1.55 at (7.08,3.95): "Review: The product is excellent but delivery was terrible." → splits to 3 chips: product→Positive green at (7.25,4.62), delivery→Negative red at (8.95,4.62), Overall→Mixed orange at (10.65,4.62) — these 3 chips are children of Example box (draw small connecting lines). Below chips note "Pattern: X is wobbly → X is ASPECT • Not list [battery]" at (7.25,5.02). Aim line at bottom "Aim: aspect + per-aspect + Mixed + ranked + proof — model 60%, our glue 40%" at (7.08,5.62).
+Visual: red dots 7pt for branches, › arrows 12pt #1F6FEB.
 
-SLIDE 3 — ARCHITECTURE — FULL PIPELINE MIND MAP (MOST IMPORTANT)
-- Title bar: "03 — Architecture — Full Pipeline Mind Map" tag "★ BEST SLIDE — 60 SEC DISCUSSION"
-- Top row: 6 connected boxes left→right with arrows: [USER CSV] review_text mandatory any name → [FRONTEND] Vercel — Upload CSV button click → user uploads CSV — vercel.json proxy /api → EC2 http (avoids mixed-content) → [BACKEND] FastAPI EC2 t3.small — POST /upload — JWT auth — CORS vercel.app — RateLimiter 30/60s → [PREPROCESS] Column matching — find_text_column substring — clean strip lower — keep rating/date/country in attributes — 16,288 rows → [BERT 5 LABELS] bert-base-uncased 110M — max_length 128 — offset_mapping — O / ASPECT / OPINION_POS / NEG / NEU → [TRIPLETS & RANKING] aspect-opinion-sentiment — Overall Mixed — Ranking count×negative% — Proof 5 quotes — MySQL Aiven last 3 — Dashboard Pie/Bar/Top5. Each box has top color bar distinct.
-- Second row split left/right:
-  Left box: "HOW WE BUILT MODEL — TWO MODELS MERGED & LABELED"
-  Text: Pre-trained English BERT (Wikipedia 2.5B + BookCorpus 800M) — understands grammar, not reviews. + DMASTE 7,524 human-labeled → 28,233 → drop -1 (11,945 implicit It is good) → 16,288 explicit. Merge → Fine-tune 5-label head AutoModelForTokenClassification num_labels=5 (Linear 768→5) → bert_aste_final 416M (model.safetensors + tokenizer.json) → S3 private → EC2 /opt/.../model:ro. Pattern: X is wobbly → X is ASPECT even if armrest never seen. No hard-coded list. Single model handles any product.
-  Right box: "WHY THIS STACK? WHY NOT OTHERS?"
-  Rows: EC2 t3.small 2GB ✓ vs t3.micro 1GB OOM 1.3G (415M+800M → kill 137) ✓, Lambda ✗ 250M limit BERT 416M fail, SageMaker ✗ overkill 10-day cost, ECS/K8s ✗ 1 container, BERT-base 110M ✓ vs large 340M needs 8GB OOM, CPU whl/cpu ✓ vs 3GB CUDA cudnn 553M. Add HEALTHCHECK + restart unless-stopped.
-- Bottom line: "Flow: CSV → Vercel proxy (no mixed-content) → EC2:8000 → Preprocess → BERT 128 → Triplets → Mixed → count×neg → Proof → MySQL → Dashboard"
-- Visual: Horizontal pipeline big, left-right detail boxes, icons minimal.
+SLIDE 3 — ARCHITECTURE — FULL PIPELINE MIND MAP (MOST IMPORTANT — DRAW EVERY CONNECTION)
+Title bar "03 — Architecture — Full Pipeline Mind Map" ★ BEST at (0.4,0.30). Top pipeline row 6 boxes each 1.95×1.62 at y=1.05 starting x=0.4 step 2.15 with top color bars #0F1E33, #173F73, #1F6FEB, #10B981, #FF6B35, #EF4444, with right-arrow shapes 0.2×10pt #E2E8F0 between boxes. MIND MAP EDGES FOR SLIDE 3 — DRAW EXACTLY AS NUMBERED FLOW:
+  Edge 1: USER CSV box (0.4,1.05) "review_text mandatory any name: Review Text / comment / feedback" —ARROW→ FRONTEND box (2.55,1.05) — label on arrow: "User clicks Upload CSV button, file selected" (6pt #64748B above arrow).
+  Edge 2: FRONTEND box —ARROW→ BACKEND box (4.70,1.05) — label: "vercel.json proxy /api → EC2 http avoids https→http mixed-content block + POST /api/v1/upload multipart/form-data" .
+  Edge 3: BACKEND box "FastAPI EC2 t3.small POST /upload JWT Bearer CORS vercel.app RateLimiter 30/60s api/main.py:cfa.api.main:app" —ARROW→ PREPROCESS box (6.85,1.05) — label: "JWT verified, file bytes received" .
+  Edge 4: PREPROCESS box "find_text_column substring, clean strip lower, keep rating/date/country in attributes, 16,288 rows, drop -1 11,945, leakage 0" —ARROW→ BERT 5 LABELS box (9.00,1.05) — label: "cleaned texts + offset_mapping" .
+  Edge 5: BERT box "bert-base-uncased 110M max_length 128 offset_mapping O/ASPECT/OPINION_POS/NEG/NEU AutoModelForTokenClassification num_labels=5" —ARROW→ TRIPLETS & RANKING box (11.15,1.05) — label: "logits argmax per token → triplets" .
+  Edge 6: Inside TRIPLETS box: "aspect-opinion-sentiment triplets → Overall Mixed (Pos+Neg→Mixed) → Ranking impact = count × negative% → Proof 5 quotes → MySQL Aiven last 3 → Dashboard Pie/Bar/Top5" — this is internal mini-chain, draw as vertical stack inside box.
+Second row: LEFT DETAIL box 6.15×3.15 at (0.4,2.85) titled "HOW WE BUILT MODEL — TWO MODELS MERGED & LABELED" — its internal mind map: Node A "Pre-trained English BERT Wikipedia 2.5B + BookCorpus 800M — understands grammar, not reviews" —MERGE (plus icon) → Node B "DMASTE 7,524 → 28,233 → drop -1 11,945 → 16,288 explicit POS79% NEG17% NEU4%" —ARROW→ Node C "Fine-tune 5-label head Linear 768→5 random, Dropout 0.1, CrossEntropy → bert_aste_final 416M → S3 s3://customer-sentiment-analysis-model-ap-south-1/bert_aste_final → EC2 /opt/.../model:ro" —ARROW→ Node D "Pattern X is wobbly → X is ASPECT — armrest unseen also found — no hard-coded list — any product" — draw these 4 nodes vertically stacked with arrows.
+  RIGHT DETAIL box 6.15×3.15 at (6.78,2.85) titled "WHY THIS STACK? WHY NOT OTHERS?" — list rows 6 lines with ✓/✗: EC2 t3.small 2GB ✓ vs t3.micro 1GB OOM 1.3G ✓, Lambda ✗ 250M, SageMaker ✗ overkill, ECS/K8s ✗ 1 container, BERT-base 110M ✓ vs large 340M 8GB OOM, CPU whl/cpu ✓ vs 3GB CUDA 553M, HEALTHCHECK ✓ — each row is leaf, no arrows, just list.
+Bottom flow line centered at (0.4,6.18): "Flow: CSV → Vercel proxy (no mixed-content) → EC2:8000 → Preprocess → BERT 128 → Triplets → Mixed → count×neg → Proof → MySQL → Dashboard" 6.5pt #64748B italic.
 
-SLIDE 4 — DATA — FROM WHERE & WHAT IS DATA (ENGLISH PRE-TRAINED + HUMAN DATASET + BIAS)
-- Title bar: "04 — Data — From Where & What is Data" tag "BREADTH OF SAMPLE DATA • 5 LABELS"
-- Left card SOURCE 1 TRAINING (human):
-  Title: DMASTE — 7,524 reviews (SilvioLima/raw_data)
-  Flow: 7,524 → flatten 28,233 → drop -1 (11,945 implicit no span) → 16,288 explicit
-  Split: review-level Train 4,055 / Val 1,014 / Test 1,268 — leakage 0 (set(train) ∩ set(test)=0) — random_state 42 reproducible.
-  Distribution bars: POS 79% (12,944) green long bar, NEG 17% (2,736) red, NEU 4% (608) orange small — BIASED box note: POS 20× NEU → model favours POS → Accuracy 79% by guessing POS → we use weighted F1. Amazon mention small.
-- Middle card 5 LABELS PER TOKEN:
-  Chips vertical: O Other is,the,was (90% tokens) light grey, ASPECT battery/armrest/delivery (blue), OPINION_POS great/excellent (green), OPINION_NEG terrible/wobbly (red), OPINION_NEU okay/average (orange). Example line: "Battery is great but armrest is wobbly" → Battery=ASPECT, great=OPINION_POS, armrest=ASPECT, wobbly=OPINION_NEG in italic blue box.
-- Right card TEST DATASETS & ANY CSV:
-  Cards: bluetooth_speaker 48 rows 4 cols, office_chair 52 rows 3 cols (no date → Trend empty test), smartwatch 55 rows 5 cols +product, plus 100+ rows coffee_maker 105 (1-col) running_shoes 102 (2-col) gaming_headset 108 (3-col) → same model any product, find_text_column accepts any name (Review Text / comment / feedback) substring. Note: Only 1 column mandatory review_text.
-- Visual: 3-column cards, distribution bars, chip pills.
+SLIDE 4 — DATA — FROM WHERE & WHAT IS DATA (NO EXTRA)
+Title bar "04 — Data — From Where & What is Data" at (0.4,0.30). Three cards: Left 4.15×5.95 at (0.4,1.05), Middle 3.85×5.95 at (4.75,1.05), Right 4.15×5.95 at (8.78,1.05).
+MIND MAP EDGES FOR SLIDE 4:
+- LEFT CARD DATA FLOW MIND MAP: Start node "DMASTE • 7,524 reviews [SilvioLima/raw_data]" at (0.65,1.42) —ARROW→ "flatten" node "28,233" at (1.60,2.35) —ARROW→ "drop aspect=-1 11,945 (implicit It is good no span)" at (2.55,2.35) —ARROW→ "16,288 explicit" at (3.50,2.35). Each arrow is ›. Then from "16,288 explicit" —ARROW down→ "Split review-level leakage 0: Train 4,055 Val 1,014 Test 1,268 set(train)∩set(test)=0" box light at (0.65,3.15). Then from that —ARROW down→ "Distribution — BIASED" at (0.65,4.12) which branches to 3 bars: POS 79% (12,944) green long 2.33 inch, NEG 17% (2,736) red 0.5 inch, NEU 4% (608) orange 0.12 inch at y 4.38/4.62/4.86 — each bar is leaf of Distribution. Then from Distribution —ARROW down→ note "POS 20× NEU → favours POS → Accuracy 79% by guessing → we use weighted F1" at (0.65,5.15). Plus small box at (0.65,5.62) "Amazon 21,214 demo only NO aspect label" — this is sibling, not connected, placed bottom.
+- MIDDLE CARD 5 LABELS: Vertical list 5 chips at x=5.0 y 1.48 step 0.88 each 1.15×0.72: O light grey, ASPECT blue #1F6FEB, OPINION_POS green, OPINION_NEG red, OPINION_NEU orange — each chip is node, no arrows, just list. From list —ARROW down→ Example box light at (5.0,6.05): "Battery is great but armrest is wobbly → Battery=ASPECT great=OPINION_POS ..." — this is child of list.
+- RIGHT CARD ANY CSV: 3 dataset nodes vertical at (9.03,1.52) step 1.05 each 3.65×0.85 light: bluetooth_speaker 48 rows, office_chair 52 rows, smartwatch 55 rows — each is leaf, then from those —ARROW down→ plus box 3.65×1.02 at (9.03,4.78): "PLUS 100+ ROWS coffee_maker 105 (1-col) running_shoes 102 (2-col) gaming_headset 108 (3-col) same model any product" — then —ARROW down→ note "Only 1 column mandatory review_text" green at (9.03,5.88). Edges: datasets → plus box → note is chain.
+Visual: bars 2.95 bg + fills, chip pills, flow arrows ›.
 
-SLIDE 5 — MODEL COMPARISON — TF-IDF vs BERT + WHY F1
-- Title bar: "05 — Model Comparison — TF-IDF vs BERT" tag "INNOVATION • PERFORMANCE"
-- Left card BEFORE TF-IDF + LOGISTIC:
-  Title: Word Count → 1 Label Per Review
-  Points: Counts battery 1 great 1 terrible 1 loses order, Needs list ["battery"] → armrest → Neutral, Mixed miss product good+delivery bad → 1 label only, Accuracy 0.71 F1 0.45 (POS 79% tricks accuracy) 1.35 MB fast but wrong. Bar ASPECT F1 0.45 red short. Note: Fixed list fails tomorrow strap.
-  Center arrow big: → +0.23 +51% better Pattern > List
-- Right card NOW BERT 5-LABEL TOKEN:
-  Title: bert-base-uncased 110M + 5 heads → every token — review-level split leakage 0 — 2 epochs T4 — lr 2e-5
-  Points bullets: Reads both ways bidirectional — wobbly near armrest → ASPECT, Pattern X is wobbly → X is ASPECT even unseen ✓, Mixed 100% catch battery Positive+delivery Negative → Mixed.
-  Scores bars: ASPECT 0.76 green, OPINION_POS 0.81, OPINION_NEG 0.72, OPINION_NEU 0.57 (NEU low 608 rows) orange, Weighted F1 0.875 main, Gap <0.05 no overfit. Footnote: Why BERT-base 110M not large 340M 415M fits t3.small 2GB large needs 8GB OOM. Backup distilbert 66M 250M F1 0.66 2× faster.
-  Separate box: WHY F1 NOT ACCURACY? FP waste (false battery top) vs FN hide (miss armrest → Neutral churn) — F1 balances 2*P*R/(P+R). Weighted F1 because bias 79% POS — accuracy lies. Optimize ASPECT F1 0.76→0.80 + weighted, not accuracy 0.96 (O 90% → 0.96 even if ASPECT 0). Next: augment NEU 608→2k, 3 epochs, nearest opinion, threshold 0.4 → 0.90 aim.
-- Visual: Split cards, red left, green right, horizontal metric bars.
+SLIDE 5 — MODEL COMPARISON — TF-IDF vs BERT + WHY F1 + FUTURE
+Title bar "05 — Model Comparison — TF-IDF vs BERT" at (0.4,0.30). Split left 4.05×5.95 at (0.4,1.05) red border, center arrow 1.25 wide at (4.55,2.95), right 6.38×5.95 at (6.55,1.05) green border, bottom boxes two small at y=4.28 and 4.95.
+MIND MAP EDGES FOR SLIDE 5:
+- LEFT TF-IDF SUB-TREE: Root "TF-IDF + LOGISTIC Word Count → 1 Label Per Review" at (0.65,1.42) — branches to 4 leaves: "Counts battery 1 great 1 terrible 1 loses order" at (0.65,1.72), "Needs list [battery] → armrest → Neutral" at (0.65,2.04), "Mixed miss product good+delivery bad → 1 label" at (0.65,2.36), "Scores Accuracy 0.71 F1 0.45 POS79% tricks 1.35MB" at (0.65,2.68) — then from leaves —ARROW down→ bar "ASPECT F1 0.45" red 1.6 inch at (0.65,3.32) — then —ARROW down→ note "Fixed list fails tomorrow strap" at (0.65,3.72) — then —ARROW down→ bottom box light orange at (0.65,4.28): "WHY IT FAILED — TESTING Precision 0.51 Recall 0.40 → F1 0.45 WHY F1 not Accuracy Accuracy 0.71 looks ok but POS79% bias →0.79 by guessing POS FP waste vs FN churn F1 balances 2*P*R/(P+R)".
+- CENTER BRIDGE: Big arrow from left bar at (4.85,3.95) 0.65×14pt green #10B981 pointing right to right card, with top label "→ +0.23 +51% better" 14pt green at (4.55,2.95) and "Pattern > List" 6.5pt #64748B at (4.55,4.32) — this edge connects LEFT subtree to RIGHT subtree.
+- RIGHT BERT SUB-TREE: Root "BERT 5-LABEL TOKEN bert-base-uncased 110M → every token leakage 0 2 epochs T4" at (6.8,1.42) — branches to 4 leaves: "Reads both ways wobbly near armrest → ASPECT" at (6.95,1.72), "Pattern X is wobbly → X is ASPECT even unseen ✓" at (6.95,2.00), "Mixed 100% battery Positive+delivery Negative →Mixed" at (6.95,2.28), "Weighted F1 0.875 ASPECT 0.76 Gap<0.05 no overfit" at (6.95,2.56) — then from leaves —ARROW down→ metric bars section at (6.8,2.92) titled "SCORES — PER LABEL F1": 4 bars ASPECT 0.76 green 2.9 inch, OPINION_POS 0.81, OPINION_NEG 0.72 red, OPINION_NEU 0.57 orange at y 3.18 step 0.36 — each bar leaf of Scores. Then —ARROW down→ footnote "Why BERT-base 110M not large 340M 415M fits t3.small 2GB large needs 8GB OOM" at (6.8,4.72) — then —ARROW down→ future box blue at (6.8,4.95): "FUTURE IMPROVEMENTS 2 weeks Data NEU608→2k POS79%→53% balance, 1 week Model 3 epochs class weight NEU 3.0, 3 days Logic nearest opinion not first → threshold 0.4 Recall 0.60→0.75 aim 0.90".
+Visual: red vs green cards, metric bars light bg #E2E8F0.
 
 SLIDE 6 — THANK YOU — ALL LINKS + FUTURE SCOPE
-- Full dark background #0F1E33 with glow, big centered "Thank You" 26pt, subtitle "Live Demo — Drag Any CSV • Q & A" #93C5FD italic.
-- Top 3-column roadmap: NOW 10 days t3.small 16,288 2 epochs F1 0.68 Neutral 58% first-opinion lag (dark), NEXT 2 WEEKS Data NEU 608→2k POS 79%→53% balance clean dedup (blue tick), NEXT 1 MONTH Model+Logic+Infra 3-4 epochs nearest opinion HTTPS ALB distilbert (green tick).
-- Middle row 2 cards dark #142B4A: REUSE — Same model any product no list no code change — find_text_column handles any name — strap also found via pattern. MONITORING — HEALTHCHECK + restart unless-stopped + CloudWatch /customer-sentiment-analysis/backend + [CFA] logs + curl -f localhost:8000/health no hardcode.
-- Bottom link card white: "Frontend: customer-feedback-insight-system.vercel.app • Backend: 3.109.121.85:8000/health • Dataset 1: huggingface.co/datasets/SilvioLima/raw_data (DMASTE) • Dataset 2: kaggle.com/datasets/dongrelaxman/amazon-reviews-dataset (Amazon 21k) • GitHub: Shaanworkspace/customer-feedback-insight-system" 6.5pt #1F6FEB centered.
-- Team line: "Team: Shaan Yadav [LEAD] • Reekal Yadav • Shikhar • Sharad • Rohan Mehra • Sachchidanand • Shivang • Ram Ashish Ram" muted.
-- Visual: Dark theme, big Thank You, link card white, roadmap ticks.
+Title pill "ROADMAP • MONITORING • THANK YOU" at (0.4,0.35) #93C5FD. Heading "What's Next" 28pt #FFFFFF at (0.4,0.75) + subtitle "We know laggings — we have fix for each • 3 months plan" #CBD5E1 at (0.4,1.35).
+MIND MAP EDGES FOR SLIDE 6:
+- TOP ROADMAP ROW: 3 columns at y=1.85 each 3.15×1.48 with top bars #1E293B, #1F6FEB, #10B981: NOW (10 days) dark at (0.4,1.85) "t3.small 2GB 16,288 rows 2 epochs F1 0.68 Neutral 58% first-opinion" —CONNECT via no arrow but sequence left→middle→right: NOW → NEXT 2 WEEKS at (3.75,1.85) "Data: NEU 608→2k POS79%→53% balance clean dedup" with blue tick ✓ at (5.10,3.08) —CONNECT → NEXT 1 MONTH at (7.10,1.85) "Model+Logic+Infra 3-4 epochs nearest HTTPS ALB distilbert" green tick. These 3 are sequential timeline left→right.
+- MIDDLE ROW: 2 cards dark #142B4A at (0.4,3.58) and (6.78,3.58) each 6.15×1.12:
+  Left "REUSE — Same model for any product — No list, no code change — find_text_column handles any name — strap also found via pattern X is wobbly." — this is child of ROADMAP (arrow from roadmap down to reuse).
+  Right "MONITORING — HEALTHCHECK + restart unless-stopped + CloudWatch /customer-sentiment-analysis/backend + [CFA] logs + curl -f localhost:8000/health no hardcode" — also child of roadmap, parallel.
+- CENTER: Big "Thank You" 28pt #FFFFFF at (0.4,4.92) centered 12.53 wide — this is hub, with "Live Demo — Drag Any CSV • Q & A" 9pt #93C5FD at (0.4,5.42) as sub.
+- BOTTOM LINK CARD white 10.33×0.62 at (1.5,5.75) border #E2E8F0: "Frontend: customer-feedback-insight-system.vercel.app • Backend: 3.109.121.85:8000/health • Dataset: huggingface.co/datasets/SilvioLima/raw_data • kaggle.com/datasets/dongrelaxman/amazon-reviews-dataset • GitHub: Shaanworkspace/customer-feedback-insight-system" 6.5pt #1F6FEB centered — child of Thank You (arrow from Thank You down to links).
+- TEAM LINE at (0.4,6.52) "Team: Shaan Yadav [LEAD] • Reekal ... " #94A3B8 — sibling of link card, no arrow.
+- Footer 6/6 dark.
+
+CRITICAL RULES FOR AI RENDERING MIND MAPS:
+- Every "→" above must be a visible arrow shape (right-arrow or › 12pt) connecting the two boxes' centers horizontally or vertically as described (left→right or top→bottom). Do not omit any edge.
+- Every box's position and size must match Inches coordinates given so no overlap. Test x+width and y+height.
+- Every text must be word-wrapped inside its box, never overflow. If text longer, make textbox taller but keep x,y.
+- No Hinglish anywhere — all English.
+- Larger text: body minimum 6.5pt but branches 7-8pt, headings 10pt Bold.
+
+Use this prompt exactly — do not summarize. Copy slide texts verbatim from SLIDE 1-6 TEXT COPY-PASTE sections below in this file.
 ```
 
 ---
