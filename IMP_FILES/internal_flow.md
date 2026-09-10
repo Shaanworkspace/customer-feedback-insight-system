@@ -1,3 +1,5 @@
+> **Updated 2026-09-10 — Perfect BERT model (5 labels, no hard-coded list), flexible Any-CSV (ENGLISH_STOP_WORDS + dynamic 10%), online Aiven MySQL (no re-register), dashboard 80% + delete + timing + See more 5/10/55.**
+
 # Internal Flow — How the pieces talk (simple version)
 
 > This is for someone who wants to understand the **inside**: what each part of the code does, how the website talks to the server, what data goes back and forth, and how the smart parts (ML + RAG) work. Read `user_flow.md` first.

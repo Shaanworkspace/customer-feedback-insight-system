@@ -1,3 +1,5 @@
+> **Updated 2026-09-10 — Perfect BERT model (5 labels, no hard-coded list), flexible Any-CSV (ENGLISH_STOP_WORDS + dynamic 10%), online Aiven MySQL (no re-register), dashboard 80% + delete + timing + See more 5/10/55.**
+
 # PPT.md — 8-Slide Presentation Plan (for KIET Hackathon Evaluators)
 
 > **How to use this file:** Give this whole file to an AI slide generator (or use it to build the deck yourself). It contains, slide by slide:

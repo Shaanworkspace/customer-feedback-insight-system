@@ -1,210 +1,96 @@
 # Backend — the server explained simply
 
-> The **backend** is the hidden server that does the thinking. It is written in Python using **FastAPI** (a tool that makes web APIs easy). This file explains every endpoint and the upload pipeline, line by line, in plain words.
+> The **backend** is the hidden server that does the thinking. It is Python + **FastAPI**. This file matches the latest code (BERT perfect model, no hard-code).
 
-Backend code lives in `src/cfa/`.
-
----
+Code lives in `src/cfa/`.
 
 ## 1. The server (`api/main.py`)
 
-FastAPI gives us automatic API docs at `/docs`.
+- `FastAPI(title="Customer Feedback Insight System")`
+- `CORSMiddleware` allows `localhost:5173`, `localhost:4173`, `https://customer-feedback-insight-system.vercel.app` and `*.vercel.app`, `allow_credentials=True`.
+- Rate limit: 60 req/min per IP (except `/health`, `/api/v1/ping`).
+- `init_db()` creates `users` + `analyses` tables (MySQL via `DATABASE_URL`, else SQLite `data/app.db`).
 
-### CORS (so the website can call it)
+## 2. Auth (real login, no fake)
 
-```python
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:4173",
-        "https://customer-feedback-insight-system.vercel.app",
-    ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
-This says: "I accept calls from the local app and from any Vercel deployment of our website."
-
----
-
-## 2. Auth endpoints (real login now)
-
-All data endpoints need a **token** (a temporary digital pass). You get it by signing up or logging in.
-
-### POST `/api/v1/auth/signup`
-Body: `{username, password}` → creates the account (password scrambled safely), returns `{message, token}`.
-
-### POST `/api/v1/auth/login`
-Body: `{username, password}` → checks the password, returns `{token}`.
-
-### GET `/api/v1/auth/me`
-Needs token. Returns `{username}`. Proof the token works.
-
-How auth works inside (`api/auth.py` + `db/repo.py`, no extra libraries):
-- Passwords are scrambled with `pbkdf2` (a one-way scramble) — we never store the plain password.
-- The token is a **JWT** (a signed ticket) made with `hmac` + `hashlib`. It is valid for 1 hour.
-- Users are stored in the database (`users` table) via `db.repo`. Accounts and uploaded results persist across restarts and re-deploys.
-
----
+- `POST /api/v1/auth/signup` → `add_user` (pbkdf2 scramble), returns `{token}`.
+- `POST /api/v1/auth/login` → `authenticate` (verify pbkdf2), returns `{token}`.
+- `GET /api/v1/auth/me` → needs `Bearer token`, returns `{username}`.
+- Token is **JWT** (`hmac`+`hashlib`, `exp` 1h, `SECRET=JWT_SECRET` env, default `dev-secret...` for local).
+- `db/repo.py`: `users` table, `create_user`/`get_user_by_username` with `IntegrityError` handling.
 
 ## 3. Data endpoints (need token)
 
-### GET `/health`
-A counter of how many reviews were analyzed and the average time. No token needed.
-```json
-{"status": "ok", "reviews_analyzed": 2002, "avg_latency_ms": 0.0}
-```
+- `GET /health` → `{status, reviews_analyzed, avg_latency_ms}` — no token.
+- `GET /api/v1/ping` → `alive`.
+- `POST /api/v1/upload` → main. Reads bytes, `process_csv`, `save_analysis` (keep last 3 per user), returns full stats.
+- `GET /api/v1/stats` → `get_stats(user.id)` (latest analysis).
+- `GET /api/v1/reviews` → `get_reviews`.
+- `POST /api/v1/analyze` → one review via `analyze_review` + `rank_concerns`.
+- `GET /api/v1/concern-comments?concern=battery` → RAG proof.
+- `GET /api/v1/history` → last 3 (`id, filename, created_at, total_reviews, top_concerns`).
+- `GET /api/v1/history/{id}` → full data for one analysis.
+- `DELETE /api/v1/history/{id}` → `delete_analysis` (new: delete button on dashboard).
 
-### GET `/api/v1/ping`
-"Is the server alive?" No token needed.
+All except `health/ping` use `Depends(get_current_user)` which checks `Authorization: Bearer <token>` and returns `401 Invalid or expired token` if bad. Frontend `api.js` clears token and redirects to `/?view=login` on `401`.
 
-### POST `/api/v1/upload`
-The main one. Receives the CSV file, analyzes it, saves the result to the database (one row per user, last 3 kept), and returns the full stats.
-```python
-@app.post("/api/v1/upload")
-async def upload(file: UploadFile = File(...), user=Depends(get_current_user)):
-    content = await file.read()
-    stats = process_csv(content)
-    save_analysis(user.id, file.filename, stats)
-    return stats
-```
+## 4. The upload pipeline (`api/pipeline.py`) — step by step, small helpers
 
-### GET `/api/v1/stats`
-Combines several readers into one response (countries, time trend, ratings).
+We follow one CSV row through the system. Helpers are 8–25 lines each, easy names.
 
-### GET `/api/v1/reviews`
-Returns the saved review list.
+- **Find columns** — `preprocessing.py:find_text_column()` checks candidates `review_text, review, comment, text...` case-insensitive, so any CSV layout works (minimal: just `review_text`).
+- **For each row** — `preprocess_csv(content)` → `cleanedRows` (`text, rating, country, date, reviewer, attributes`), skips empty.
+- **Analyze** — `analyze_reviews([row["text"] for row in cleanedRows])`:
+  - `analysis/extract.py`: `_bert_aspects()` first (if `bert_aste_final/` exists, no list), else `_llm_batch()` if `HF_TOKEN`, else `_dynamic_fallback_batch()` (per-CSV frequent nouns via `ENGLISH_STOP_WORDS` + `dynamicMinCount = 3 if >20 else 2` + word-alone sentiment filter — no product hard-code).
+  - `analysis/sentiment.py`: `SentimentClassifier.classify()` counts `pos/neg` from `aspects` → `Mixed` if both, else `Positive/Negative/Neutral` (no word list, no second classifier).
+- **Build reviews** — `buildReviewsForStorage()` makes `review_id` (uuid), `entity`, `sentiment`, `rating` (first number via regex), `country`, `date`, `concerns`, `aspects`, and `concernAggregator.add(name, sentiment, text)`.
+- **Counts** — `buildSentimentDistribution()` → `positive/negative/neutral/mixed`, `rank_concerns({"concerns": agg.stats()})` → `impact = count × negative_pct`, `proof` + `comments_by_concern` via `find_similar` (word overlap, no vector DB).
+- **Charts** — `_ratings`, `_countries`, `extractMonthTrend` (regex `YYYY-MM`).
+- **Save** — `save_analysis(user_id, filename, stats)` + `ReportStore.save_json` → `analyses` table (keep 3). On `data/app.db` fallback, file is created via `DATA_DIR.mkdir`.
 
-### POST `/api/v1/analyze`
-Analyze a single review text (used by the Analyzer screen).
+**Error handling is split, not one big try:** `readUploadFileSafely`, `decodeCsvBytesToText`, `processCsvBytesToStats` each raise `HTTPException(400/500)` with a clear message, shown in the frontend red alert.
 
-### GET `/api/v1/concern-comments?concern=battery`
-Returns the proof reviews for one concern (the RAG output saved at upload time).
+## 5. Reading results (`analysis/stats.py`, `db/repo.py`)
 
-### GET `/api/v1/history`
-Returns the user's last 3 uploaded analyses (filename, time, total reviews, top concerns). Older uploads are pruned automatically.
-
----
-
-## 4. The upload pipeline (`api/pipeline.py`) — step by step
-
-We follow one CSV row through the system.
-
-### Step 4.1 — Find columns
-The code matches column names: text → `Review Text`, rating → `Rating`, country → `Country`, date → `Date of Experience`, reviewer → `Reviewer Name`. This is why both Kaggle format and a simple `review_text,rating,date` format work.
-
-### Step 4.2 — For each row
-```python
-text = (row.get(text_col) or "").strip()
-if not text:
-    continue                      # skip empty rows
-result = analyze_review(text, include_similar=False)
-sentiment = "positive" if result["overall_sentiment"] == "positive" else "negative"
-```
-`analyze_review` returns the sentiment and the list of concerns.
-
-### Step 4.3 — Parse the rating
-Kaggle rating is the string `"Rated 1 out of 5 stars"`. We extract the first number → `1`. A plain `3` also gives `3`. Missing → `None`.
-
-### Step 4.4 — Build one review object
-```python
-reviews.append({
-    "review_id": "a1b2c3d4",
-    "text": "Battery drains very fast",
-    "entity": "battery",
-    "sentiment": "negative",
-    "rating": 1,
-    "country": "US",
-    "date": "2024-03-15T10:00:00.000Z",
-    "reviewer": "User3",
-})
-```
-
-### Step 4.5 — Count concerns
-A running tally: every time "battery" appears, `count` goes up and `negative` goes up if the sentiment was negative.
-
-### Step 4.6 — Save reviews
-`data/reviews.json` holds every review. This is what the Dashboard reads.
-
-### Step 4.7 — Rank concerns
-`rank_concerns(...)` → impact score (see `ranking/priority.py`). Example:
-```json
-[{"concern": "battery", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1}]
-```
-
-### Step 4.8 — Build proof (RAG)
-For each concern we call `find_similar(name)` to fetch the top-5 real reviews, stored as `comments_by_concern`. This is the "real proof" the Dashboard shows.
-
-### Step 4.9 — Save stats
-`data/concern_stats.json` holds the summary.
-
-### Step 4.10 — Return
-The whole stats dict goes back to the browser as JSON.
-
----
-
-## 5. Reading results (`analysis/stats.py`)
-
-The Dashboard never recomputes. It calls readers that just read the saved files:
-- `get_stats()` → `concern_stats.json`
-- `get_reviews()` → `reviews.json`
-- `get_countries()` → top 10
-- `get_time_trend()` → 4-digit year from each date
-- `get_ratings()` → star counts
-
-Because it only reads saved data, the numbers are always the real ones from your CSV.
-
----
+Dashboard never recomputes. It reads the latest saved `data`:
+- `get_stats()` → `total_reviews, sentiment_distribution, ranked_concerns, ratings, countries, time_trend, proof, comments, reviews`
+- `get_reviews()` → list of review objects
+- `get_concern_comments()` → top similar reviews for one concern
 
 ## 6. Data storage
 
-Connection is `DATABASE_URL` (see `db/core.py`). With it set, results go to **Aiven MySQL** (`users` + `analyses` tables). With it unset, a local **SQLite** file (`data/app.db`) is used as a fallback.
+- `DATABASE_URL=mysql+pymysql://...@aivencloud.com:14273/cfa` (from `.env` or Render env `sync: false`) → **Aiven MySQL** (`users`, `analyses` JSON). Without it, `sqlite:///data/app.db`.
+- `JWT_SECRET` env → stable token (default `dev-secret...` for local).
+- `config.py`: `BERT_ASTE_DIR = PROJECT_ROOT / "bert_aste_final"` (400MB, gitignored until trained), `MODEL_PATH` legacy TF-IDF kept.
+- `data/` is gitignored → repo never ships fake results.
 
-`config.py`:
-```python
-DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data"))
-REVIEWS_PATH = DATA_DIR / "reviews.json"   # only a fallback for RAG if no DB reviews
-MODEL_PATH = PROJECT_ROOT / "models" / "sentiment_model.joblib"
-```
+## 7. Example upload response
 
-- Every result is stored per user in the `analyses` table; only the **last 3 analyses per user** are kept.
-- `data/` (SQLite fallback) is gitignored → the repo never ships fake results.
-- `models/` (the trained model files) **are committed** → the cloud uses the real trained model, not just the fallback.
+`POST /api/v1/upload` with `bluetooth_speaker_reviews.csv` (48 rows, 4 cols):
 
----
-
-## 7. Example: full upload response
-
-Request: `POST /api/v1/upload` with `6_luxewatch_price.csv`
-
-Response (trimmed):
 ```json
 {
-  "total_reviews": 16,
-  "sentiment_distribution": {"positive": 11, "negative": 5},
-  "ranked_concerns": [
-    {"concern": "price", "count": 11, "negative_pct": 36.4, "impact": 100, "priority": 1}
-  ],
-  "ratings": {"1": 6, "2": 5, "4": 2, "5": 3},
-  "countries": {"US": 2, "GB": 2, "CA": 2},
-  "time_trend": [{"year": "2024", "count": 16}],
-  "comments_by_concern": {
-    "price": [{"reviewer": "User23", "text": "Price is too high", "rating": 2, "country": "US", "date": "2024-01-23", "sentiment": "negative", "similarity": 1.0}]
-  }
+  "total_reviews": 48,
+  "sentiment_distribution": {"positive": 7, "negative": 27, "neutral": 1, "mixed": 13},
+  "ranked_concerns": [{"concern": "battery", "count": 9, "negative_pct": 77.8, "impact": 100, "priority": 1}],
+  "ratings": {"1": 12, "2": 8, "5": 20},
+  "countries": {"India": 15, "USA": 18},
+  "time_trend": [{"month": "2024-01", "count": 10}],
+  "reviews": [{"review_id": "a1b2c3d4", "text": "Battery drains...", "sentiment": "negative", "concerns": [{"name": "battery", "sentiment": "negative"}]}]
 }
 ```
 
----
-
-## 8. How to run the backend locally
+## 8. How to run locally (online DB)
 
 ```bash
+# .env must have DATABASE_URL (Aiven) and JWT_SECRET
+cat .env  # DATABASE_URL=mysql+pymysql://...
 cd src/cfa
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn api.main:app --reload --port 8000
+python -m venv .venv; source .venv/bin/activate
+pip install -r requirements.txt  # includes transformers, torch, datasets
+PYTHONPATH=src uvicorn cfa.api.main:app --host 0.0.0.0 --port 8000  # uses MySQL, not SQLite
+# Frontend in another terminal
+cd frontend; npm install; npm run dev  # http://localhost:5173
 ```
-Then open `http://localhost:8000/docs` to see the interactive API.
+
+Check `http://localhost:8000/health` and `http://localhost:8000/docs`.

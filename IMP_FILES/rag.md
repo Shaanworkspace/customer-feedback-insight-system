@@ -1,3 +1,5 @@
+> **Updated 2026-09-10 — Perfect BERT model (5 labels, no hard-coded list), flexible Any-CSV (ENGLISH_STOP_WORDS + dynamic 10%), online Aiven MySQL (no re-register), dashboard 80% + delete + timing + See more 5/10/55.**
+
 # RAG Documentation — "Show me real proof"
 
 RAG stands for **Retrieval-Augmented Generation**. In plain words: *before you answer, go fetch real facts and use them.*

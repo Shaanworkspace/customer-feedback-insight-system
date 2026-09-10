@@ -1,3 +1,5 @@
+> **Updated 2026-09-10 — Perfect BERT model (5 labels, no hard-coded list), flexible Any-CSV (ENGLISH_STOP_WORDS + dynamic 10%), online Aiven MySQL (no re-register), dashboard 80% + delete + timing + See more 5/10/55.**
+
 # RAG Architecture — Local vs Deployed (Online)
 
 > Dedicated note on how Retrieval-Augmented Generation (RAG) works in this project, how it runs **locally** vs **online (deployed)**, the exact differences, and why we use no Vector DB. Companion to `rag.md` (module internals) and `backend.md` (deployment).
