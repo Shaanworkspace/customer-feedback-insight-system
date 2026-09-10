@@ -38,7 +38,22 @@ function buildAuthHeader() {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+function handleUnauthorizedAndRedirect(response) {
+  if (response.status === 401) {
+    setToken('')
+    setUser(null)
+    const currentView = new URLSearchParams(window.location.search).get('view')
+    if (currentView !== 'login') {
+      window.location.href = '/?view=login'
+    }
+  }
+}
+
 async function extractErrorDetail(response) {
+  // If 401, clear the expired token so user is not stuck in a loop
+  if (response.status === 401) {
+    handleUnauthorizedAndRedirect(response)
+  }
   try {
     const data = await response.json()
     return data.detail || ''
