@@ -119,9 +119,10 @@ def _dynamic_fallback_batch(texts):
         stopwords = {
             "the","is","are","was","were","be","been","am","a","an","and","or","but","if","in","on","at","to","of","for","with","by","this","that","these","those","it","its","as","so","no","not","very","just","also","have","has","had","do","does","did","will","would","can","could","should","my","your","our","their","i","we","you","he","she","they","me","us","him","her","them","from","up","out","about","into","over","after","before","between","during","while","when","where","why","how","what","which","who","whom",
         }
-        # Opinion words should not be treated as aspects
+        # Opinion words and generic time/verb words should not be treated as aspects
         opinion_stopwords = {
             "terrible","poor","low","quickly","drains","drains fast","overheats","slow","fast","good","great","excellent","amazing","stunning","sharp","vivid","beautiful","awesome","perfect","outstanding","superb","wonderful","fantastic","happy","satisfied","disappointed","rude","unhelpful","useless","expensive","overpriced","faulty","broken","cracked","blurry","grainy","dim","flickers","late","cheap","worth","sturdy","durable","comfortable","wobbly","flimsy","neat","safe","average","special","quick","quickly","poorly",
+            "day","days","time","life","love","smooth","easy",
         }
         # Collect word counts across all reviews
         wordCounts = Counter()
@@ -132,8 +133,9 @@ def _dynamic_fallback_batch(texts):
             reviewWords.append(filtered)
             wordCounts.update(filtered)
 
-        # Frequent words that appear at least twice are candidate aspects, but not opinion words
-        frequentAspects = {word for word, count in wordCounts.items() if count >= 2 and word not in opinion_stopwords}
+        # Frequent words that appear at least 3 times are candidate aspects, but not opinion words
+        # 3+ filters out noisy 2x words like "day", "time" while keeping real concerns like battery (8x)
+        frequentAspects = {word for word, count in wordCounts.items() if count >= 3 and word not in opinion_stopwords}
 
         batchResults = []
         for text, words in zip(texts, reviewWords):
