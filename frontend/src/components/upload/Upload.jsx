@@ -45,12 +45,15 @@ export default function Upload({ onStart, onDone, onCancel }) {
 
   // Called when a file is picked from dialog or dropped
   function handleFileSelection(fileFromInput) {
+    console.log('[CFA] [UPLOAD-PAGE] handleFileSelection', fileFromInput ? { name: fileFromInput.name, size: fileFromInput.size } : 'NO FILE')
     const validationError = validateCsvFile(fileFromInput)
     if (validationError) {
+      console.error('[CFA] [UPLOAD-PAGE] ❌ validation fail', validationError)
       setCsvUploadErrorMessage(validationError)
       setSelectedCsvFile(null)
       return
     }
+    console.log('[CFA] [UPLOAD-PAGE] ✅ file selected, ready to upload')
     setSelectedCsvFile(fileFromInput)
     setCsvUploadErrorMessage('')
   }
@@ -82,28 +85,38 @@ export default function Upload({ onStart, onDone, onCancel }) {
 
   // Single upload — ENV decides Local vs Deployed (no two buttons)
   async function uploadToBackend() {
+    console.log('[CFA] [UPLOAD-PAGE] uploadToBackend() click — file:', selectedCsvFile ? { name: selectedCsvFile.name, size: selectedCsvFile.size } : 'NO FILE')
     if (!selectedCsvFile) {
+      console.error('[CFA] [UPLOAD-PAGE] ❌ no file — upload ruka')
       setCsvUploadErrorMessage('Please choose a CSV file first.')
       return
     }
 
+    const t0 = performance.now()
+    console.log('[CFA] [UPLOAD-PAGE] ⏳ upload start — MODEL pe request ja rahi hai…')
     setIsCsvUploadInProgress(true)
     setCsvUploadErrorMessage('')
 
     try {
-      await uploadReviews(selectedCsvFile)
+      const result = await uploadReviews(selectedCsvFile)
+      const dt = Math.round(performance.now() - t0)
+      console.log(`[CFA] [UPLOAD-PAGE] ✅ MODEL se response aa gaya in ${dt}ms`, { total: result.total_reviews })
+      if (dt > 15000) console.warn('[CFA] [UPLOAD-PAGE] ⚠️ 15s+ laga — MODEL fang gaya lagta hai (backend cold start?)')
       onStart?.()
       onDone()
     } catch (uploadError) {
-      console.error('CSV upload failed:', uploadError)
-      const messageFromServer = uploadError?.message || ''
-      if (messageFromServer.toLowerCase().includes('network') || messageFromServer.toLowerCase().includes('backend')) {
+      const dt = Math.round(performance.now() - t0)
+      console.error(`[CFA] [UPLOAD-PAGE] ❌ fail in ${dt}ms — file gayi ya nahi?`, uploadError.message)
+      if (uploadError.message?.toLowerCase().includes('network') || uploadError.message?.toLowerCase().includes('backend')) {
+        console.error('[CFA] [UPLOAD-PAGE] → file backend tak gayi hi nahi')
         setCsvUploadErrorMessage('Cannot reach the server. Please check if the backend is running and try again.')
       } else {
-        setCsvUploadErrorMessage(messageFromServer || 'Upload failed. Please try again with a valid CSV.')
+        console.error('[CFA] [UPLOAD-PAGE] → file gayi, MODEL pe error aaya')
+        setCsvUploadErrorMessage(uploadError?.message || 'Upload failed. Please try again with a valid CSV.')
       }
     } finally {
       setIsCsvUploadInProgress(false)
+      console.log('[CFA] [UPLOAD-PAGE] uploadToBackend done')
     }
   }
 

@@ -63,26 +63,44 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   }
 
   function handleDashboardFile(fileToHandle) {
+    console.log('[CFA] [DASHBOARD] handleDashboardFile() — file mila', fileToHandle ? { name: fileToHandle.name, size: fileToHandle.size, type: fileToHandle.type } : 'NO FILE')
     const validationError = validateCsvFile(fileToHandle)
     if (validationError) {
+      console.error('[CFA] [DASHBOARD] ❌ validation fail — file upload ruka', validationError)
       setDashboardUploadError(validationError)
       return
     }
+    console.log('[CFA] [DASHBOARD] ✅ validation pass — ab MODEL pe bhej rahe hai…')
     setDashboardUploadError('')
     handleDashboardUpload(fileToHandle)
   }
 
   async function handleDashboardUpload(fileToUpload) {
+    console.log('[CFA] [DASHBOARD] handleDashboardUpload() start — file model pe ja rahi hai', { name: fileToUpload.name, size: fileToUpload.size })
+    const t0 = performance.now()
     setDashboardIsUploading(true)
     setDashboardUploadError('')
     try {
-      await uploadReviews(fileToUpload)
-      if (onReload) onReload()
-      else window.location.reload()
+      console.log('[CFA] [DASHBOARD] ⏳ uploadReviews() call kar rahe hai — fetch start')
+      const result = await uploadReviews(fileToUpload)
+      const dt = Math.round(performance.now() - t0)
+      console.log(`[CFA] [DASHBOARD] ✅ upload + MODEL success in ${dt}ms — result mila`, { total: result.total_reviews, ranked: result.ranked_concerns?.slice(0,2) })
+      if (onReload) {
+        console.log('[CFA] [DASHBOARD] onReload() trigger — history refresh')
+        onReload()
+      } else {
+        console.log('[CFA] [DASHBOARD] reload page')
+        window.location.reload()
+      }
     } catch (uploadError) {
+      const dt = Math.round(performance.now() - t0)
+      console.error(`[CFA] [DASHBOARD] ❌ upload/model fail in ${dt}ms — file gayi par response nahi`, uploadError.message)
+      if (uploadError.message?.includes('reach the backend')) console.error('[CFA] [DASHBOARD] → file backend tak gayi hi nahi (network/CORS)')
+      else console.error('[CFA] [DASHBOARD] → file gayi, MODEL pe fang gayi ya error diya (BERT/model.safetensors check karo)')
       setDashboardUploadError(uploadError.message || 'Upload failed. Please try again.')
     } finally {
       setDashboardIsUploading(false)
+      console.log('[CFA] [DASHBOARD] handleDashboardUpload done — spinner off')
     }
   }
 
@@ -102,10 +120,11 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   }
 
   useEffect(() => {
+    console.log('[CFA] [DASHBOARD] useEffect mount — getMe + getHistory call')
     const u = getUser()
-    if (u) setMe(u)
-    else getMe().then(setMe).catch(() => setMe(null))
-    getHistory().then(setAnalyses).catch(() => setListError(true))
+    if (u) { console.log('[CFA] [DASHBOARD] getUser from localStorage', u); setMe(u) }
+    else getMe().then((d)=>{console.log('[CFA] [DASHBOARD] getMe ok', d); setMe(d)}).catch((e)=>{console.error('[CFA] [DASHBOARD] getMe fail', e.message); setMe(null)})
+    getHistory().then((d)=>{console.log('[CFA] [DASHBOARD] getHistory ok', d.length); setAnalyses(d)}).catch((e)=>{console.error('[CFA] [DASHBOARD] getHistory fail', e.message); setListError(true)})
   }, [reloadKey])
 
   useEffect(() => {
@@ -114,25 +133,29 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
       setReviews([])
       return
     }
+    console.log(`[CFA] [DASHBOARD] getHistoryReport(${selectedId}) → MODEL report fetch start`)
+    const t0 = performance.now()
     setViewLoading(true)
     setViewError(false)
     getHistoryReport(selectedId)
       .then((r) => {
+        console.log(`[CFA] [DASHBOARD] ✅ report ${selectedId} ok in ${Math.round(performance.now()-t0)}ms`, { total: r.total_reviews })
         setStats(r)
         setReviews(r.reviews || [])
       })
-      .catch(() => setViewError(true))
+      .catch((e) => { console.error(`[CFA] [DASHBOARD] ❌ report ${selectedId} fail`, e.message); setViewError(true) })
       .finally(() => setViewLoading(false))
   }, [selectedId])
 
   const openComments = (concern) => {
+    console.log(`[CFA] [DASHBOARD] openComments(${concern}) → MODEL concern-comments fetch`)
     setOpenConcern(concern)
     setLoadingComments(true)
     setCommentError(false)
     setComments([])
     getConcernComments(concern)
-      .then((c) => setComments(c))
-      .catch(() => setCommentError(true))
+      .then((c) => { console.log(`[CFA] [DASHBOARD] ✅ comments for ${concern}`, c.length); setComments(c) })
+      .catch((e) => { console.error(`[CFA] [DASHBOARD] ❌ comments fail`, e.message); setCommentError(true) })
       .finally(() => setLoadingComments(false))
   }
 

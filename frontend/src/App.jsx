@@ -35,16 +35,19 @@ export default function App() {
   }, [])
 
   const navigate = (v) => {
+    console.log(`[CFA] [NAV] navigate → ${v} (from ${view})`)
     window.history.pushState({ view: v }, '', `?view=${v}`)
     setView(v)
   }
 
   const handleLogin = () => {
+    console.log('[CFA] [AUTH] handleLogin — token set, go dashboard')
     setSignedIn(true)
     navigate('dashboard')
   }
 
   const handleLogout = () => {
+    console.log('[CFA] [AUTH] handleLogout — clear token+user')
     localStorage.removeItem('cfa_token')
     localStorage.removeItem('cfa_user')
     setSignedIn(false)
@@ -52,11 +55,13 @@ export default function App() {
   }
 
   const handleUploadStart = () => {
+    console.log('[CFA] [UPLOAD] handleUploadStart — dashboard skeleton on')
     setAnalyzing(true)
     navigate('dashboard')
   }
 
   const handleUploaded = () => {
+    console.log('[CFA] [UPLOAD] handleUploaded — dashboard reload')
     setAnalyzing(false)
     setReload((r) => r + 1)
   }
