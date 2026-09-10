@@ -1,7 +1,7 @@
 """Aspect extraction — your main BERT model only.
 
 Aim: 1 review → auto aspects → per-aspect feeling → Mixed.
-Only English stopwords are kept (standard). No hard-coded product list, no word list.
+Only English stopwords are kept (standard). No hard-coded product list, no word list, no LLM.
 """
 
 import re
@@ -38,9 +38,10 @@ def _bert_aspects(text):
 
 
 def extract_aspects(texts):
-    """Return a list of aspect dicts for each text.
+    """Return a list of aspect dicts for each text — BERT only.
 
-    Order: 1) BERT perfect model (no hard-code). 2) Empty until BERT is trained.
+    No TF-IDF, no LLM, no product list. If BERT not yet trained, returns empty
+    (train in notebooks/Final_Perfect_Model.ipynb → bert_aste_final/).
     This keeps your aim pure and polished.
     """
     allResults = []
@@ -49,7 +50,6 @@ def extract_aspects(texts):
         if bertResult is not None:
             allResults.append(bertResult)
         else:
-            # No TF-IDF, no LLM, no product list — just empty until you run trainer.train()
-            # Once bert_aste_final/ exists, this will never happen.
+            # No hard-coded guess — wait for BERT
             allResults.append([])
     return allResults
