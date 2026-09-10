@@ -193,63 +193,124 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   if (selectedId == null) {
     return (
       <div className="w-full">
-        <section className="mb-8 rounded-[20px] border border-[#e1e7ef] bg-gradient-to-r from-[#173f73] to-[#2b6cb0] p-8 text-white">
-          <div className="text-[11px] font-extrabold tracking-[1.5px] opacity-80">WELCOME TO YOUR WORKSPACE</div>
-          <h2 className="mt-1 text-[clamp(26px,3.5vw,36px)] font-bold">Hi {me?.first_name || 'there'} 👋</h2>
-          <p className="mt-2 max-w-[620px] text-[15px] opacity-90">
-            Drop a CSV with your reviews below. Only 1 column is required — <strong className="font-extrabold text-white">review_text</strong> (also accepts Review Text, comment, feedback, text).
-            Optional columns like <span className="rounded bg-white/20 px-1.5 py-0.5 text-[12px] font-bold">rating, date, country</span> make the charts richer, but the main insights work with just review text.
-          </p>
-          <div className="mt-4 rounded-lg bg-white/10 p-3 text-[11px] leading-relaxed text-white/90">
-            <strong>Minimal CSV:</strong> <code className="rounded bg-white/20 px-1 py-0.5">review_text</code> — one column, any name containing <code className="rounded bg-white/20 px-1 py-0.5">review/comment/feedback/text</code>. Any extra columns are auto-kept and shown.
+        {/* Hero with photo background like login — light blue overlay */}
+        <section className="relative mb-10 overflow-hidden rounded-[20px] border border-white/60 shadow-[0_20px_50px_rgba(23,63,115,0.15)]">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1800&q=80')" }} aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#173f73]/90 via-[#2b6cb0]/80 to-[#eaf1f8]/60" aria-hidden="true" />
+          <div className="relative z-[1] px-6 py-12 md:px-10 md:py-14">
+            <div className="mx-auto max-w-[820px] text-center text-white">
+              <div className="mx-auto mb-3 inline-block rounded-full bg-white/20 px-3 py-1 text-[10px] font-extrabold tracking-[1.5px]">WELCOME TO YOUR WORKSPACE</div>
+              <h2 className="text-[clamp(28px,4vw,40px)] font-extrabold leading-tight tracking-tight">Hi {me?.first_name || 'there'} 👋</h2>
+              <p className="mx-auto mt-3 max-w-[640px] text-[15px] leading-relaxed text-white/90">
+                Your customer feedback, turned into clear actions. Drop your CSV and see <strong className="font-extrabold text-white">what customers love, what hurts, and what to fix first</strong> — with real quotes as proof.
+              </p>
+              <div className="mx-auto mt-6 max-w-[560px]">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Drop CSV here to upload"
+                  onClick={() => dashboardFileInputRef.current?.click()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') dashboardFileInputRef.current?.click()
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    setDashboardIsDragging(true)
+                  }}
+                  onDragLeave={() => setDashboardIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    setDashboardIsDragging(false)
+                    handleDashboardFile(e.dataTransfer.files?.[0])
+                  }}
+                  className={`flex min-h-[130px] flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed bg-white/95 px-6 py-7 text-center shadow-[0_8px_25px_rgba(0,0,0,0.15)] backdrop-blur transition
+                    ${dashboardIsDragging ? 'border-solid border-white bg-white' : 'border-white/70 hover:border-white hover:bg-white'}
+                    ${dashboardIsUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'}`}
+                >
+                  <input ref={dashboardFileInputRef} type="file" accept=".csv" className="hidden" onChange={(e) => handleDashboardFile(e.target.files?.[0])} />
+                  {dashboardIsUploading ? (
+                    <>
+                      <span className="h-6 w-6 animate-spin rounded-full border-2 border-[#173f73] border-t-transparent" aria-hidden="true" />
+                      <strong className="text-[14px] text-[#173f73]">Analyzing your reviews…</strong>
+                      <span className="text-[11px] text-[#8a96a8]">This takes a few seconds</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3fa] text-[20px] font-extrabold text-[#173f73]">⇪</span>
+                      <strong className="text-[14px] text-[#142b48]">Drop CSV here</strong>
+                      <span className="text-[11px] text-[#8a96a8]">or click to choose a file — any columns work</span>
+                    </>
+                  )}
+                </div>
+                {dashboardUploadError && (
+                  <div role="alert" className="mt-3 rounded-lg border border-[#ffd5ce] bg-[#fff0ef] px-3 py-2.5 text-left text-[12px] font-medium text-[#b42318]">
+                    {dashboardUploadError}
+                  </div>
+                )}
+                <p className="mt-3 text-[10px] text-white/80">Only <code className="rounded bg-white/20 px-1 py-0.5">review_text</code> is required. Add <code className="rounded bg-white/20 px-1 py-0.5">rating, date, country</code> for richer charts.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Professional drag and drop on dashboard */}
-        <section className="mb-8">
-          <div
-            role="button"
-            tabIndex={0}
-            aria-label="Drop CSV here to upload on dashboard"
-            onClick={() => dashboardFileInputRef.current?.click()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') dashboardFileInputRef.current?.click()
-            }}
-            onDragOver={(e) => {
-              e.preventDefault()
-              setDashboardIsDragging(true)
-            }}
-            onDragLeave={() => setDashboardIsDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault()
-              setDashboardIsDragging(false)
-              const droppedFile = e.dataTransfer.files?.[0]
-              handleDashboardFile(droppedFile)
-            }}
-            className={`flex min-h-[140px] flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed bg-white px-6 py-8 text-center shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition
-              ${dashboardIsDragging ? 'border-solid border-[#173f73] bg-[#eef4fb]' : 'border-[#cdd8e4] hover:border-[#47739e] hover:bg-[#f5f9fd]'}
-              ${dashboardIsUploading ? 'pointer-events-none opacity-70' : 'cursor-pointer'}`}
-          >
-            <input ref={dashboardFileInputRef} type="file" accept=".csv" className="hidden" onChange={(e) => handleDashboardFile(e.target.files?.[0])} />
-            {dashboardIsUploading ? (
-              <>
-                <span className="h-6 w-6 animate-spin rounded-full border-2 border-[#173f73] border-t-transparent" aria-hidden="true" />
-                <strong className="text-[14px] text-[#173f73]">Analyzing your reviews…</strong>
-                <span className="text-[11px] text-[#8a96a8]">This takes a few seconds</span>
-              </>
-            ) : (
-              <>
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf3fa] text-[20px] font-extrabold text-[#173f73]">⇪</span>
-                <strong className="text-[14px] text-[#142b48]">Drop CSV here</strong>
-                <span className="text-[11px] text-[#8a96a8]">or click to choose a file — any columns work</span>
-              </>
-            )}
+        {/* How your data should look — professional table */}
+        <section className="mb-10 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-[16px] font-extrabold text-[#142b48]">How your data should look</h3>
+            <span className="rounded-full bg-[#eaf1f8] px-3 py-1 text-[10px] font-extrabold tracking-wide text-[#315f89]">1 column required</span>
           </div>
-          {dashboardUploadError && (
-            <div role="alert" className="mt-3 rounded-lg border border-[#ffd5ce] bg-[#fff0ef] px-3 py-2.5 text-[12px] font-medium text-[#b42318]">
-              {dashboardUploadError}
+          <p className="mb-4 text-[12px] leading-relaxed text-[#718198]">Column names are flexible — we find <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> even if you call it <code className="rounded bg-[#f0f4f8] px-1 py-0.5">Review Text, comment, feedback</code>. Extra columns are kept and shown.</p>
+          <div className="overflow-hidden rounded-xl border border-[#e1e7ef]">
+            <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.6fr] gap-px bg-[#e1e7ef] text-[11px] font-extrabold uppercase tracking-wide text-[#5a6472]">
+              <div className="bg-[#f8fafc] px-4 py-3">review_text <span className="ml-1 rounded bg-[#173f73] px-1.5 py-0.5 text-[9px] text-white">required</span></div>
+              <div className="bg-[#f8fafc] px-4 py-3">rating</div>
+              <div className="bg-[#f8fafc] px-4 py-3">date</div>
+              <div className="bg-[#f8fafc] px-4 py-3">country</div>
             </div>
-          )}
+            <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.6fr] gap-px bg-[#e1e7ef] text-[12px]">
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">Battery drains fast and overheats.</div>
+              <div className="bg-white px-4 py-2.5 text-center text-[#33425a]">1</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">2024-01-08</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">India</div>
+            </div>
+            <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.6fr] gap-px bg-[#e1e7ef] text-[12px]">
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">Camera is stunning, love it.</div>
+              <div className="bg-white px-4 py-2.5 text-center text-[#33425a]">5</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">2024-01-10</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">USA</div>
+            </div>
+            <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.6fr] gap-px bg-[#e1e7ef] text-[12px]">
+              <div className="bg-white px-4 py-2.5 italic text-[#8a96a8]">The chair armrest is wobbly but fabric is comfortable.</div>
+              <div className="bg-white px-4 py-2.5 text-center text-[#33425a]">3</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">2024-02-15</div>
+              <div className="bg-white px-4 py-2.5 text-[#33425a]">Germany</div>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-[#8a96a8]">Tip: You can also give just one column — <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> — and the main insights will still work. Extra columns just make the extra charts.</p>
+        </section>
+
+        {/* Four professional columns */}
+        <section className="mb-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf1f8] text-[#173f73]">▦</div>
+            <h4 className="text-[14px] font-extrabold text-[#142b48]">How your data is</h4>
+            <p className="mt-2 text-[12px] leading-relaxed text-[#718198]">Your CSV stays as is. We read <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> and auto-keep every other column in <code className="rounded bg-[#f0f4f8] px-1 py-0.5">attributes</code> — nothing is deleted or reshaped.</p>
+          </div>
+          <div className="rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf8f0] text-[#1f7c46]">⚡</div>
+            <h4 className="text-[14px] font-extrabold text-[#142b48]">How we are working</h4>
+            <p className="mt-2 text-[12px] leading-relaxed text-[#718198]">BERT (5 labels) finds aspects by pattern <code className="rounded bg-[#f0f4f8] px-1 py-0.5">X is wobbly</code> → X is aspect, so any product (chair, phone) works without a new list.</p>
+          </div>
+          <div className="rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7e6] text-[#b7791f]">↗</div>
+            <h4 className="text-[14px] font-extrabold text-[#142b48]">How we should improve it</h4>
+            <p className="mt-2 text-[12px] leading-relaxed text-[#718198]">We rank by <code className="rounded bg-[#f0f4f8] px-1 py-0.5">count × negative%</code>. Fix the top — battery 8× 87% — and the whole feeling lifts.</p>
+          </div>
+          <div className="rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0f4f8] text-[#173f73]">🔒</div>
+            <h4 className="text-[14px] font-extrabold text-[#142b48]">How we maintain privacy</h4>
+            <p className="mt-2 text-[12px] leading-relaxed text-[#718198]">Per-user, last 3 analyses only. MySQL on Aiven (online) or local SQLite. Your CSV is analyzed securely and never shared.</p>
+          </div>
         </section>
 
         <section>
