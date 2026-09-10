@@ -1,4 +1,8 @@
-"""Upload pipeline: CSV -> preprocess -> analyze -> aggregate -> save stats."""
+"""Upload pipeline: CSV bytes -> clean reviews -> analyze -> rank -> save.
+
+Small helpers, easy names, each helper does one job.
+Exception handling is split per step, not all inside one big try.
+"""
 
 import re
 import uuid
@@ -11,89 +15,139 @@ from cfa.analysis.stats import _countries, _ratings
 from cfa.ranking.priority import rank_concerns
 
 
-def _month_trend(reviews):
-    counts = {}
-    for r in reviews:
-        date = r.get("date", "")
-        if not date:
+def extractMonthTrend(customerReviews):
+    """Count reviews per month (YYYY-MM) for the timeline chart."""
+    monthCounts = {}
+    for singleReview in customerReviews:
+        reviewDate = singleReview.get("date", "")
+        if not reviewDate:
             continue
-        m = re.search(r"\d{4}-\d{2}", date)
-        if not m:
+        matchedMonth = re.search(r"\d{4}-\d{2}", reviewDate)
+        if not matchedMonth:
             continue
-        counts[m.group()] = counts.get(m.group(), 0) + 1
-    return [{"month": k, "count": v} for k, v in sorted(counts.items())]
+        monthKey = matchedMonth.group()
+        monthCounts[monthKey] = monthCounts.get(monthKey, 0) + 1
+    return [{"month": month, "count": count} for month, count in sorted(monthCounts.items())]
 
 
-def process_csv(content: bytes) -> dict:
-    rows, _columns = preprocess_csv(content)
-    results = analyze_reviews([r["text"] for r in rows])
+def buildSentimentDistribution(processedReviews):
+    """Count how many reviews are positive / negative / neutral / mixed."""
+    distribution = {"positive": 0, "negative": 0, "neutral": 0, "mixed": 0}
+    for singleReview in processedReviews:
+        reviewFeeling = singleReview["sentiment"]
+        distribution[reviewFeeling] = distribution.get(reviewFeeling, 0) + 1
+    return distribution
 
-    reviews = []
-    agg = ConcernAggregator()
-    for r, result in zip(rows, results):
-        sentiment = result["overall_sentiment"]
-        attributes = r["attributes"]
-        reviews.append(
-            {
-                "review_id": str(uuid.uuid4())[:8],
-                "text": r["text"],
-                "entity": result["concerns"][0]["name"] if result["concerns"] else "general",
-                "sentiment": sentiment,
-                "rating": r["rating"],
-                "country": r["country"],
-                "date": r["date"],
-                "reviewer": r["reviewer"],
-                "attributes": attributes,
-                "concerns": result["concerns"],
-                "aspects": result["aspects"],
-            }
-        )
-        for c in result["concerns"]:
-            agg.add(c["name"], c["sentiment"], r["text"])
 
-    total = len(reviews)
-    sentiment_distribution = {"positive": 0, "negative": 0, "neutral": 0, "mixed": 0}
-    for r in reviews:
-        sentiment_distribution[r["sentiment"]] = sentiment_distribution.get(r["sentiment"], 0) + 1
+def buildReviewsForStorage(cleanedRows, analysisResults):
+    """Make the list that we save to the database."""
+    reviewsForStorage = []
+    concernAggregator = ConcernAggregator()
 
-    ranked = rank_concerns({"concerns": agg.stats()})
-    proof_by_concern = agg.proof()
+    for cleanedRow, analysisResult in zip(cleanedRows, analysisResults):
+        overallFeeling = analysisResult["overall_sentiment"]
+        rowAttributes = cleanedRow["attributes"]
 
-    reviews_by_id = {r["review_id"]: r for r in reviews}
-    comments_by_concern = {}
-    for name in agg.counts:
-        items = []
-        for s in find_similar(name.replace("_", " "), top_k=5, reviews=reviews):
-            r = reviews_by_id.get(s["review_id"])
-            if not r:
+        # First concern name or 'general' if none
+        firstConcernName = analysisResult["concerns"][0]["name"] if analysisResult["concerns"] else "general"
+
+        reviewRecord = {
+            "review_id": str(uuid.uuid4())[:8],
+            "text": cleanedRow["text"],
+            "entity": firstConcernName,
+            "sentiment": overallFeeling,
+            "rating": cleanedRow["rating"],
+            "country": cleanedRow["country"],
+            "date": cleanedRow["date"],
+            "reviewer": cleanedRow["reviewer"],
+            "attributes": rowAttributes,
+            "concerns": analysisResult["concerns"],
+            "aspects": analysisResult["aspects"],
+        }
+        reviewsForStorage.append(reviewRecord)
+
+        for detectedConcern in analysisResult["concerns"]:
+            concernAggregator.add(detectedConcern["name"], detectedConcern["sentiment"], cleanedRow["text"])
+
+    return reviewsForStorage, concernAggregator
+
+
+def buildProofByConcern(concernAggregator):
+    """Real quotes for each concern (first 3)."""
+    return concernAggregator.proof()
+
+
+def buildCommentsByConcern(concernAggregator, reviewsForStorage):
+    """For each concern, find 5 similar real reviews."""
+    reviewsById = {reviewItem["review_id"]: reviewItem for reviewItem in reviewsForStorage}
+    commentsGroupedByConcern = {}
+
+    for concernName in concernAggregator.counts:
+        similarList = find_similar(concernName.replace("_", " "), top_k=5, reviews=reviewsForStorage)
+        commentItems = []
+        for similarEntry in similarList:
+            matchedReview = reviewsById.get(similarEntry["review_id"])
+            if not matchedReview:
                 continue
-            items.append(
+            commentItems.append(
                 {
-                    "review_id": r["review_id"],
-                    "reviewer": r.get("reviewer") or "Verified Reviewer",
-                    "text": r["text"],
-                    "rating": r.get("rating"),
-                    "country": r.get("country", ""),
-                    "date": r.get("date", ""),
-                    "sentiment": r["sentiment"],
-                    "similarity": s["similarity"],
-                    "attributes": r.get("attributes", {}),
+                    "review_id": matchedReview["review_id"],
+                    "reviewer": matchedReview.get("reviewer") or "Verified Reviewer",
+                    "text": matchedReview["text"],
+                    "rating": matchedReview.get("rating"),
+                    "country": matchedReview.get("country", ""),
+                    "date": matchedReview.get("date", ""),
+                    "sentiment": matchedReview["sentiment"],
+                    "similarity": similarEntry["similarity"],
+                    "attributes": matchedReview.get("attributes", {}),
                 }
             )
-        comments_by_concern[name] = items
+        commentsGroupedByConcern[concernName] = commentItems
+
+    return commentsGroupedByConcern
+
+
+def process_csv(csvFileBytes: bytes) -> dict:
+    # Step 1: Read CSV — find the text column by itself
+    try:
+        cleanedRows, detectedColumns = preprocess_csv(csvFileBytes)
+    except Exception as error:
+        raise ValueError(f"Could not read the CSV file: {error}") from error
+
+    if not cleanedRows:
+        raise ValueError("No reviews found. Make sure the CSV has a column like 'review_text' or 'Review Text' with text inside.")
+
+    # Step 2: Analyze each review (BERT finds aspects, rule gives overall)
+    try:
+        analysisResults = analyze_reviews([row["text"] for row in cleanedRows])
+    except Exception as error:
+        raise ValueError(f"Could not analyze reviews: {error}") from error
+
+    # Step 3: Build reviews + concerns
+    reviewsForStorage, concernAggregator = buildReviewsForStorage(cleanedRows, analysisResults)
+
+    # Step 4: Counts
+    totalReviews = len(reviewsForStorage)
+    sentimentDistribution = buildSentimentDistribution(reviewsForStorage)
+    rankedConcerns = rank_concerns({"concerns": concernAggregator.stats()})
+    proofByConcern = buildProofByConcern(concernAggregator)
+    commentsByConcern = buildCommentsByConcern(concernAggregator, reviewsForStorage)
+
+    # Step 5: Charts data
+    representativeReviews = [
+        {"review_id": reviewItem["review_id"], "text": reviewItem["text"], "sentiment": reviewItem["sentiment"]}
+        for reviewItem in reviewsForStorage[:3]
+    ]
 
     return {
-        "total_reviews": total,
-        "sentiment_distribution": sentiment_distribution,
-        "ranked_concerns": ranked,
-        "representative_reviews": [
-            {"review_id": r["review_id"], "text": r["text"], "sentiment": r["sentiment"]}
-            for r in reviews[:3]
-        ],
-        "proof_by_concern": proof_by_concern,
-        "comments_by_concern": comments_by_concern,
-        "ratings": _ratings(reviews),
-        "countries": _countries(reviews),
-        "time_trend": _month_trend(reviews),
-        "reviews": reviews,
+        "total_reviews": totalReviews,
+        "sentiment_distribution": sentimentDistribution,
+        "ranked_concerns": rankedConcerns,
+        "representative_reviews": representativeReviews,
+        "proof_by_concern": proofByConcern,
+        "comments_by_concern": commentsByConcern,
+        "ratings": _ratings(reviewsForStorage),
+        "countries": _countries(reviewsForStorage),
+        "time_trend": extractMonthTrend(reviewsForStorage),
+        "reviews": reviewsForStorage,
     }

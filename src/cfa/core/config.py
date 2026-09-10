@@ -9,8 +9,7 @@ DATA_DIR = Path(os.environ.get("DATA_DIR", PROJECT_ROOT / "data"))
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Concern / RAG settings
-CONCERN_LEXICON_PATH = PROJECT_ROOT / "src" / "cfa" / "analysis" / "concern_lexicon.json"
+# RAG setting
 REVIEWS_PATH = DATA_DIR / "reviews.json"
 
 # Model settings — legacy TF-IDF (kept for backward compat)

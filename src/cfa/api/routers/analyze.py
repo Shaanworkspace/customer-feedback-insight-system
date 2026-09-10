@@ -14,68 +14,144 @@ from cfa.reporting.store import ReportStore
 
 router = APIRouter(tags=["analyze"])
 
-_store = ReportStore()
+reportStore = ReportStore()
+
+
+# --- Helpers: single-review analysis ---
+
+def buildRankedConcernsForSingleReview(detectedConcerns):
+    rankedInput = {
+        "concerns": [
+            {
+                "name": concernItem["name"],
+                "count": 1,
+                "negative_pct": 100.0 if concernItem["sentiment"] == "negative" else 0.0,
+            }
+            for concernItem in detectedConcerns
+        ]
+    }
+    return rank_concerns(rankedInput)
+
+
+def getSimilarReviewsIfHistoryExists(reviewText, userId):
+    latestAnalysis = get_latest_analysis(userId)
+    pastReviews = (latestAnalysis or {}).get("reviews", [])
+    if not pastReviews:
+        return []
+    return find_similar(reviewText, reviews=pastReviews, top_k=5)
 
 
 @router.post("/api/v1/analyze")
-def analyze(req: AnalyzeRequest, user=Depends(get_current_user)):
-    start = time.time()
-    result = analyze_review(req.review_text)
-    result["ranked_concerns"] = rank_concerns(
-        {
-            "concerns": [
-                {
-                    "name": c["name"],
-                    "count": 1,
-                    "negative_pct": 100.0 if c["sentiment"] == "negative" else 0.0,
-                }
-                for c in result["concerns"]
-            ]
-        }
-    )
-    analysis = get_latest_analysis(user.id)
-    reviews = (analysis or {}).get("reviews", [])
-    if reviews:
-        result["similar_reviews"] = find_similar(req.review_text, reviews=reviews, top_k=5)
+def analyze_single_review(request: AnalyzeRequest, currentUser=Depends(get_current_user)):
+    # Validate input
+    customerReviewText = (request.review_text or "").strip()
+    if not customerReviewText:
+        raise HTTPException(status_code=400, detail="Please provide a review text.")
+
+    startTime = time.time()
+
+    try:
+        analysisResult = analyze_review(customerReviewText)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Could not analyze the review: {error}") from error
+
+    try:
+        analysisResult["ranked_concerns"] = buildRankedConcernsForSingleReview(analysisResult["concerns"])
+    except Exception:
+        analysisResult["ranked_concerns"] = []
+
+    try:
+        analysisResult["similar_reviews"] = getSimilarReviewsIfHistoryExists(customerReviewText, currentUser.id)
+    except Exception:
+        analysisResult["similar_reviews"] = []
+
+    # Metrics for /health
     metrics["reviews_analyzed"] += 1
-    metrics["total_latency_ms"] += (time.time() - start) * 1000
-    return result
+    metrics["total_latency_ms"] += (time.time() - startTime) * 1000
+
+    return analysisResult
+
+
+# --- Helpers: CSV upload ---
+
+def readUploadFileSafely(uploadedFile: UploadFile):
+    try:
+        return uploadedFile.file.read()
+    except Exception as error:
+        raise HTTPException(status_code=400, detail=f"Could not read the file: {error}") from error
+
+
+def decodeCsvBytesToText(csvBytes: bytes):
+    try:
+        return csvBytes.decode("utf-8")
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="File must be a UTF-8 CSV. Please save it as UTF-8 and try again.")
+
+
+def processCsvBytesToStats(csvBytes: bytes):
+    try:
+        return process_csv(csvBytes)
+    except ValueError as error:
+        # Known validation error (e.g., no reviews found)
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    except Exception as error:
+        raise HTTPException(status_code=400, detail=f"Could not process the CSV. Make sure it has a review text column: {error}") from error
 
 
 @router.post("/api/v1/upload")
-async def upload(file: UploadFile = File(...), user=Depends(get_current_user)):
+async def upload_csv_file(file: UploadFile = File(...), currentUser=Depends(get_current_user)):
+    # Step 1: Validate file type (keep form field name 'file' for frontend compatibility)
+    uploadedFile = file
+    fileName = (uploadedFile.filename or "").lower()
+    if fileName and not fileName.endswith(".csv"):
+        raise HTTPException(status_code=400, detail="Please upload a CSV file (.csv).")
+
+    # Step 2: Read bytes
+    csvFileBytes = await uploadedFile.read()
+
+    if not csvFileBytes or len(csvFileBytes.strip()) == 0:
+        raise HTTPException(status_code=400, detail="The uploaded file is empty.")
+
+    # Step 3: Decode check (for metrics)
+    csvTextForMetrics = decodeCsvBytesToText(csvFileBytes)
+    metrics["reviews_analyzed"] += csvTextForMetrics.count("\n")
+
+    # Step 4: Process
+    dashboardStats = processCsvBytesToStats(csvFileBytes)
+
+    # Step 5: Save
     try:
-        content = await file.read()
-        text = content.decode("utf-8")
-    except UnicodeDecodeError:
-        raise HTTPException(status_code=400, detail="File must be a UTF-8 CSV.")
-    metrics["reviews_analyzed"] += text.count("\n")
-    try:
-        stats = process_csv(content)
-    except Exception:
-        raise HTTPException(
-            status_code=400,
-            detail="Could not process the CSV. Make sure it has a 'review_text' column.",
-        )
-    save_analysis(user.id, file.filename, stats)
-    _store.save_json(user.id, file.filename or "upload", stats)
-    return stats
+        save_analysis(currentUser.id, uploadedFile.filename, dashboardStats)
+        reportStore.save_json(currentUser.id, uploadedFile.filename or "upload", dashboardStats)
+    except Exception as error:
+        # Save failure should not hide the result, but we log it
+        print(f"Warning: could not save analysis: {error}")
+
+    return dashboardStats
 
 
 @router.post("/api/v1/report/email")
-def report_email(req: EmailReportRequest, user=Depends(get_current_user)):
-    data = (
-        get_analysis_by_id(user.id, req.analysis_id)
-        if req.analysis_id
-        else get_latest_analysis(user.id)
-    )
-    if not data:
-        raise HTTPException(status_code=404, detail="No analysis found for this user")
-    html = build_report_html(data)
+def send_report_email(request: EmailReportRequest, currentUser=Depends(get_current_user)):
+    # Find which analysis to send
     try:
-        send_email(req.email, "Your Customer Feedback Insight Report", html)
-    except RuntimeError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Could not send email: {e}")
-    return {"sent": True, "email": req.email}
+        reportData = (
+            get_analysis_by_id(currentUser.id, request.analysis_id)
+            if request.analysis_id
+            else get_latest_analysis(currentUser.id)
+        )
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Could not load the report: {error}") from error
+
+    if not reportData:
+        raise HTTPException(status_code=404, detail="No analysis found for this user. Please upload a CSV first.")
+
+    htmlReport = build_report_html(reportData)
+
+    try:
+        send_email(request.email, "Your Customer Feedback Insight Report", htmlReport)
+    except RuntimeError as error:
+        raise HTTPException(status_code=500, detail=str(error)) from error
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Could not send email: {error}") from error
+
+    return {"sent": True, "email": request.email}

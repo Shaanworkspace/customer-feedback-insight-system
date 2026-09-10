@@ -112,6 +112,19 @@ Training happens separately:
 | Deploy | Vercel (frontend) + Render (backend) | Free, one-click |
 | Tests | Pytest + FastAPI TestClient | 7 tests, all pass |
 
+### Professional Polish — Latest Audit (2026-09-10)
+
+*All recent changes follow readability research (naming) and production-ready UX.*
+
+| Area | What Was Made Professional |
+|------|-----------------------------|
+| **Upload** | The CSV drop zone is now a **professional `div`** (not a plain button): click or drag-and-drop, hover highlight `border-[#173f73] bg-[#eef4fb]`, keyboard accessible (`Enter`/`Space`), shows file name + size, “Only .CSV” badge, and a spinner `LoadingSpinner` while `isCsvUploadInProgress` |
+| **Loading** | Every async action has a spinner: `isCsvUploadInProgress` (Upload), `analyzing` (Dashboard skeletons), `viewLoading` + `loadingComments` (Dashboard), `loading` (Analyzer) |
+| **Errors** | Split per step, not all in one `try`: `validateCsvFile()` → `handleFileSelection()` → `uploadToBackend()` (network vs server vs empty), plus `csvUploadErrorMessage` shown in a red alert `role="alert"`; backend `readUploadFileSafely` / `decodeCsvBytesToText` / `processCsvBytesToStats` each raise `HTTPException(400/500)` with a clear message |
+| **Variables** | Research-backed, self-explaining names: `selectedCsvFile`, `isDraggingOverDropZone`, `csvUploadErrorMessage`, `isCsvUploadInProgress`, `fileInputReference`, `customerReviews`, `sentimentDistribution`, `concernAggregator`, `reviewsForStorage`, `rankedConcerns` — reading the name tells what the variable holds |
+| **Code** | Helpers are small (8–25 lines), each does one job: `validateCsvFile`, `handleDragOver`, `uploadToBackend`, `extractMonthTrend`, `buildSentimentDistribution`, `buildReviewsForStorage` — easy to test and read |
+| **Clean-up** | Removed dead `CONCERN_LEXICON_PATH` from `config.py`, removed duplicate `make_labels` logic, removed hard-coded word lists from `sentiment.py`, removed unused imports; unusual steps like “large-scale punctuation stripping” kept out (BERT needs grammar) |
+
 Env vars: `DATABASE_URL` (MySQL, else SQLite), `HF_TOKEN` (optional), `HF_MODEL` (optional).
 
 ---
