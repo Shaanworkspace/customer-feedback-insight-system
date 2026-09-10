@@ -20,7 +20,6 @@ env:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   test-backend:
@@ -70,14 +69,13 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: false
-          role-session-name: gha-deploy-${{ github.run_id }}
 
       - name: Debug AWS identity (post-assume)
         run: |
-          aws sts get-caller-identity || echo "sts get-caller-identity failed — role not assumed"
+          aws sts get-caller-identity || echo "sts get-caller-identity failed — check AWS keys"
           echo "ECR registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
 
       - name: Login to Amazon ECR
@@ -113,13 +111,12 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          mask-aws-account-id: false
-          role-session-name: gha-deploy-${{ github.run_id }}
 
       - name: Debug AWS identity (deploy)
-        run: aws sts get-caller-identity || echo "sts get-caller-identity failed — check trust policy"
+        run: aws sts get-caller-identity || echo "sts get-caller-identity failed — check AWS keys"
 
       - name: Deploy to EC2 via SSM (no SSH)
         run: |
