@@ -10,7 +10,6 @@ import uuid
 from cfa.analysis.aggregation import ConcernAggregator
 from cfa.analysis.concerns import analyze_reviews
 from cfa.analysis.preprocessing import preprocess_csv
-from cfa.analysis.rag import find_similar
 from cfa.analysis.stats import _countries, _ratings
 from cfa.ranking.priority import rank_concerns
 
@@ -79,15 +78,16 @@ def buildProofByConcern(concernAggregator):
 
 
 def buildCommentsByConcern(concernAggregator, reviewsForStorage):
-    """For each concern, find 5 similar real reviews."""
-    reviewsById = {reviewItem["review_id"]: reviewItem for reviewItem in reviewsForStorage}
+    """For each concern, keep 5 top comments (no RAG, just first 5 that mention it)."""
     commentsGroupedByConcern = {}
-
-    for concernName in concernAggregator.counts:
-        similarList = find_similar(concernName.replace("_", " "), top_k=5, reviews=reviewsForStorage)
+    for concernName, concernInfo in concernAggregator.counts.items():
+        # Take the first 5 texts that were added for this concern (already in order)
+        topTexts = concernInfo["texts"][:5]
+        # Find the full review objects for those texts
         commentItems = []
-        for similarEntry in similarList:
-            matchedReview = reviewsById.get(similarEntry["review_id"])
+        for textSnippet in topTexts:
+            # Find the review that has this text (first match)
+            matchedReview = next((review for review in reviewsForStorage if review["text"] == textSnippet), None)
             if not matchedReview:
                 continue
             commentItems.append(
@@ -99,12 +99,11 @@ def buildCommentsByConcern(concernAggregator, reviewsForStorage):
                     "country": matchedReview.get("country", ""),
                     "date": matchedReview.get("date", ""),
                     "sentiment": matchedReview["sentiment"],
-                    "similarity": similarEntry["similarity"],
+                    "similarity": 1.0,
                     "attributes": matchedReview.get("attributes", {}),
                 }
             )
         commentsGroupedByConcern[concernName] = commentItems
-
     return commentsGroupedByConcern
 
 

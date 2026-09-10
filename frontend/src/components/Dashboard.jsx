@@ -1,13 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import {
-  getHistory,
-  getHistoryReport,
-  getConcernComments,
-  getMe,
-  getUser,
-  sendReportEmail,
-  uploadReviews,
-} from '../api'
+import { getHistory, getHistoryReport, getConcernComments, getMe, getUser } from '../api'
 import { downloadText, sampleCsvText, reportToCsv } from '../utils'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
@@ -43,8 +35,6 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   const [reviews, setReviews] = useState([])
   const [viewLoading, setViewLoading] = useState(false)
   const [viewError, setViewError] = useState(false)
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState('')
   const [openConcern, setOpenConcern] = useState(null)
   const [comments, setComments] = useState([])
   const [loadingComments, setLoadingComments] = useState(false)
@@ -167,17 +157,7 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
     setBoardReviews(filtered.slice(0, 55))
   }
 
-  const send = () => {
-    if (!email) {
-      setStatus('Enter an email address first.')
-      return
-    }
-    if (selectedId == null) return
-    setStatus('Sending…')
-    sendReportEmail(email, selectedId)
-      .then(() => setStatus(`Report sent to ${email}`))
-      .catch((e) => setStatus(e.message || 'Failed to send'))
-  }
+
 
   if (analyzing) {
     return (
@@ -928,28 +908,6 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
           )}
         </section>
       )}
-
-      <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-        <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Email this report</h3>
-        <p className="mt-1 text-[12px] text-[#8793a5]">Send the full report to a teammate</p>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="teammate@company.com"
-            className="w-full rounded-[10px] border border-[#d7dee8] px-4 py-3 text-[14px] outline-none focus:border-[#173f73] sm:max-w-[320px]"
-          />
-          <button
-            type="button"
-            className="cursor-pointer rounded-[10px] bg-[#173f73] px-5 py-3 font-bold text-white transition hover:bg-[#12345f]"
-            onClick={send}
-          >
-            Send report
-          </button>
-        </div>
-        {status && <p className="mt-3 text-[13px] text-[#5a6472]">{status}</p>}
-      </section>
 
       {openConcern && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4" onClick={() => setOpenConcern(null)}>
