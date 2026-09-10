@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from cfa.api.deps import get_current_user
 from cfa.analysis.stats import get_concern_comments, get_reviews, get_stats
-from cfa.db.repo import get_analysis_by_id, list_history
+from cfa.db.repo import delete_analysis, get_analysis_by_id, list_history
 
 router = APIRouter(tags=["data"])
 
@@ -33,3 +33,11 @@ def history_report(analysis_id: int, user=Depends(get_current_user)):
 @router.get("/api/v1/concern-comments")
 def concern_comments(concern: str = "", user=Depends(get_current_user)):
     return get_concern_comments(concern, user.id)
+
+
+@router.delete("/api/v1/history/{analysis_id}")
+def delete_history(analysis_id: int, user=Depends(get_current_user)):
+    deleted = delete_analysis(user.id, analysis_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+    return {"deleted": True, "id": analysis_id}

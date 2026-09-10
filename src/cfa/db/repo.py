@@ -97,3 +97,12 @@ def get_analysis_by_id(user_id: int, analysis_id: int) -> dict | None:
         ).first()
         return a.data if a else None
 
+
+def delete_analysis(user_id: int, analysis_id: int) -> bool:
+    with SessionLocal() as s:
+        result = s.execute(
+            delete(Analysis).where(Analysis.user_id == user_id, Analysis.id == analysis_id)
+        )
+        s.commit()
+        return result.rowcount > 0
+

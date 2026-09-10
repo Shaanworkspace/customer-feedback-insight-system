@@ -163,6 +163,18 @@ export async function getHistoryReport(analysisId) {
   return response.json()
 }
 
+export async function deleteHistory(analysisId) {
+  const response = await fetch(`${currentApiBaseUrl}/api/v1/history/${analysisId}`, {
+    method: 'DELETE',
+    headers: buildAuthHeader(),
+  })
+  if (!response.ok) {
+    const detail = await extractErrorDetail(response)
+    throw new Error(detail || 'Delete failed')
+  }
+  return response.json()
+}
+
 export async function sendReportEmail(emailAddress, analysisId) {
   const response = await fetch(`${currentApiBaseUrl}/api/v1/report/email`, {
     method: 'POST',
