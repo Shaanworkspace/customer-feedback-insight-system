@@ -57,11 +57,28 @@ jobs:
           fi
           echo "Context check: .dockerignore correctly excludes bert_aste_final (see .dockerignore)"
 
+      - name: Debug OIDC context (for sts:AssumeRoleWithWebIdentity)
+        run: |
+          echo "Ref: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Expected aud: sts.amazonaws.com"
+          echo "Expected sub: repo:${{ github.repository }}:ref:${{ github.ref }}"
+          echo "Role to assume (masked): ${{ secrets.AWS_ROLE_TO_ASSUME }}"
+          echo "AWS_REGION: ${{ env.AWS_REGION }}"
+          echo "If this fails, check IAM role trust: Federated arn:aws:iam::304835195385:oidc-provider/token.actions.githubusercontent.com, Action sts:AssumeRoleWithWebIdentity, Condition aud=sub as above"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
+          role-session-name: gha-deploy-${{ github.run_id }}
+
+      - name: Debug AWS identity (post-assume)
+        run: |
+          aws sts get-caller-identity || echo "sts get-caller-identity failed — role not assumed"
+          echo "ECR registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
@@ -86,11 +103,23 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Debug OIDC context (deploy)
+        run: |
+          echo "Ref: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Expected sub: repo:${{ github.repository }}:ref:${{ github.ref }}"
+          echo "Role to assume (masked): ${{ secrets.AWS_ROLE_TO_ASSUME }}"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: false
+          role-session-name: gha-deploy-${{ github.run_id }}
+
+      - name: Debug AWS identity (deploy)
+        run: aws sts get-caller-identity || echo "sts get-caller-identity failed — check trust policy"
 
       - name: Deploy to EC2 via SSM (no SSH)
         run: |
