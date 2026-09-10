@@ -51,6 +51,13 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   const [loadingComments, setLoadingComments] = useState(false)
   const [commentError, setCommentError] = useState(false)
 
+  // For Top 10 + See more and Review Explorer limit
+  const [visibleConcernCount, setVisibleConcernCount] = useState(10)
+  const [reviewVisibleCount, setReviewVisibleCount] = useState(10)
+  const [activeTab, setActiveTab] = useState('all')
+  const [isBoardOpen, setIsBoardOpen] = useState(false)
+  const [boardReviews, setBoardReviews] = useState([])
+
   // Drag and drop on dashboard
   const dashboardFileInputRef = useRef(null)
   const [dashboardIsDragging, setDashboardIsDragging] = useState(false)
@@ -137,6 +144,24 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
       .then((c) => setComments(c))
       .catch(() => setCommentError(true))
       .finally(() => setLoadingComments(false))
+  }
+
+  // Open board for a tab (top, positive, negative, etc.)
+  function openTabBoard(tabName) {
+    setActiveTab(tabName)
+    setIsBoardOpen(true)
+    let filtered = []
+    if (tabName === 'top') {
+      filtered = reviews.filter((r) => {
+        const topNames = concerns.slice(0, 3).map((c) => c.concern)
+        return r.concerns?.some((c) => topNames.includes(c.name))
+      })
+    } else if (tabName === 'positive' || tabName === 'negative' || tabName === 'neutral' || tabName === 'mixed') {
+      filtered = reviews.filter((r) => r.sentiment === tabName)
+    } else if (tabName === 'all' || tabName === 'review') {
+      filtered = reviews
+    }
+    setBoardReviews(filtered.slice(0, 50))
   }
 
   const send = () => {
@@ -357,16 +382,18 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="cursor-pointer rounded-[10px] bg-[#173f73] px-4 py-3 font-bold text-white shadow transition hover:bg-[#12345f]"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#173f73] px-5 py-3 text-[13px] font-extrabold tracking-wide text-white shadow-[0_7px_18px_rgba(23,63,115,0.20)] transition hover:-translate-y-0.5 hover:bg-[#12345f] hover:shadow-[0_10px_24px_rgba(23,63,115,0.25)]"
             onClick={onUpload}
           >
-            + Upload new
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[12px]">＋</span>
+            Upload new
           </button>
           <button
             type="button"
-            className="cursor-pointer rounded-[10px] border border-[#173f73] bg-white px-4 py-3 font-bold text-[#173f73] transition hover:bg-[#eef4fb]"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#173f73] bg-white px-5 py-3 text-[13px] font-extrabold tracking-wide text-[#173f73] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#eef4fb] hover:shadow"
             onClick={() => downloadText('report.csv', reportToCsv(stats))}
           >
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#edf3fa] text-[12px]">⤓</span>
             Export CSV
           </button>
         </div>
@@ -462,10 +489,36 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
       </section>
 
       <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-        <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Priority Concerns</h3>
-        <p className="mt-1 text-[12px] text-[#8793a5]">Issues to fix first, ranked by impact</p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Priority Concerns</h3>
+            <p className="mt-1 text-[12px] text-[#8793a5]">Issues to fix first, ranked by impact — top 10 shown</p>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { key: 'all', label: 'All' },
+              { key: 'top', label: 'Top' },
+              { key: 'positive', label: 'Positive' },
+              { key: 'negative', label: 'Negative' },
+              { key: 'neutral', label: 'Neutral' },
+              { key: 'mixed', label: 'Mixed' },
+              { key: 'review', label: 'Review' },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => openTabBoard(tab.key)}
+                className={`rounded-full px-3 py-1.5 text-[11px] font-bold capitalize transition ${
+                  activeTab === tab.key ? 'bg-[#173f73] text-white shadow' : 'bg-[#f0f4f8] text-[#536a82] hover:bg-[#e1eaf5]'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="mt-5 flex flex-col gap-5">
-          {concernSummary.map((c, index) => (
+          {concernSummary.slice(0, visibleConcernCount).map((c, index) => (
             <div className="grid grid-cols-[32px_1fr_110px_auto] items-center gap-3" key={c.concern}>
               <div className={`flex h-[30px] w-[30px] items-center justify-center rounded-lg text-[12px] font-extrabold ${index === 0 ? 'bg-[#fdeceb] text-[#c94a3d]' : 'bg-[#edf3fa] text-[#173f73]'}`}>
                 {index + 1}
@@ -492,6 +545,23 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
             </div>
           ))}
         </div>
+        {concerns.length > visibleConcernCount ? (
+          <button
+            type="button"
+            className="mx-auto mt-6 block rounded-full border border-[#cdd8e4] bg-white px-5 py-2 text-[12px] font-bold text-[#173f73] shadow-sm transition hover:bg-[#f0f4f8]"
+            onClick={() => setVisibleConcernCount((prev) => prev + 10)}
+          >
+            See more ({concerns.length - visibleConcernCount} more)
+          </button>
+        ) : concerns.length > 10 ? (
+          <button
+            type="button"
+            className="mx-auto mt-6 block text-[12px] font-semibold text-[#8a96a8] hover:text-[#173f73]"
+            onClick={() => setVisibleConcernCount(10)}
+          >
+            Show less
+          </button>
+        ) : null}
       </section>
 
       <section className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -540,14 +610,18 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
       </section>
 
       <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
-        <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Review Explorer</h3>
-        <p className="mt-1 text-[12px] text-[#8793a5]">{reviews.length} analyzed reviews</p>
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Review Explorer</h3>
+            <p className="mt-1 text-[12px] text-[#8793a5]">{reviews.length} analyzed reviews — showing {Math.min(reviewVisibleCount, reviews.length)} of {reviews.length}</p>
+          </div>
+        </div>
         <div className="mt-5 flex flex-col gap-3">
           {reviews.length === 0 ? (
             <p className="text-[13px] text-[#8a96a8]">No individual reviews available.</p>
           ) : (
-            reviews.map((r, i) => (
-              <div key={i} className="rounded-[12px] border border-[#eef1f6] bg-[#fbfcfe] p-4">
+            reviews.slice(0, reviewVisibleCount).map((r, i) => (
+              <div key={i} className="rounded-[12px] border border-[#eef1f6] bg-[#fbfcfe] p-4 transition hover:border-[#d7e0ec] hover:bg-white">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${SENT_CLASS[r.sentiment] || SENT_CLASS.neutral}`}>{r.sentiment}</span>
                   <span className="text-[11px] text-[#8a96a8]">{r.rating ? `★ ${r.rating}` : ''}{r.country ? ` · ${r.country}` : ''}</span>
@@ -564,7 +638,65 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
             ))
           )}
         </div>
+        {reviews.length > reviewVisibleCount ? (
+          <button
+            type="button"
+            className="mx-auto mt-5 block rounded-full border border-[#cdd8e4] bg-white px-5 py-2 text-[12px] font-bold text-[#173f73] shadow-sm transition hover:bg-[#f0f4f8]"
+            onClick={() => setReviewVisibleCount((prev) => prev + 10)}
+          >
+            See more ({reviews.length - reviewVisibleCount} more)
+          </button>
+        ) : reviews.length > 10 ? (
+          <button
+            type="button"
+            className="mx-auto mt-5 block text-[12px] font-semibold text-[#8a96a8] hover:text-[#173f73]"
+            onClick={() => setReviewVisibleCount(10)}
+          >
+            Show less
+          </button>
+        ) : null}
       </section>
+
+      {/* Tab Board — shows filtered comments for the selected tab */}
+      {isBoardOpen && (
+        <section className="mb-5 rounded-[15px] border border-[#173f73]/20 bg-gradient-to-br from-[#f8fafd] to-white p-6 shadow-[0_8px_25px_rgba(23,63,115,0.08)]">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="m-0 text-[16px] font-bold capitalize text-[#142b48]">{activeTab} reviews</h3>
+              <p className="mt-1 text-[11px] text-[#8a96a8]">{boardReviews.length} comments where feeling is {activeTab}</p>
+            </div>
+            <button
+              type="button"
+              className="rounded-full border border-[#cdd8e4] bg-white px-3 py-1.5 text-[11px] font-bold text-[#173f73] hover:bg-[#f0f4f8]"
+              onClick={() => setIsBoardOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+          {boardReviews.length === 0 ? (
+            <p className="rounded-lg bg-white p-4 text-center text-[13px] text-[#8a96a8]">No {activeTab} reviews in this analysis.</p>
+          ) : (
+            <div className="flex max-h-[420px] flex-col gap-3 overflow-y-auto pr-1">
+              {boardReviews.map((r, i) => (
+                <div key={i} className="rounded-[12px] border border-[#eef1f6] bg-white p-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${SENT_CLASS[r.sentiment] || SENT_CLASS.neutral}`}>{r.sentiment}</span>
+                    <span className="text-[10px] text-[#8a96a8]">{r.rating ? `★ ${r.rating}` : ''}</span>
+                  </div>
+                  <p className="m-0 text-[13px] leading-[1.5] text-[#33425a]">{r.text}</p>
+                  {r.concerns?.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {r.concerns.map((c, j) => (
+                        <span key={j} className="rounded bg-[#f0f4f8] px-2 py-0.5 text-[10px] font-bold capitalize text-[#536a82]">{c.name}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="mb-5 rounded-[15px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)]">
         <h3 className="m-0 text-[18px] font-bold text-[#172f50]">Email this report</h3>

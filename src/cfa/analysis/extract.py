@@ -106,36 +106,53 @@ def _llm_batch(texts):
 
 
 def _dynamic_fallback_batch(texts):
-    """Discover aspects per CSV without a fixed list.
+    """Discover aspects per CSV without any hard-coded product list.
 
-    We find frequent content words across the batch (not a hard-coded product list).
-    For sentiment we use the trained TF-IDF model (not a word list) on the clause.
+    Research: Use standard English stopwords + dynamic frequency + simple noun-like filter.
+    Works for any dataset (chair, phone, watch) without changing code.
     """
     try:
         from cfa.ml.serve import predict_sentiment
         from collections import Counter
+        from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
         import re
 
-        stopwords = {
-            "the","is","are","was","were","be","been","am","a","an","and","or","but","if","in","on","at","to","of","for","with","by","this","that","these","those","it","its","as","so","no","not","very","just","also","have","has","had","do","does","did","will","would","can","could","should","my","your","our","their","i","we","you","he","she","they","me","us","him","her","them","from","up","out","about","into","over","after","before","between","during","while","when","where","why","how","what","which","who","whom",
-        }
-        # Opinion words and generic time/verb words should not be treated as aspects
-        opinion_stopwords = {
-            "terrible","poor","low","quickly","drains","drains fast","overheats","slow","fast","good","great","excellent","amazing","stunning","sharp","vivid","beautiful","awesome","perfect","outstanding","superb","wonderful","fantastic","happy","satisfied","disappointed","rude","unhelpful","useless","expensive","overpriced","faulty","broken","cracked","blurry","grainy","dim","flickers","late","cheap","worth","sturdy","durable","comfortable","wobbly","flimsy","neat","safe","average","special","quick","quickly","poorly",
-            "day","days","time","life","love","smooth","easy",
-        }
-        # Collect word counts across all reviews
+        # Standard stopwords — not hard-coded by us, from sklearn (research-backed)
+        standardStopwords = set(ENGLISH_STOP_WORDS)
+
+        # Collect word counts across all reviews (standard stopwords only, no hard-coded product list)
         wordCounts = Counter()
         reviewWords = []
         for text in texts:
             words = re.findall(r"[a-z]{3,}", text.lower())
-            filtered = [w for w in words if w not in stopwords]
+            filtered = [w for w in words if w not in standardStopwords]
             reviewWords.append(filtered)
             wordCounts.update(filtered)
 
-        # Frequent words that appear at least 3 times are candidate aspects, but not opinion words
-        # 3+ filters out noisy 2x words like "day", "time" while keeping real concerns like battery (8x)
-        frequentAspects = {word for word, count in wordCounts.items() if count >= 3 and word not in opinion_stopwords}
+        # Dynamic threshold: 10% of reviews or 2, whichever is larger — adapts to any dataset size
+        # 12 reviews -> 2, 36 reviews -> 3, 100 reviews -> 10 — no fixed number, works for chair or phone
+        dynamicMinCount = max(2, int(len(texts) * 0.10))
+
+        # Filter to keep only noun-like aspects (not pure opinion words)
+        # Use the trained sentiment model on the word itself: opinion words like "poor" are strongly negative alone,
+        # while aspect words like "battery" are neutral alone. This is data-driven, not hard-coded.
+        frequentCandidates = {word for word, count in wordCounts.items() if count >= dynamicMinCount}
+        frequentAspects = set()
+        for word in frequentCandidates:
+            # Skip very short words
+            if len(word) < 4:
+                continue
+            # Skip adverbs ending with ly (quickly, poorly) — not aspects
+            if word.endswith("ly"):
+                continue
+            try:
+                wordFeeling = predict_sentiment(word)
+                # If the word alone is strongly opinionated, it's likely an opinion word, not an aspect
+                if wordFeeling["label"] in ("positive", "negative") and wordFeeling["confidence"] >= 0.65:
+                    continue
+            except Exception:
+                pass
+            frequentAspects.add(word)
 
         batchResults = []
         for text, words in zip(texts, reviewWords):
