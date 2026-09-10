@@ -13,19 +13,34 @@ init_db()
 
 app = FastAPI(title="Customer Feedback Insight System")
 
-limiter = RateLimiter(max_requests=60, window_seconds=60)
+# Allow 30 requests per IP in 60 seconds, and 200 total for all IPs (global flood)
+limiter = RateLimiter(max_requests=30, window_seconds=60, global_max=200)
+
+
+# Small helper: should we skip rate limiting for this path?
+def is_health_check(path: str) -> bool:
+    return path in ("/health", "/api/v1/ping")
 
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
-    if request.url.path in ("/health", "/api/v1/ping"):
+    # Health checks are not limited
+    if is_health_check(request.url.path):
         return await call_next(request)
-    client = request.client.host if request.client else "unknown"
-    if not limiter.is_allowed(client):
+
+    # Find who is asking (IP address)
+    client_ip = request.client.host if request.client else "unknown"
+
+    # Check if this IP (or all IPs together) made too many requests
+    if not limiter.is_allowed(client_ip):
+        # 429 = Too Many Requests, tell the browser to wait 60 seconds
         return JSONResponse(
             status_code=429,
-            content={"detail": "Too many requests. Please slow down and try again later."},
+            content={"detail": "Too many requests. Please wait a minute and try again."},
+            headers={"Retry-After": "60"},
         )
+
+    # OK, let the request continue
     return await call_next(request)
 
 
