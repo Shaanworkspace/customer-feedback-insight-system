@@ -1,6 +1,6 @@
-const DEPLOYED_API = 'https://cfa-api.onrender.com'
+const DEPLOYED_API = 'http://3.109.121.85:8000'
 const LOCAL_API = 'http://localhost:8000'
-// ENV decides: if VITE_API_BASE is set, use it; else if running on localhost use local, else deployed
+// ENV decides: if VITE_API_BASE is set, use it; else if running on localhost use local, else deployed EC2
 const API_BASE =
   import.meta.env.VITE_API_BASE || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? LOCAL_API : DEPLOYED_API)
 
