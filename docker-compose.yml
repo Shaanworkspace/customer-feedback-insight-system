@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: .
+    image: cfa-backend:local
+    container_name: cfa-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      # mount BERT so you don't rebuild on model change (optional, remove for pure image)
+      - ./bert_aste_final:/app/bert_aste_final:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -1,0 +1,25 @@
+# Keep image small — only backend + BERT needed on EC2
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.git
+.github
+frontend/node_modules
+frontend/dist
+data
+output
+*.log
+.DS_Store
+.env
+# but DO include bert_aste_final (426M) — needed for BERT
+!bert_aste_final
+!bert_aste_final/**
+# keep testing csvs out of image (use local final.csv for test)
+testing_csvs
+notebooks
+*.pdf
+*.html
