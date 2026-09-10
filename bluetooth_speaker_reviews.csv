@@ -1,0 +1,49 @@
+review_text,rating,date,country
+"Battery lasts 10 hours, amazing sound and deep bass.",5,2024-01-08,India
+"Battery drains in 3 hours, very poor backup.",1,2024-01-10,USA
+"Sound is loud and clear, love the bass quality.",5,2024-01-12,Germany
+"Sound is muffled and volume is low, disappointed.",2,2024-01-14,UK
+"Bluetooth pairing is fast and stable, easy to connect.",5,2024-01-16,India
+Bluetooth disconnects often and lags.,2,2024-01-18,USA
+"Build is sturdy and waterproof, great for outdoors.",5,2024-01-20,Japan
+"Build feels cheap and flimsy, cracked in a week.",1,2024-01-22,Germany
+"Price is great value for money, worth it.",5,2024-01-25,India
+"Too expensive for this quality, overpriced.",2,2024-01-28,USA
+"Portability is excellent, lightweight and compact.",5,2024-02-01,USA
+Too bulky and heavy to carry around.,2,2024-02-03,UK
+"Charging is fast, full in 2 hours.",5,2024-02-05,India
+Charging is very slow and heats up.,1,2024-02-07,USA
+Customer service was helpful and quick.,5,2024-02-10,India
+Customer service was rude and unhelpful.,1,2024-02-12,USA
+The product is excellent but delivery was terrible.,3,2024-02-15,USA
+Sound is amazing but battery drains fast.,3,2024-02-18,India
+Build is sturdy but sound is poor.,3,2024-02-20,Germany
+Price is good but Bluetooth is unstable.,3,2024-02-22,UK
+Battery is good but charging is slow.,3,2024-02-24,USA
+"Loud Bass but poor battery, mixed feelings.",3,2024-02-26,India
+"Amazing portability and sound, highly recommend.",5,2024-03-01,India
+"Worst speaker, everything is faulty and broken.",1,2024-03-03,USA
+"Average, does the job, nothing special.",3,2024-03-05,Canada
+Battery is excellent but price is too high.,3,2024-03-07,India
+Sound quality is poor and battery drains quickly.,1,2024-03-09,USA
+Delivery was fast and packaging was neat.,5,2024-03-11,Germany
+Delivery was late and box was damaged.,1,2024-03-13,UK
+"Waterproof works great in rain, very durable.",5,2024-03-15,India
+"Not waterproof at all, stopped working after splash.",1,2024-03-17,USA
+Controls are easy to use and intuitive.,5,2024-03-19,India
+Controls are confusing and buttons are hard to press.,2,2024-03-21,USA
+ Bass is punchy and sound is crisp.,5,2024-03-23,Japan
+Sound is distorted at high volume.,2,2024-03-25,USA
+"Great gift, kids love it.",5,2024-03-27,UK
+"Not worth the money, regret buying.",1,2024-03-29,India
+Battery holds charge well for a week.,5,2024-04-01,USA
+"Battery swells after a month, dangerous.",1,2024-04-03,Germany
+Pairing is instant with my phone.,5,2024-04-05,UK
+Pairing fails every time with laptop.,1,2024-04-07,USA
+Design is beautiful and modern.,5,2024-04-09,India
+Design is ugly and outdated.,2,2024-04-11,USA
+Lightweight and easy to carry to beach.,5,2024-04-13,India
+"Heavy and bulky, not portable at all.",2,2024-04-15,USA
+Microphone is clear for calls.,5,2024-04-17,Germany
+Microphone is muffled and no one can hear me.,1,2024-04-19,UK
+Overall great speaker for the price.,5,2024-04-21,India

@@ -129,6 +129,43 @@ Env vars: `DATABASE_URL` (MySQL, else SQLite), `HF_TOKEN` (optional), `HF_MODEL`
 
 ---
 
+## What Your CSV Must Have — Minimal Columns
+
+**We ask for the smallest possible CSV.** Only **1 column is mandatory**. Everything else is optional and auto-detected if you give it.
+
+| Column You Give | Is It Mandatory? | What Names Do We Accept? (Flexible) | What Happens If You Give It? | What If You Don't Give It? |
+|-----------------|------------------|--------------------------------------|------------------------------|----------------------------|
+| **Review text** | **Yes — 1 column required** | `review_text`, `Review Text`, `review`, `comment`, `feedback`, `text`, `sentence`, `ReviewText`, `COMMENT` — **any name that contains one of these words, any capital/small** | We use it for everything: find aspects, feelings, ranking, proof. The code `find_text_column()` finds it by itself, no hard-coded name. | Upload fails with `No reviews found. Make sure the CSV has a column like 'review_text'` — because we have nothing to analyze. |
+| `rating` | No | `rating`, `Rating`, `stars`, `Stars`, `score`, `Score`, `Stars Rating` | Makes the **Rating Distribution** bar chart (1-5 stars). | Chart shows empty, but main insights still work. |
+| `date` | No | `date`, `Date`, `review_date`, `Review Date`, `Date of Experience`, `timestamp`, `Time` | Makes the **Trend Over Time** (reviews per month) chart. We look for `YYYY-MM` inside the text. | Trend chart empty, but not needed for feelings. |
+| `country` | No | `country`, `Country`, `nation`, `Region`, `Market` | Makes the **Top Countries** chart. | Chart empty. |
+| `reviewer` / `author` | No | `reviewer`, `Reviewer Name`, `author`, `customer`, `user` | Shows reviewer name in proof quotes. | Shows “Verified Reviewer”. |
+| `product` / any other | No | `product`, `item`, `category`, `manufacturer`, `price` — **any name you like** | We keep it in `attributes` and show it in the dashboard’s “attributes” and you can filter by it later. | Nothing breaks. |
+| Any extra column | No | Any name at all | We keep it, never delete it. It appears in `attributes` and in `Export CSV`. | — |
+
+**How to give the CSV:**
+
+| Question | Answer |
+|----------|--------|
+| **How many columns minimum?** | **1** — just a column with review text. Example: `review_text` with 10 rows works. For good charts, give 4: `review_text, rating, date, country` (like our 3 new datasets). |
+| **Do column names have to be exact?** | **No, flexible.** `Review Text` or `COMMENT` or `my_feedback` all work if they contain `review`/`comment`/`feedback`/`text`. We map with `find_text_column()` — no hard-coded exact name. |
+| **What if your CSV is in Hindi or has different header?** | Still works if the header contains one of the accepted words above. If your header is `samiksha` (Hindi), rename it to `review_text` before upload, or we can add `samiksha` to the mapping in one line — tell us. |
+| **Are we hard-coding columns?** | **No.** Old code had a fixed `concern_lexicon.json` for aspects, but now aspects are found by BERT (pattern `X is wobbly`) and CSV columns are found by substring search. No hard-coded product list. |
+| **What do we do with your data?** | We read every row → clean → BERT finds `battery→Negative` etc. → count → rank → save. Your raw CSV is never altered, we only read. |
+
+**Our 3 new large datasets (minimal columns, different products, many rows to analyze well):**
+
+| File (in `testing_csvs/` + project root + Desktop) | Rows | Columns (Minimal) | Why This One? |
+|-----------------------------------------------------|------|-------------------|---------------|
+| `bluetooth_speaker_reviews.csv` | 48 | `review_text, rating, date, country` | Tests all 4 optional columns → all charts fill. Has `battery, sound, Bluetooth, build, price, portability` — 8 concerns. |
+| `office_chair_reviews.csv` | 52 | `review_text, rating, country` — **no date** | Tests missing `date` → Trend chart empty but other charts still work, proves optional handling. Has `fabric, armrest, wheels, back support` — different product, same code. |
+| `smartwatch_reviews.csv` | 55 | `review_text, rating, date, country, product` — **extra `product` column** | Tests extra column kept in `attributes` and shown. Has `battery, screen, strap, fitness, charging` — 55 rows for deep analysis. |
+| `final.csv` / `final_interview.csv` | 36 | `review_text, rating, date, country, product` | The interview showcase — balanced Positive 8/Negative 19/Mixed 7, battery on top, every chart filled. |
+
+All 3 are **bigger** than before (12/16 rows) so you can analyze deeply and show a full dashboard, not a toy.
+
+---
+
 ## Project Structure
 
 ```

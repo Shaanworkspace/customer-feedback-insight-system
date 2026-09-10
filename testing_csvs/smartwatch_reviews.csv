@@ -1,0 +1,56 @@
+review_text,rating,date,country,product
+"Battery lasts 2 days, very impressive.",5,2024-01-05,India,SmartWatch Pro
+"Battery drains in 6 hours, terrible.",1,2024-01-07,USA,SmartWatch Pro
+"Screen is bright and vivid, love the display.",5,2024-01-09,Germany,SmartWatch Pro
+"Screen flickers and is dim, poor display.",1,2024-01-11,UK,SmartWatch Pro
+"Strap is comfortable and soft, great material.",5,2024-01-13,Japan,SmartWatch Pro
+"Strap broke within a week, poor quality.",1,2024-01-15,India,SmartWatch Pro
+Fitness tracking is accurate and useful.,5,2024-01-17,USA,SmartWatch Pro
+Step count is inaccurate and heart rate is wrong.,2,2024-01-19,Germany,SmartWatch Pro
+"Charging is fast, full in 1 hour.",5,2024-01-21,UK,SmartWatch Pro
+Charging is slow and heats up a lot.,1,2024-01-23,USA,SmartWatch Pro
+Price is great value for the features.,5,2024-01-25,India,SmartWatch Pro
+Too expensive for what it does.,2,2024-01-27,USA,SmartWatch Pro
+"Design is sleek and modern, beautiful.",5,2024-01-29,Germany,SmartWatch Pro
+"Design is bulky and heavy, not comfortable.",2,2024-01-31,UK,SmartWatch Pro
+"Waterproof works in swimming pool, great.",5,2024-02-02,India,SmartWatch Pro
+"Not waterproof, damaged after rain.",1,2024-02-04,USA,SmartWatch Pro
+Notifications work perfectly and on time.,5,2024-02-06,Japan,SmartWatch Pro
+Notifications are delayed and buggy.,2,2024-02-08,Germany,SmartWatch Pro
+Customer service was excellent and quick.,5,2024-02-10,India,SmartWatch Pro
+Customer service was rude and slow.,1,2024-02-12,USA,SmartWatch Pro
+Delivery was fast and packaging was neat.,5,2024-02-14,UK,SmartWatch Pro
+Delivery was late and packaging was damaged.,1,2024-02-16,India,SmartWatch Pro
+The product is excellent but delivery was terrible.,3,2024-02-18,USA,SmartWatch Pro
+Battery drains fast but screen is amazing.,3,2024-02-20,India,SmartWatch Pro
+Strap is comfortable but battery drains quickly.,3,2024-02-22,Germany,SmartWatch Pro
+Fitness tracking is good but charging is slow.,3,2024-02-24,UK,SmartWatch Pro
+Price is high but design is beautiful.,3,2024-02-26,USA,SmartWatch Pro
+Waterproof is great but notifications are buggy.,3,2024-02-28,India,SmartWatch Pro
+Battery is excellent but price is too high.,3,2024-03-01,USA,SmartWatch Pro
+Screen is bright but strap is uncomfortable.,3,2024-03-03,Japan,SmartWatch Pro
+"Amazing battery and screen, highly recommend.",5,2024-03-05,India,SmartWatch Pro
+"Worst watch, everything is faulty and broken.",1,2024-03-07,USA,SmartWatch Pro
+"Average watch, does the job, nothing special.",3,2024-03-09,Canada,SmartWatch Pro
+GPS is accurate and fast to lock.,5,2024-03-11,Germany,SmartWatch Pro
+GPS takes forever and is inaccurate.,1,2024-03-13,UK,SmartWatch Pro
+Call quality is clear and loud.,5,2024-03-15,India,SmartWatch Pro
+Calls are muffled and drop often.,1,2024-03-17,USA,SmartWatch Pro
+App is easy to use and syncs well.,5,2024-03-19,Japan,SmartWatch Pro
+App is confusing and crashes often.,1,2024-03-21,Germany,SmartWatch Pro
+"Comfortable to sleep with, lightweight.",5,2024-03-23,India,SmartWatch Pro
+"Too heavy to wear at night, uncomfortable.",2,2024-03-25,USA,SmartWatch Pro
+Vibration is strong and noticeable.,5,2024-03-27,UK,SmartWatch Pro
+Vibration is weak and misses notifications.,2,2024-03-29,India,SmartWatch Pro
+Sensors are accurate and responsive.,5,2024-04-01,USA,SmartWatch Pro
+Sensors are laggy and inaccurate.,1,2024-04-03,Germany,SmartWatch Pro
+Great for sports and fitness tracking.,5,2024-04-05,UK,SmartWatch Pro
+"Not good for sports, inaccurate tracking.",2,2024-04-07,India,SmartWatch Pro
+Looks premium and feels great on wrist.,5,2024-04-09,Japan,SmartWatch Pro
+Looks cheap and feels plasticky.,2,2024-04-11,USA,SmartWatch Pro
+"Worth the money, very satisfied.",5,2024-04-13,India,SmartWatch Pro
+"Not worth it, regret buying.",1,2024-04-15,USA,SmartWatch Pro
+Buttons are tactile and responsive.,5,2024-04-17,Germany,SmartWatch Pro
+Buttons are hard to press and stuck.,1,2024-04-19,UK,SmartWatch Pro
+"Long battery, bright screen, great watch.",5,2024-04-21,India,SmartWatch Pro
+Screen is dim and battery drains fast.,1,2024-04-23,USA,SmartWatch Pro
