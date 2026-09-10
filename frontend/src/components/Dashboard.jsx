@@ -193,11 +193,11 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
   if (selectedId == null) {
     return (
       <div className="w-full">
-        {/* Full page background like login */}
-        <div className="fixed inset-0 -z-10 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1920&q=80')" }} aria-hidden="true" />
-        <div className="fixed inset-0 -z-10 bg-gradient-to-b from-[#f4f7fb]/95 via-[#f4f7fb]/80 to-[#f4f7fb]" aria-hidden="true" />
+        {/* Full page background like login — covers entire dashboard */}
+        <div className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80')" }} aria-hidden="true" />
+        <div className="fixed inset-0 -z-10 bg-gradient-to-b from-[#f4f7fb]/90 via-[#f4f7fb]/70 to-[#f4f7fb]/95" aria-hidden="true" />
 
-        {/* Hero with light blue — now on main page, professional */}
+        {/* Hero — light blue, professional, on main page */}
         <section className="relative mb-8 overflow-hidden rounded-[20px] border border-white/60 bg-gradient-to-br from-[#eaf1f8] via-[#f0f6ff] to-white p-8 shadow-[0_20px_50px_rgba(23,63,115,0.10)] md:p-10">
           <div className="mx-auto max-w-[820px] text-center">
             <div className="mx-auto mb-3 inline-block rounded-full bg-[#173f73] px-3 py-1 text-[10px] font-extrabold tracking-[1.5px] text-white">WELCOME TO YOUR WORKSPACE</div>
@@ -349,120 +349,54 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
           <p className="mt-3 text-[10px] text-[#8a96a8]">Tip: You can also give just one column — <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> — and the main insights will still work. Extra columns just make the extra charts.</p>
         </section>
 
-        {/* Four sections — each with its own image, like landing why-rows */}
-        <section className="mb-10">
-          <div className="mb-6 text-center">
-            <h3 className="text-[20px] font-extrabold text-[#142b48]">How it all works — and stays safe</h3>
-            <p className="mt-1 text-[12px] text-[#8a96a8]">Four professional sections, each with a visual.</p>
+        {/* Four sections — each with its own image, like landing why-rows, bigger diffs */}
+        <section className="mb-12">
+          <div className="mb-8 text-center">
+            <h3 className="text-[22px] font-extrabold tracking-tight text-[#142b48]">How it all works — and stays safe</h3>
+            <p className="mt-2 text-[13px] leading-relaxed text-[#718198]">Four clear sections, each with a visual, well spaced and easy to scan.</p>
           </div>
-          <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 items-center gap-6 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
+          <div className="flex flex-col gap-8">
+            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
               <div className="order-2 md:order-1">
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf1f8] text-[#173f73]">▦</div>
-                <h4 className="text-[16px] font-extrabold text-[#142b48]">How your data is</h4>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#5a6d80]">Your CSV stays as is. We read <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> and auto-keep every other column in <code className="rounded bg-[#f0f4f8] px-1 py-0.5">attributes</code> — nothing is deleted or reshaped. What you see in the table above is exactly what we store.</p>
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf1f8] text-[14px] font-extrabold text-[#173f73]">01</div>
+                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How your data is</h4>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">Your CSV stays as is. We read <code className="rounded bg-[#f0f4f8] px-1 py-0.5">review_text</code> and auto-keep every other column in <code className="rounded bg-[#f0f4f8] px-1 py-0.5">attributes</code> — nothing is deleted or reshaped. What you see in the table above is exactly what we store.</p>
               </div>
               <div className="order-1 overflow-hidden rounded-xl md:order-2">
                 <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Data table" className="h-[180px] w-full object-cover" loading="lazy" />
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-6 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
+            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="AI working" className="h-[180px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="AI working" className="h-[220px] w-full object-cover" loading="lazy" />
               </div>
               <div>
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf8f0] text-[#1f7c46]">⚡</div>
-                <h4 className="text-[16px] font-extrabold text-[#142b48]">How we are working</h4>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#5a6d80]">BERT (5 labels) finds aspects by pattern <code className="rounded bg-[#f0f4f8] px-1 py-0.5">X is wobbly</code> → X is aspect, so any product (chair, phone, watch) works without a new list. No hard-coded dictionary.</p>
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf8f0] text-[14px] font-extrabold text-[#1f7c46]">02</div>
+                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we are working</h4>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">We work in sequence: <strong>read → clean → BERT (5 labels) → per-aspect feeling → overall Mixed</strong>. BERT finds aspects by pattern <code className="rounded bg-[#f0f4f8] px-1 py-0.5">X is wobbly</code> → X is aspect, so any product works without a new list.</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-6 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
+            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1.2fr_1fr]">
               <div>
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7e6] text-[#b7791f]">↗</div>
-                <h4 className="text-[16px] font-extrabold text-[#142b48]">How we should improve it</h4>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#5a6d80]">We rank by <code className="rounded bg-[#f0f4f8] px-1 py-0.5">count × negative%</code>. Fix the top — battery 8× 87% — and the whole feeling lifts. The dashboard shows impact 100 on top, so you know where to act first.</p>
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7e6] text-[14px] font-extrabold text-[#b7791f]">03</div>
+                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we should improve it</h4>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">We rank by <code className="rounded bg-[#f0f4f8] px-1 py-0.5">count × negative%</code>. Fix the top — battery 8× 87% — and the whole feeling lifts. The dashboard shows impact 100 on top, so you know where to act first.</p>
               </div>
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Improve chart" className="h-[180px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Improve chart" className="h-[220px] w-full object-cover" loading="lazy" />
               </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-6 rounded-[16px] border border-[#e1e7ef] bg-white p-6 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
+            <div className="grid grid-cols-1 items-center gap-8 rounded-[16px] border border-[#e1e7ef] bg-white p-8 shadow-[0_4px_18px_rgba(25,46,72,0.04)] md:grid-cols-[1fr_1.2fr]">
               <div className="overflow-hidden rounded-xl">
-                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80" alt="Privacy lock" className="h-[180px] w-full object-cover" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80" alt="Privacy lock" className="h-[220px] w-full object-cover" loading="lazy" />
               </div>
               <div>
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0f4f8] text-[#173f73]">🔒</div>
-                <h4 className="text-[16px] font-extrabold text-[#142b48]">How we maintain privacy</h4>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#5a6d80]">Per-user, last 3 analyses only. MySQL on Aiven (online) or local SQLite. Your CSV is analyzed securely and never shared. Delete any analysis with the × on hover.</p>
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0f4f8] text-[14px] font-extrabold text-[#173f73]">04</div>
+                <h4 className="text-[17px] font-extrabold tracking-tight text-[#142b48]">How we maintain privacy</h4>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#5a6d80]">Per-user, last 3 analyses only. MySQL on Aiven (online) or local SQLite. Your CSV is analyzed securely and never shared. Delete any analysis with the × on hover.</p>
               </div>
             </div>
           </div>
-        </section>
-
-        <section>
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-[20px] font-bold text-[#142b48]">Your analyses</h3>
-            <span className="text-[12px] text-[#8793a5]">{analyses.length} saved</span>
-          </div>
-
-          {listError ? (
-            <div className="rounded-[14px] border border-[#ffd5ce] bg-[#fff5f3] p-6 text-center text-[13px] text-[#b42318]">
-              Could not load your analyses.
-            </div>
-          ) : analyses.length === 0 ? (
-            <div className="rounded-[15px] border border-dashed border-[#cdd8e4] bg-white p-10 text-center">
-              <p className="text-[14px] font-semibold text-[#718097]">No analyses yet.</p>
-              <p className="mt-1 text-[13px] text-[#8a96a8]">Upload a CSV to get your first report.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {analyses.map((a) => (
-                <div
-                  key={a.id}
-                  className="group relative rounded-[15px] border border-[#e1e7ef] bg-white p-5 shadow-[0_4px_18px_rgba(25,46,72,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(25,46,72,0.08)]"
-                >
-                  <button
-                    type="button"
-                    onClick={() => selectAnalysis(a.id)}
-                    className="w-full cursor-pointer text-left"
-                  >
-                    <strong className="block truncate pr-6 text-[15px] text-[#142b48]">{a.filename || 'Untitled analysis'}</strong>
-                    <div className="mt-1 text-[12px] text-[#8793a5]">
-                      {a.total_reviews != null ? `${a.total_reviews} reviews · ` : ''}
-                      {a.created_at ? `${new Date(a.created_at).toLocaleDateString()} ${new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {(a.top_concerns || []).map((c, i) => (
-                        <span key={i} className="rounded-md bg-[#f0f4f8] px-2 py-0.5 text-[10px] font-bold capitalize text-[#536a82]">{c}</span>
-                      ))}
-                    </div>
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Delete analysis"
-                    onClick={async (e) => {
-                      e.stopPropagation()
-                      if (!confirm(`Delete "${a.filename || 'this analysis'}"?`)) return
-                      try {
-                        const { deleteHistory } = await import('../api')
-                        await deleteHistory(a.id)
-                        setAnalyses((prev) => prev.filter((item) => item.id !== a.id))
-                        if (selectedId === a.id) {
-                          setSelectedId(null)
-                          setStats(null)
-                        }
-                      } catch (err) {
-                        alert(err.message || 'Could not delete')
-                      }
-                    }}
-                    className="absolute right-2 top-2 hidden h-7 w-7 items-center justify-center rounded-full bg-white p-0 text-[14px] font-bold text-[#8a96a8] shadow transition hover:bg-[#fff0ef] hover:text-[#b42318] group-hover:flex"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </section>
       </div>
     )
