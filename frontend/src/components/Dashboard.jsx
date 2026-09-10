@@ -197,23 +197,11 @@ export default function Dashboard({ analyzing = false, reloadKey = 0, onUpload, 
           <div className="text-[11px] font-extrabold tracking-[1.5px] opacity-80">WELCOME TO YOUR WORKSPACE</div>
           <h2 className="mt-1 text-[clamp(26px,3.5vw,36px)] font-bold">Hi {me?.first_name || 'there'} 👋</h2>
           <p className="mt-2 max-w-[620px] text-[15px] opacity-90">
-            This is your customer feedback workspace. Open a past analysis to see its full report, or drop a new CSV right here.
+            Drop a CSV with your reviews below. Only 1 column is required — <strong className="font-extrabold text-white">review_text</strong> (also accepts Review Text, comment, feedback, text).
+            Optional columns like <span className="rounded bg-white/20 px-1.5 py-0.5 text-[12px] font-bold">rating, date, country</span> make the charts richer, but the main insights work with just review text.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="cursor-pointer rounded-[10px] bg-white px-5 py-3 font-bold text-[#173f73] shadow transition hover:-translate-y-0.5"
-              onClick={onUpload}
-            >
-              + Upload new reviews
-            </button>
-            <button
-              type="button"
-              className="cursor-pointer rounded-[10px] border border-white/50 px-5 py-3 font-bold text-white transition hover:bg-white/10"
-              onClick={() => downloadText('sample_reviews.csv', sampleCsvText())}
-            >
-              Download sample CSV
-            </button>
+          <div className="mt-4 rounded-lg bg-white/10 p-3 text-[11px] leading-relaxed text-white/90">
+            <strong>Minimal CSV:</strong> <code className="rounded bg-white/20 px-1 py-0.5">review_text</code> — one column, any name containing <code className="rounded bg-white/20 px-1 py-0.5">review/comment/feedback/text</code>. Any extra columns are auto-kept and shown.
           </div>
         </section>
 

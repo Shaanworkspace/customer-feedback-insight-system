@@ -27,7 +27,8 @@ def extractMonthTrend(customerReviews):
             continue
         monthKey = matchedMonth.group()
         monthCounts[monthKey] = monthCounts.get(monthKey, 0) + 1
-    return [{"month": month, "count": count} for month, count in sorted(monthCounts.items())]
+    # Return both keys for frontend compatibility (old expects count, new expects reviews)
+    return [{"month": month, "count": count, "reviews": count} for month, count in sorted(monthCounts.items())]
 
 
 def buildSentimentDistribution(processedReviews):
