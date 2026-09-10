@@ -6,21 +6,20 @@
 
 ```mermaid
 graph TD
-    A[User: CSV with review_text] --> B[Frontend: Drop CSV here<br/>div drag-drop]
-    B --> C[FastAPI: POST /api/v1/upload<br/>+ JWT Auth]
-    C --> D[Preprocessing<br/>find_text_column]
-    D --> E[BERT Token Model<br/>bert-base-uncased<br/>5 labels]
-    E --> F[Per-Aspect Sentiment<br/>battery→Negative<br/>delivery→Positive]
-    F --> G[Overall Sentiment<br/>Pos+Neg → Mixed]
-    G --> H[Ranking<br/>count × negative%]
-    H --> I[Proof<br/>5 top comments per concern]
-    I --> J[MySQL Aiven<br/>users + analyses<br/>last 3]
-    J --> K[Frontend Dashboard<br/>Pie + Bar + Table<br/>Top 5 See more]
-    K --> L[User: What to fix first]
-
-    M[Notebook: Final_Journal.ipynb<br/>60 cells, T4 GPU<br/>trainer.train()] -.-> E
-    M -.-> N[bert_aste_final/<br/>~400 MB BERT<br/>~250 MB DistilBERT]
-    N -.-> E
+    A[User CSV] --> B[Frontend Drop CSV]
+    B --> C[FastAPI POST upload]
+    C --> D[Preprocessing]
+    D --> E[BERT 5 labels]
+    E --> F[Per-Aspect Sentiment]
+    F --> G[Overall Mixed]
+    G --> H[Ranking]
+    H --> I[Proof 5 comments]
+    I --> J[MySQL Aiven]
+    J --> K[Dashboard]
+    K --> L[What to fix first]
+    M[Notebook Final_Journal] -.-> E
+    N[bert_aste_final] -.-> E
+    M -.-> N
 ```
 
 ## 2. Step-by-Step with Code Links
