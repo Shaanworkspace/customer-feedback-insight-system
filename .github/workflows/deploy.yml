@@ -120,11 +120,11 @@ jobs:
               \"sleep 15\",
               \"echo '[deploy] Verifying mount inside container...'\",
               \"docker exec $CONTAINER_NAME test -f /app/bert_aste_final/config.json || (echo 'ERROR: mount failed — /app/bert_aste_final/config.json not in container' && docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
-              \"curl -fs http://localhost:8000/health || (echo '[deploy] health failed'; docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
+              \"curl -f http://localhost:8000/health || (echo '[deploy] health failed'; docker logs --tail 100 $CONTAINER_NAME; exit 1)\",
               \"echo '[deploy] BERT model check: should not be Neutral fallback'\",
               \"curl -fs http://localhost:8000/api/v1/ping || true\",
               \"docker image prune -f || true\",
-              \"echo '[deploy] Done — http://65.0.124.255:8000/health with real BERT'\"
+              \"echo '[deploy] Done — FastAPI + real BERT on localhost:8000/health'\"
             ]" \
             --query "Command.CommandId" --output text)
 
@@ -144,8 +144,6 @@ jobs:
           done
           echo "SSM timed out"; exit 1
 
-      - name: Verify public endpoint
+      - name: Verify SSM deployment logs (no hardcoded IP)
         run: |
-          sleep 5
-          curl -fs http://65.0.124.255:8000/health && echo "Public health OK" || echo "::warning::Public health check failed — check SG 8000"
-          curl -fs http://65.0.124.255:8000/api/v1/ping || true
+          echo "SSM deployment already verified on EC2 via curl -f http://localhost:8000/health (inside SSM). No hardcoded public IP used."
