@@ -70,7 +70,7 @@ Result: battery → Positive (from "great"), delivery → Negative (from "terrib
 
 ```
 Local:  .env (DATABASE_URL=mysql://...@aivencloud.com:14273/cfa) → uvicorn cfa.api.main:app --host 0.0.0.0 --port 8000 → http://localhost:8000 → Frontend vite --host 0.0.0.0 --port 5173 → http://localhost:5173
-Deployed: GitHub push main → Render (uvicorn, autoDeploy, DATABASE_URL sync:false) → https://cfa-api.onrender.com → Vercel (npm run build) → https://customer-feedback-insight-system.vercel.app
+Deployed: GitHub push main → EC2 (uvicorn, autoDeploy, DATABASE_URL sync:false) → https://cfa-api.onEC2.com → Vercel (npm run build) → https://customer-feedback-insight-system.vercel.app
 ```
 
 ## 6. Where to Check

@@ -146,7 +146,7 @@ Exactly ye hi TF-IDF (Term Frequency × Inverse Document Frequency) karta hai.
 Humne **Logistic Regression** choose kiya. Available options they: Naive Bayes, SVM, Random Forest, Decision Tree, Neural Networks/BERT, etc.
 
 **Kyun Logistic Regression?**
-- **Fast & light:** 79k rows par 1-2 minute mein train ho jata hai, choti file (joblib) banata hai — Render pe bina GPU chal jata hai.
+- **Fast & light:** 79k rows par 1-2 minute mein train ho jata hai, choti file (joblib) banata hai — EC2 pe bina GPU chal jata hai.
 - **Probability deta hai:** output sirf "positive" nahi, balki `0.92` confidence bhi deta hai. Ye confidence baad mein 4-class banane ke kaam aati hai.
 - **Samajh mein aata hai:** har word ka ek weight hota hai (positive word = +, negative = −). Debug karna easy.
 - **Accuracy kaafi achhi:** test pe **88.4% accuracy, 0.875 F1** (metrics.json).

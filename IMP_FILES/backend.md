@@ -59,7 +59,7 @@ Dashboard never recomputes. It reads the latest saved `data`:
 
 ## 6. Data storage
 
-- `DATABASE_URL=mysql+pymysql://...@aivencloud.com:14273/cfa` (from `.env` or Render env `sync: false`) → **Aiven MySQL** (`users`, `analyses` JSON). Without it, `sqlite:///data/app.db`.
+- `DATABASE_URL=mysql+pymysql://...@aivencloud.com:14273/cfa` (from `.env` or EC2 env `sync: false`) → **Aiven MySQL** (`users`, `analyses` JSON). Without it, `sqlite:///data/app.db`.
 - `JWT_SECRET` env → stable token (default `dev-secret...` for local).
 - `config.py`: `BERT_ASTE_DIR = PROJECT_ROOT / "bert_aste_final"` (400MB, gitignored until trained), `MODEL_PATH` legacy TF-IDF kept.
 - `data/` is gitignored → repo never ships fake results.

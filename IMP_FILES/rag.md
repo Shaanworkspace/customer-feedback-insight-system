@@ -122,7 +122,7 @@ If `reviews.json` is empty (no upload yet), `find_similar` returns this placehol
 **A:** Word-overlap = (query words ∩ review words) / (query words). It is a subset-overlap ratio. We chose it because the query is a single concern name (1-2 words), so we just need to know "does this review mention that word?" Cosine similarity over embeddings would be more robust to synonyms but heavier. For single-keyword queries, overlap is sufficient and transparent.
 
 ### Q5. "What happens when reviews.json is empty?"
-**A:** `find_similar` returns a hardcoded `_EXAMPLE` placeholder so the frontend modal still renders. This prevents a crash on a fresh deploy where no CSV has been uploaded yet. Once a real upload happens, the placeholder is never used.
+**A:** `find_similar` returns a hardcoded `_EXAMPLE` placeholder so the frontend modal still EC2s. This prevents a crash on a fresh deploy where no CSV has been uploaded yet. Once a real upload happens, the placeholder is never used.
 
 ### Q6. "How would you scale this to millions of reviews?"
 **A:** (a) Move storage to a database (Postgres / Elasticsearch). (b) Pre-compute embeddings and use a vector index (FAISS/Pinecone) for semantic search. (c) Index by concern so we don't scan every review. (d) Cache the top-5 per concern. The current code is intentionally simple; the retrieval interface (`find_similar`) would stay the same while the internals swap to embeddings.

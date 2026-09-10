@@ -83,7 +83,7 @@ Key local facts:
  Browser (Vercel: customer-feedback-insight-system.vercel.app)
         │  click concern "battery"
         ▼
- Backend (Render: cfa-api.onrender.com)   ← SAME code as local
+ Backend (EC2: 3.109.121.85:8000)   ← SAME code as local
         │  GET /api/v1/concern-comments?concern=battery
         ▼
  stats.get_concern_comments(concern, user_id)
@@ -96,10 +96,10 @@ Key local facts:
 Key online facts:
 - The **algorithm and data model are identical** to local — same `find_similar`, same `get_concern_comments`, same database code. Only the database *host* (`DATABASE_URL`) differs.
 - The trained model is **committed** to the repo (`models/*.joblib`), so local and online load the **exact same model**.
-- CORS allows both `localhost:5173` and `*.vercel.app`, so the Vercel frontend can call the Render backend.
+- CORS allows both `localhost:5173` and `*.vercel.app`, so the Vercel frontend can call the EC2 backend.
 - Auth (JWT) protects every data endpoint, including RAG endpoints.
-- Results persist in Aiven MySQL → they survive Render restarts and re-deploys (no ephemeral `data/` loss).
-- **Render free tier cold-starts**: after idle, the first request (model load) is slower. Subsequent requests are fast.
+- Results persist in Aiven MySQL → they survive EC2 restarts and re-deploys (no ephemeral `data/` loss).
+- **EC2 free tier cold-starts**: after idle, the first request (model load) is slower. Subsequent requests are fast.
 
 ---
 
@@ -107,7 +107,7 @@ Key online facts:
 
 | Aspect | Local | Deployed (Online) |
 |--------|-------|-------------------|
-| Backend URL | `http://localhost:8000` | `https://cfa-api.onrender.com` |
+| Backend URL | `http://localhost:8000` | `http://3.109.121.85:8000` |
 | Frontend URL | `http://localhost:5173` | `https://…vercel.app` |
 | RAG **algorithm** | word-overlap (`find_similar`) | word-overlap (`find_similar`) — **same** |
 | Model used | committed `models/*.joblib` | committed `models/*.joblib` — **same** |
@@ -221,5 +221,5 @@ Local vs deployed: the **only** difference is which database hosts the `analyses
 ## 11. How to verify
 
 - Local: see `user_flow.md` + run backend (`uvicorn cfa.api.main:app --port 8000`) and frontend (`npm run dev`); sign up, upload a CSV, click a concern, see real quotes. Set `DATABASE_URL` in `.env` to use Aiven MySQL locally too.
-- Online: the deployed backend (`cfa-api.onrender.com`, with `DATABASE_URL` set to Aiven MySQL in the Render dashboard) runs the **same** code; sign up, upload, click a concern — identical proof quotes, now persistent.
+- Online: the deployed backend (`3.109.121.85:8000`, with `DATABASE_URL` set to Aiven MySQL in the EC2 dashboard) runs the **same** code; sign up, upload, click a concern — identical proof quotes, now persistent.
 - Unit-level: `find_similar` is pure and testable; `tests/` covers the API + DB layer.

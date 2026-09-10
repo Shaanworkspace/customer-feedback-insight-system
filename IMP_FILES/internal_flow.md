@@ -50,7 +50,7 @@ Clicking **View Comments** on a concern calls `getConcernComments(concern)` and 
 
 **Request (browser → server), upload:**
 ```
-POST https://cfa-api.onrender.com/api/v1/upload
+POST http://3.109.121.85:8000/api/v1/upload
 Authorization: Bearer <your token>
 file: <the CSV bytes>
 ```
@@ -89,7 +89,7 @@ The Dashboard reads fields like `ranked_concerns`, `ratings`, `countries`, `time
 | `GET /api/v1/concern-comments?concern=x` | proof quotes for a concern | saved stats |
 | `GET /api/v1/ping` / `/health` | is server alive / counters | — |
 
-CORS lets the Vercel website (and your laptop) talk to the Render server. All data endpoints except `/health` and `/ping` **require the token**.
+CORS lets the Vercel website (and your laptop) talk to the EC2 server. All data endpoints except `/health` and `/ping` **require the token**.
 
 ---
 

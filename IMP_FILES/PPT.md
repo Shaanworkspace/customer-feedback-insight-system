@@ -37,7 +37,7 @@
 Browser (React, Vercel)
         │  HTTPS + token
         ▼
-Backend (FastAPI, Render)
+Backend (FastAPI, EC2)
    ├─ api/       (endpoints + auth)
    ├─ analysis/  (concerns, rag, stats)
    ├─ ml/        (sentiment model)
@@ -50,14 +50,14 @@ data/ (reviews.json, concern_stats.json)  •  models/ (trained model)
 Mention: CI/CD via GitHub Actions; modular layers; no black box.
 
 **What to say**
-> "The architecture is three clean layers: a React frontend on Vercel, a FastAPI backend on Render, and a modular Python backend split into api / analysis / ml / ranking / core. Data flows in as a CSV, gets analyzed, and the results are saved as simple JSON the dashboard reads. We also have CI/CD (GitHub Actions) that runs tests and builds on every push."
+> "The architecture is three clean layers: a React frontend on Vercel, a FastAPI backend on EC2, and a modular Python backend split into api / analysis / ml / ranking / core. Data flows in as a CSV, gets analyzed, and the results are saved as simple JSON the dashboard reads. We also have CI/CD (GitHub Actions) that runs tests and builds on every push."
 
 **Evaluator questions**
 - *"Architecture mein kya choose kiya aur kyon?"* → Layered, modular design (api/analysis/ml/ranking/core). Easy to read, test, and extend; each module has one job.
 - *"Doosri cheezein kyon nahi choose kiye?"* → We rejected a single "god file" (hard to maintain) and heavy microservices (overkill for this scale). Layers are the right balance.
 - *"Kya flow chuna?"* → Upload → analyze each row (hybrid sentiment + concern detection) → save JSON → dashboard reads → RAG proof per concern. Simple, stateless, deployable.
-- *"Python version kya hai?"* → **Python 3.11** (also used in CI and on Render).
-- *"Tech stack kyon?"* → React+Vite+Tailwind (fast UI), FastAPI (auto docs, simple), scikit-learn (no GPU needed), Vercel+Render (free, one-click).
+- *"Python version kya hai?"* → **Python 3.11** (also used in CI and on EC2).
+- *"Tech stack kyon?"* → React+Vite+Tailwind (fast UI), FastAPI (auto docs, simple), scikit-learn (no GPU needed), Vercel+EC2 (free, one-click).
 
 ---
 
@@ -148,16 +148,16 @@ Tested on **15,900 unseen reviews**.
 ## Slide 7 — Deployment, CI/CD & Code Quality
 
 **What to show**
-- Vercel (frontend) + Render (backend), REST API, CORS.
+- Vercel (frontend) + EC2 (backend), REST API, CORS.
 - GitHub Actions CI: `pytest` (backend) + `npm build` (frontend) on every push.
 - Modular code, tests, real auth (signup/login, hashed passwords, JWT).
 - `data/` gitignored (no fake numbers); `models/` committed.
 
 **What to say**
-> "We deployed the frontend on Vercel and the backend on Render with a REST API. Every push runs CI — backend tests and a frontend build. The code is modular and tested, and login is real (hashed passwords + JWT tokens)."
+> "We deployed the frontend on Vercel and the backend on EC2 with a REST API. Every push runs CI — backend tests and a frontend build. The code is modular and tested, and login is real (hashed passwords + JWT tokens)."
 
 **Evaluator questions**
-- *"Deployment kahan?"* → Frontend Vercel, backend Render; they talk over HTTPS REST.
+- *"Deployment kahan?"* → Frontend Vercel, backend EC2; they talk over HTTPS REST.
 - *"CI/CD kya hai?"* → GitHub Actions runs our test suite and build automatically on every commit — catches breaks early.
 - *"Security / auth?"* → Real signup/login; passwords scrambled (pbkdf2); JWT tokens; all data endpoints protected.
 - *"Scalability?"* → Stateless API; for huge data we'd move to a database + embeddings (interface stays the same).
@@ -203,7 +203,7 @@ A: The other 13 KIET use cases (Root Cause Analysis, Product Comparison, Recomme
 A: Use Case #7 (Sentiment Analysis of Customer Reviews) has the clearest business value, is fully demonstrable end-to-end, and lets us show the whole ML pipeline (data → train → predict → insight). Data is readily available (Amazon reviews).
 
 **Q3. Architecture ("rack") mein kya choose kiya aur kyon?**
-A: Three layers — React frontend (Vercel), FastAPI backend (Render), modular Python (api/analysis/ml/ranking/core). Chosen for clarity, testability, and easy deployment. Rejected a monolithic file (hard to maintain) and microservices (overkill at this scale).
+A: Three layers — React frontend (Vercel), FastAPI backend (EC2), modular Python (api/analysis/ml/ranking/core). Chosen for clarity, testability, and easy deployment. Rejected a monolithic file (hard to maintain) and microservices (overkill at this scale).
 
 **Q4. Doosri cheezein kyon nahi choose kiin?**
 A: Monolith → unmaintainable; microservices → unnecessary complexity/cost; a single keyword model → low accuracy; a heavy transformer → needs GPU and is harder to deploy/explain. Our layered + hybrid choice is the balanced middle.
@@ -227,7 +227,7 @@ A: The reviews are short and noisy; sentiment is often ambiguous (sarcasm, mixed
 A: Supervised ML flow — show labelled reviews → learn word weights → predict on new text; plus a hybrid fallback and a RAG retrieval step for proof.
 
 **Q11. Python version kya hai?**
-A: **Python 3.11** (used locally, in CI, and on Render).
+A: **Python 3.11** (used locally, in CI, and on EC2).
 
 **Q12. Innovation kya hai?**
 A: Hybrid ML + concern detection + retrieval-only RAG (real proof quotes) + explainable priority ranking + live dashboard.
@@ -236,7 +236,7 @@ A: Hybrid ML + concern detection + retrieval-only RAG (real proof quotes) + expl
 A: Word-overlap retrieval is instant and needs zero infra for thousands of reviews. Embeddings/vector DB would be more semantic but heavier; we'd adopt them at millions of rows. The retrieval interface stays the same.
 
 **Q14. Deployment aur CI/CD?**
-A: Vercel (frontend) + Render (backend) + REST API; GitHub Actions runs `pytest` + `npm build` on every push.
+A: Vercel (frontend) + EC2 (backend) + REST API; GitHub Actions runs `pytest` + `npm build` on every push.
 
 **Q15. Auth / security?**
 A: Real signup/login, passwords scrambled with pbkdf2, JWT tokens (HS256, 1h), all data endpoints protected. Users are in-memory (temporary, demo).

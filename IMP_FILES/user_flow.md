@@ -22,7 +22,7 @@ Say: *"They create an account or sign in. We give a token, now they can use the 
 
 **What you see:**
 - Top hero `Upload your reviews` + **professional `div` drop zone** (not button): dashed border `border-[#b9c8d8]`, hover `border-[#173f73] bg-[#eef4fb]`, keyboard `Enter/Space`, shows file name + size, “Only .CSV” badge, spinner `LoadingSpinner` while `isCsvUploadInProgress`.
-- Two buttons: **Upload & Continue ON LOCAL** (`http://localhost:8000`) and **ON DEPLOYED** (`https://cfa-api.onrender.com`), both with icon `＋`/`⤓`, shadow and hover lift.
+- Two buttons: **Upload & Continue ON LOCAL** (`http://localhost:8000`) and **ON DEPLOYED** (`http://3.109.121.85:8000`), both with icon `＋`/`⤓`, shadow and hover lift.
 - Below: 3 steps `01 Drop your CSV → 02 AI reads everything → 03 See what to fix` and `Any columns work` cards.
 
 **What you do:** Pick/drag a CSV (any name like `review_text`, `Review Text`, `comment` — auto-found), click a button.
@@ -83,7 +83,7 @@ Table of every saved review (`GET /api/v1/reviews`), searchable.
 
 **Q: Why two upload buttons?** Local vs Deployed — same code, different `setApiBase`.
 
-**Q: Backend sleep?** Render free sleeps 15 min, first upload takes 30 sec to wake — frontend shows `Analyzing…` spinner, not crash.
+**Q: Backend sleep?** EC2 free sleeps 15 min, first upload takes 30 sec to wake — frontend shows `Analyzing…` spinner, not crash.
 
 **Q: Login real?** Yes — MySQL Aiven, pbkdf2, JWT 1h, 401 clears token and redirects to login.
 

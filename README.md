@@ -5,7 +5,7 @@
 > Built for **Cognizant / KIET Hackathon — Use Case #7: Sentiment Analysis of Customer Reviews** (Amazon Reviews Dataset).
 
 [![Live Frontend](https://img.shields.io/badge/Live-Frontend-blue?style=flat&logo=vercel)](https://customer-feedback-insight-system.vercel.app)
-[![Live API](https://img.shields.io/badge/Live-API-green?style=flat&logo=render)](https://cfa-api.onrender.com/health)
+[![Live API](https://img.shields.io/badge/Live-API-green?style=flat&logo=amazonec2)](http://3.109.121.85:8000/health)
 [![Notebook](https://img.shields.io/badge/Notebook-Final_Perfect_Model.ipynb-blue)](notebooks/Final_Perfect_Model.ipynb)
 [![ML](https://img.shields.io/badge/ML-BERT%20ASTE%20No%20Hardcode-green)](https://huggingface.co/transformers)
 [![Tests](https://img.shields.io/badge/Tests-7%20passed-brightgreen)](#)
@@ -66,7 +66,7 @@ Companies get thousands of reviews. Reading one by one is impossible. This syste
 ```
                 ┌──────────────────────────┐         ┌──────────────────────────────┐
                 │  Browser (React)         │         │  Backend (FastAPI)           │
-                │  Vercel / localhost      │         │  Render / localhost:8000     │
+                │  Vercel / localhost      │         │  EC2 / localhost:8000     │
                 │                          │  HTTP   │  POST /api/v1/upload (CSV)   │
                 │  Landing → Login →       │ ──────▶ │  POST /api/v1/analyze (1)    │
                 │  Upload → Dashboard      │ ◀────── │  GET  /api/v1/stats          │
@@ -109,7 +109,7 @@ Training happens separately:
 | ML | **BERT token classification** (main, no hard-code) | Legacy TF-IDF 1.35 MB kept only for reference, not used in main flow | (`bert-base-uncased`, 5 labels) + `transformers`, `torch`, `datasets` | No fixed list, finds any aspect; runs on T4 GPU, 15-20 min |
 | Fallback | Hugging Face Inference (`HF_TOKEN` optional) | If BERT not yet trained, LLM can help; otherwise empty (no hard-coded guess) |
 | DB | MySQL (Aiven) or SQLite fallback (`data/app.db`) | Last 3 analyses per user |
-| Deploy | Vercel (frontend) + Render (backend) | Free, one-click |
+| Deploy | Vercel (frontend) + EC2 (backend) | Free, one-click |
 | Tests | Pytest + FastAPI TestClient | 7 tests, all pass |
 
 ### Professional Polish — Latest Audit (2026-09-10)
@@ -370,7 +370,7 @@ Open `http://localhost:5173` → Login → Upload → Dashboard.
 
 ## API Reference
 
-Base: `http://localhost:8000` or `https://cfa-api.onrender.com`
+Base: `http://localhost:8000` or `http://3.109.121.85:8000`
 
 All `/api/v1/*` except `/health` and `/api/v1/ping` need `Authorization: Bearer <token>`.
 
@@ -408,7 +408,7 @@ All `/api/v1/*` except `/health` and `/api/v1/ping` need `Authorization: Bearer 
 ## Deployment
 
 - **Frontend** → Vercel, root `frontend/`, build `npm run build`, output `dist`.
-- **Backend** → Render, start `uvicorn cfa.api.main:app --host 0.0.0.0 --port 10000`, set `DATABASE_URL` for MySQL.
+- **Backend** → EC2, start `uvicorn cfa.api.main:app --host 0.0.0.0 --port 10000`, set `DATABASE_URL` for MySQL.
 - CORS allows `https://customer-feedback-insight-system.vercel.app`, `*.vercel.app`, `localhost`.
 
 ---
@@ -463,7 +463,7 @@ def check_overfit(trainer):
 | 4 | UI/UX | Login (JWT) → Upload (any CSV) → Dashboard (feeling pie, ranked concerns, proof quotes, single analyzer) | `frontend/src/components/Dashboard.jsx` |
 | 5 | Technical Implementation | Small functions (8–25 lines), 8th grade comments, modular `api/analysis/ml/ranking/core`, 7 tests pass | `src/cfa/` |
 | 6 | Model Performance | Weighted F1 ~0.875, per-label report, overfit gap check, not just accuracy | `notebooks/Final_Perfect_Model.ipynb` cells 45-48 |
-| 7 | Deployment | Vercel + Render, health check, `DATABASE_URL` + SQLite fallback | [Deployment](#deployment) |
+| 7 | Deployment | Vercel + EC2, health check, `DATABASE_URL` + SQLite fallback | [Deployment](#deployment) |
 | 8 | Presentation | This README + notebook runs top-to-bottom without error → PPT can copy the flow | This file |
 | 9 | Collaboration | `Team_Tasks_Assignment.pdf`, `IMP_FILES/` docs, commit `d14ccc1` with clear message | Git log |
 
