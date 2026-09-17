@@ -1,34 +1,22 @@
-# Project Presentation — 5 to 10 Minute Script (memorize the bold lines)
+# 5-10 Minute Spoken Presentation — Memorize This (Easy English)
 
-## 1. Project karta kya hai? (30 sec)
-**"My project reads thousands of customer reviews and tells the business three things: are customers happy, which exact aspect is the problem, and what to fix first — with real customer quotes as proof."**
-Upload a CSV, get pie charts, ranked concerns like battery 87 percent negative, and quotes. One review also works in the Analyzer.
+## 1. What our project does (30 sec)
+Our project is Customer Feedback Insight System for Use Case 7. Companies get thousands of reviews. We take a CSV, find what customers talk about, how they feel for each part, overall feeling, and what to fix first with proof quotes. Example: `The product is excellent but delivery was terrible` gives product Positive, delivery Negative, overall Mixed, delivery ranked first.
 
-## 2. Problem kya thi? (30 sec)
-**"Reading reviews manually is impossible, star ratings hide the real issue, and simple positive-negative tools miss Mixed feelings and new aspects."**
-Example: "product excellent but delivery terrible" is both happy and angry — old tools pick one side.
+## 2. What was the problem (1 min)
+Businesses cannot read thousands of reviews manually. One review has many feelings, so single Positive/Negative fails. Key concerns unknown: which aspect how often how negative. CSV names differ: Review Text, comment, feedback. Hard-coded list fails for new product like armrest. Manager sees Positive 80% but delivery 40% Negative hidden inside Mixed.
 
-## 3. Solve kaise kiya — parts me divide karke (4 min, har part 30-40 sec)
-Say: **"I split the solution into 5 parts and connected them one by one."**
+## 3. How we solved it — parts (3 min, say one by one and connect)
+Part 1 Frontend: React 19 Vercel. User clicks Upload CSV. File goes via vercel.json proxy /api to EC2 http to avoid mixed-content block. Evidence `frontend/src/api.js:248`, `frontend/vercel.json:5`.
+Part 2 Backend: FastAPI EC2 t3.small. POST /upload with JWT Bearer, CORS vercel.app, rate limit 30 per minute. Evidence `src/cfa/api/routers/analyze.py:78`, `main.py:17,55`.
+Part 3 Preprocess: find_text_column accepts any name, clean_text normalizes whitespace, keep rating/date/country. Evidence `src/cfa/analysis/preprocessing.py:38-96`.
+Part 4 Model: Two things merged. English BERT bert-base-uncased 110M 12 layers 768 hidden knows grammar, plus DMASTE 7524 human reviews flattened 28233 minus implicit -1 11945 gives 16288 explicit POS79% NEG17% NEU4%. Fine-tune 5-label head Linear 768->5 for 2 epochs batch16 lr2e-5 max128. Pattern learned: X is wobbly -> X is ASPECT. No list. Evidence `src/cfa/ml/bert_aste.py:20,52`, `cognizant1/data/dmaste_clean.csv`.
+Part 5 Decide: decode per-token argmax -> triplets (first opinion flaw) -> Mixed if pos and neg -> rank impact count×negative% -> proof first 5 verbatim. Evidence `bert_aste.py:78-149`, `ranking/priority.py`, `analysis/sentiment.py:7-21`.
+Part 6 Store and show: Save JSON to MySQL analyses table keep last 3, show Pie Bar Trend Top5 in Dashboard. Evidence `src/cfa/db/repo.py:35-54`, `frontend/src/components/Dashboard.jsx:678`.
+Connect line to say: CSV -> Vercel proxy -> EC2 FastAPI -> preprocess -> BERT 128 -> triplets -> Mixed -> rank -> MySQL -> Dashboard. Model 60%, our logic 40%.
 
-**Part 1 — Data.** "Public DMASTE reviews, 7,524 reviews became 16,288 aspect rows after dropping hidden ones. Review-level split so no leakage."
+## 4. Honest limits + future (1 min)
+Data biased POS79% so accuracy lies, we use weighted F1. Training scores example only, no metrics file. Confidence 0.85 hard-coded. First opinion for all aspects is wrong for Mixed. Retrieval is word overlap not RAG. t3.micro OOM so t3.small. Next: NEU 608->2k, nearest opinion, 3 epochs, HTTPS.
 
-**Part 2 — Model.** "Fine-tuned bert-base-uncased for token classification with 5 labels — O, aspect, and three opinion types. Tokenizer 128, 2 epochs on T4. Weighted F1 about 0.875 per our docs."
-
-**Part 3 — Backend.** "FastAPI with JWT auth, rate limits, and strict validation. One endpoint analyzes a review, one uploads CSV. Model loads once and stays in memory."
-
-**Part 4 — Logic.** "Each aspect gets a feeling, Mixed rule catches both-sides reviews, ranking is count times negative percent, proof quotes attached."
-
-**Part 5 — Screen + Server.** "React dashboard with charts on Vercel, Docker backend on EC2 t3.small, MySQL saves last 3 analyses per user."
-
-## 4. Connect karke dikhao (1 min)
-**"CSV drops on Vercel, proxy sends it to EC2, text is cleaned, BERT finds aspects in 128 tokens, rules make Mixed, ranking orders fixes, MySQL stores, dashboard draws — one straight line, no black boxes except the honest 110M-parameter BERT."**
-
-## 5. Challenges + honesty (1 min)
-**"Three real fights: hidden rows broke labeling so we dropped 11,945; the tiny server ran out of memory so we moved micro to small; the browser blocked mixed content so we proxied /api. And honestly: our retrieval is word overlap, not vector RAG, and confidence 0.85 is a constant — my planned upgrades."**
-
-## 6. Closing line (10 sec)
-**"One review in, aspects plus Mixed plus ranked fix out — explainable, deployed, and demo-ready."**
-
-## Slide hints (if asked to present slides)
-1 Title + one-line + live links. 2 Problem + Mixed example. 3 Architecture diagram (5 boxes). 4 Model (5 labels, 128, 2 epochs, F1). 5 Demo screenshot (battery 87.5%). 6 Honesty + roadmap (NEU rows, HTTPS, vector RAG).
+## 5. Close (30 sec)
+Reuse same model for any product, no code change. Monitoring via healthcheck. Links: frontend vercel.app, backend 3.109.121.85:8000/health, datasets huggingface SilvioLima + kaggle Amazon demo, GitHub Shaanworkspace. Team 8: Shaan Lead Model+Deploy, Reekal Training, Shikhar Visual, Sharad Preprocess, Rohan/Sachchidanand FastAPI, Shivang/Ram Frontend. Thank you, ready for demo and questions.
